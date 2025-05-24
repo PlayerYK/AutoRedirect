@@ -1,0 +1,100 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AutoRedirect 开发工作流程规则
+
+## 开发环境设置
+
+### Chrome扩展开发模式
+1. 打开Chrome浏览器，进入 `chrome://extensions/`
+2. 启用"开发者模式"
+3. 点击"加载已解压的扩展程序"，选择项目根目录
+4. 每次修改代码后，点击扩展卡片上的刷新按钮重新加载
+
+### 调试工具
+- 后台脚本调试：在扩展管理页面点击"背景页"链接
+- 弹出窗口调试：右键点击扩展图标，选择"检查弹出内容"
+- 选项页面调试：在选项页面右键选择"检查"
+
+## 代码修改工作流程
+
+### 修改后台逻辑
+1. 编辑 [script/background.js](mdc:script/background.js)
+2. 重新加载扩展
+3. 在后台页面控制台查看调试信息
+4. 测试URL重定向功能
+
+### 修改用户界面
+1. 编辑相应的HTML文件（[popup.html](mdc:popup.html), [options.html](mdc:options.html), [chose.html](mdc:chose.html)）
+2. 编辑对应的JavaScript文件
+3. 重新加载扩展
+4. 测试界面交互
+
+### 修改样式
+1. 直接在HTML文件的`<style>`标签中修改CSS
+2. 重新加载扩展
+3. 检查界面显示效果
+
+## 测试流程
+
+### 功能测试
+1. **开关测试**：在弹出窗口中切换开关，验证图标变化
+2. **规则测试**：在选项页面添加测试规则，验证重定向功能
+3. **多结果测试**：创建匹配多个结果的规则，测试选择页面
+4. **本地文件测试**：打开本地HTML文件，测试file://协议重定向
+
+### 调试技巧
+- 在 [script/background.js](mdc:script/background.js) 中修改 `show_debug_level = 0` 查看所有调试信息
+- 使用 `debugLog()` 函数添加自定义调试信息
+- 在Chrome开发者工具的Network标签中查看请求拦截情况
+
+## 版本发布流程
+
+### 准备发布
+1. 更新 [manifest.json](mdc:manifest.json) 中的版本号
+2. 更新 [README.md](mdc:README.md) 中的更新日志
+3. 测试所有功能确保正常工作
+4. 清理调试代码和console.log语句
+
+### 打包扩展
+1. 在Chrome扩展管理页面点击"打包扩展程序"
+2. 选择项目根目录
+3. 生成.crx文件和.pem私钥文件
+
+## 常见问题解决
+
+### 扩展无法加载
+- 检查 [manifest.json](mdc:manifest.json) 语法是否正确
+- 确认所有引用的文件路径是否存在
+- 查看Chrome扩展管理页面的错误信息
+
+### 重定向不工作
+- 检查扩展是否已启用（图标应该是粗体版本）
+- 在后台页面控制台查看调试信息
+- 验证规则格式是否正确（原始URL####目标URL）
+
+### 界面显示异常
+- 检查HTML语法和CSS样式
+- 确认JavaScript文件是否正确加载
+- 使用开发者工具检查控制台错误
+
+## 代码规范
+
+### JavaScript规范
+- 使用localStorage存储用户数据
+- 使用Chrome扩展API进行浏览器交互
+- 添加适当的错误处理和调试信息
+
+### HTML/CSS规范
+- 保持HTML结构清晰
+- CSS样式内联在HTML文件中
+- 确保界面在不同分辨率下正常显示
+- 使用语义化的HTML标签
+
+### 文件组织
+- 所有JavaScript文件放在 `script/` 目录
+- 所有图片资源放在 `images/` 目录
+- HTML文件放在项目根目录
+- 配置文件（[manifest.json](mdc:manifest.json), [regpattern.txt](mdc:regpattern.txt)）放在根目录

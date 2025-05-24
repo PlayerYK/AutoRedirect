@@ -1,0 +1,97 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AutoRedirect Chrome扩展项目规则
+
+## 项目概述
+AutoRedirect是一个Chrome浏览器扩展，用于自动重定向URL。主要功能是将本地文件路径或开发环境URL自动重定向到指定的目标URL。
+
+## 核心文件结构
+
+### 扩展配置
+- [manifest.json](mdc:manifest.json) - Chrome扩展的核心配置文件，定义了扩展的权限、背景脚本、图标等
+- [regpattern.txt](mdc:regpattern.txt) - 重定向规则模式文件
+
+### 用户界面文件
+- [popup.html](mdc:popup.html) - 扩展弹出窗口的HTML，包含开关控制
+- [options.html](mdc:options.html) - 扩展选项页面，用于配置重定向规则
+- [chose.html](mdc:chose.html) - 多个匹配结果时的选择页面
+
+### JavaScript脚本
+- [script/background.js](mdc:script/background.js) - 后台脚本，处理URL监听和重定向逻辑
+- [script/popup_switch.js](mdc:script/popup_switch.js) - 弹出窗口的开关控制逻辑
+- [script/options.js](mdc:script/options.js) - 选项页面的交互逻辑
+- [script/chose.js](mdc:script/chose.js) - 选择页面的交互逻辑
+
+### 资源文件
+- `images/` - 包含扩展图标文件（icon_19.png, icon_48.png, icon_128.png等）
+
+## 核心功能模块
+
+### 1. URL监听与重定向
+- 监听标签页URL变化（chrome.tabs.onUpdated）
+- 监听网络请求（chrome.webRequest.onBeforeRequest）
+- 支持file://协议的本地文件重定向
+- 支持http/https协议的网址重定向
+
+### 2. 规则匹配系统
+- 使用正则表达式匹配URL模式
+- 支持通配符（*）匹配
+- 规则格式：`原始URL模式####目标URL模式`
+- 支持多个匹配结果的选择
+
+### 3. 用户界面
+- 弹出窗口：简单的开关控制
+- 选项页面：规则编辑和保存
+- 选择页面：多个匹配结果时的用户选择
+
+### 4. 数据存储
+- 使用localStorage存储用户配置
+- 存储项：jump_list（规则列表）、jump_list_auto（自动重定向开关）
+
+## 开发指南
+
+### 修改重定向规则
+1. 编辑 [script/background.js](mdc:script/background.js) 中的规则处理逻辑
+2. 规则格式在 [options.html](mdc:options.html) 中有详细说明
+3. 默认规则从远程URL加载：`http://jslab.pro/autoredirect/regpattern.txt`
+
+### 修改用户界面
+1. 弹出窗口样式：编辑 [popup.html](mdc:popup.html) 的CSS部分
+2. 选项页面：修改 [options.html](mdc:options.html) 和 [script/options.js](mdc:script/options.js)
+3. 图标更换：替换 `images/` 目录中的图标文件
+
+### 调试功能
+- [script/background.js](mdc:script/background.js) 中包含debugLog函数用于调试
+- 可通过修改show_debug_level变量控制调试信息输出级别
+
+### 权限说明
+扩展需要以下权限（在 [manifest.json](mdc:manifest.json) 中定义）：
+- `tabs` - 访问标签页信息
+- `webRequest` - 监听网络请求
+- `webRequestBlocking` - 阻塞和修改网络请求
+- `http://*/*` 和 `https://*/*` - 访问所有HTTP/HTTPS网站
+
+## 常见开发任务
+
+### 添加新的重定向规则
+1. 在 [options.html](mdc:options.html) 的选项页面中添加规则
+2. 规则会自动保存到localStorage中
+3. [script/background.js](mdc:script/background.js) 会自动应用新规则
+
+### 修改扩展图标
+1. 替换 `images/` 目录中的图标文件
+2. 确保图标尺寸符合Chrome扩展规范（16x16, 48x48, 128x128）
+3. 更新 [manifest.json](mdc:manifest.json) 中的图标路径（如果需要）
+
+### 更新扩展版本
+1. 修改 [manifest.json](mdc:manifest.json) 中的version字段
+2. 更新 [README.md](mdc:README.md) 中的更新日志
+
+## 注意事项
+- 避免创建重定向循环
+- 测试时注意检查控制台的调试信息
+- 修改权限时需要重新加载扩展
+- 支持通配符但要谨慎使用以避免意外匹配

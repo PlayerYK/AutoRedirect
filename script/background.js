@@ -1,176 +1,198 @@
-var regPatternUrl = 'http://jslab.pro/autoredirect/regpattern.txt';
+// 引入共享的重定向引擎
+importScripts('redirect-engine.js');
 
-// get 
-var isAuto = localStorage['jump_list_auto'] || 0;
-if(isAuto == 1){
-    chrome.browserAction.setIcon({path:"images/icon_19_bold.png"});
-}else{
-    chrome.browserAction.setIcon({path:"images/icon_19.png"});
+var regPatternUrl = "http://jslab.pro/autoredirect/regpattern.txt";
+
+// Initialize extension
+chrome.runtime.onInstalled.addListener(() => {
+  initializeExtension();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  initializeExtension();
+});
+
+async function initializeExtension() {
+  // Get auto redirect setting
+  const result = await chrome.storage.local.get(["jump_list_auto"]);
+  const isAuto = result.jump_list_auto || 0;
+
+  try {
+    if (isAuto == 1) {
+      await chrome.action.setIcon({
+        path: {
+          19: "images/icon_19_bold.png",
+          38: "images/icon_19_bold.png",
+        },
+      });
+    } else {
+      await chrome.action.setIcon({
+        path: {
+          19: "images/icon_19.png",
+          38: "images/icon_19.png",
+        },
+      });
+    }
+  } catch (error) {
+    debugLog("Failed to set icon: " + error);
+  }
 }
 
-
 // Called when the url of a tab changes.
-function checkForValidUrl(tabId, changeInfo, tab) {
-    // If the letter 'file:///' is found in the tab's URL...
-    if (tab && tab.url && tab.url.indexOf('file:///') > -1) {
-        // ...check options and start jump.
-        var jump_list = localStorage['jump_list'];
-        if(!jump_list){
-            $.ajax({
-                url:regPatternUrl,
-                type:'get',
-                dataType:'text',
-                success:function(r){
-                    localStorage['jump_list'] = r;
-                }
-            });
-        }
-        isAuto = localStorage['jump_list_auto'] || 0;
-        if(isAuto == 1){
-            startProcess(tab);
-        }
+async function checkForValidUrl(tabId, changeInfo, tab) {
+  // If the letter 'file:///' is found in the tab's URL...
+  if (tab && tab.url && tab.url.indexOf("file:///") > -1) {
+    // ...check options and start jump.
+    const result = await chrome.storage.local.get([
+      "jump_list",
+      "jump_list_auto",
+    ]);
+    let jump_list = result.jump_list;
+
+    if (!jump_list) {
+      try {
+        const response = await fetch(regPatternUrl);
+        const text = await response.text();
+        await chrome.storage.local.set({ jump_list: text });
+        jump_list = text;
+      } catch (error) {
+        debugLog("Failed to fetch pattern list: " + error);
+        return;
+      }
     }
-};
+
+    const isAuto = result.jump_list_auto || 0;
+    if (isAuto == 1) {
+      startProcess(tab);
+    }
+  }
+}
+
 //Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
 
-function startProcess(tab){
-    chrome.tabs.query({active:true,windowId: chrome.windows.WINDOW_ID_CURRENT},function(tabs){
-        var tab = tabs[0];
-        var url = encodeURI(tab.url);
-        debugLog('local tab url ' + url,2);
-        var src_list = localStorage['jump_list'].split('\n');
-        var j_list = [];
-        $.each(src_list,function(i,v){
-            var line = $.trim(v);
-            if(line != ''){
-                var regStr = line.split('####')[0];
-                var urlStr = line.split('####')[1];
-                j_list.push({
-                    'regStr':regStr.replace(/\//g,'\\/').replace(/\*/g,'\.\*\?').replace(/\n/,'').replace(/\r/,''),
-                    'urlStr':urlStr.replace(/\n/,'').replace(/\r/,'')
-                });
-            }
-        });
+async function startProcess(tab) {
+  const tabs = await chrome.tabs.query({
+    active: true,
+    windowId: chrome.windows.WINDOW_ID_CURRENT,
+  });
+  const currentTab = tabs[0];
+  // 不要对URL进行编码，保持原始URL用于匹配
+  const url = currentTab.url;
+  debugLog("local tab url " + url, 1);
 
-        var result_list = [];
-        $.each(j_list,function(k,v){
-            var reg = new RegExp(".*"+ v.regStr,'i');
-            if (reg.test(url)){
-                var onlineUrl = url.replace(reg, v.urlStr);
-                if($.inArray(onlineUrl,result_list) == -1){
-                    result_list.push(onlineUrl);
-                }
-            }
+  const result = await chrome.storage.local.get(["jump_list"]);
+  const jump_list = result.jump_list;
+
+  if (!jump_list) {
+    debugLog("No jump list found");
+    return;
+  }
+
+  // 使用共享的重定向引擎
+  const rules = RedirectEngine.parseRedirectRules(jump_list);
+  const src_list = jump_list.split("\n");
+  const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
+
+  debugLog(result_list, 2);
+
+  switch (result_list.length) {
+    case 0:
+      // No matches found
+      break;
+    case 1:
+      chrome.tabs.update(currentTab.id, {
+        url: result_list[0] + "?t=" + +new Date(),
+      });
+      break;
+    default:
+      chrome.tabs.update(currentTab.id, {
+        url: chrome.runtime.getURL("chose.html"),
+      });
+      setTimeout(function () {
+        chrome.runtime.sendMessage({
+          type: "urls",
+          value: result_list,
+          rules: rule_info,
         });
-        debugLog(result_list,2);
-        switch (result_list.length){
-            case 0:
-//                chrome.tabs.create({
-//                    url:chrome.extension.getURL("options.html"),
-//                    index:tab.index + 1,
-//                    active:true
-//                },function(tab){
-//
-//                })
-                break;
-            case 1:
-                chrome.tabs.update(tab.id, {url:result_list[0]+'?t='+(+new Date)});
-//                chrome.tabs.update(tab.id, {url:result_list[0]});
-                break;
-            default:
-                chrome.tabs.update(tab.id, {url:chrome.extension.getURL("chose.html")});
-                setTimeout(function(){
-                    chrome.runtime.sendMessage({
-                        type: 'urls',
-                        value:result_list
-                    })},100);
-                break;
-        }
-    });
+      }, 100);
+      break;
+  }
 }
 
-
-chrome.webRequest.onBeforeRequest.addListener(function(details){
-    debugLog('called details params');
+// Handle web requests using declarativeNetRequest
+chrome.webRequest.onBeforeRequest.addListener(
+  async function (details) {
+    debugLog("called details params");
     debugLog(details);
-    debugLog('online tab url '+details.url,2);
+    debugLog("online tab url " + details.url, 2);
 
-    isAuto = localStorage['jump_list_auto'] || 0;
-    debugLog('auto redirect: isAuto ' + isAuto);
-    if(isAuto != 1){
+    const result = await chrome.storage.local.get([
+      "jump_list_auto",
+      "jump_list",
+    ]);
+    const isAuto = result.jump_list_auto || 0;
+
+    debugLog("auto redirect: isAuto " + isAuto);
+    if (isAuto != 1) {
+      return;
+    }
+
+    const url = details.url;
+    let jump_list = result.jump_list;
+
+    if (!jump_list) {
+      try {
+        const response = await fetch(regPatternUrl);
+        const text = await response.text();
+        await chrome.storage.local.set({ jump_list: text });
+        jump_list = text;
+      } catch (error) {
+        debugLog("Failed to fetch pattern list: " + error);
         return;
+      }
     }
-    var url = details.url;
-    var src_list = localStorage['jump_list'].split('\n');
 
-    if(!src_list){
-        $.ajax({
-            url:regPatternUrl,
-            type:'get',
-            dataType:'text',
-            success:function(r){
-                localStorage['jump_list'] = r;
-            }
+    // 使用共享的重定向引擎
+    const rules = RedirectEngine.parseRedirectRules(jump_list);
+    const src_list = jump_list.split("\n");
+    const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
+
+    debugLog("result length " + result_list.length);
+    debugLog(result_list, 2);
+
+    switch (result_list.length) {
+      case 0:
+        break;
+      case 1:
+        chrome.tabs.update(details.tabId, {
+          url: result_list[0],
         });
+        break;
+      default:
+        chrome.tabs.update(details.tabId, {
+          url: chrome.runtime.getURL("chose.html"),
+        });
+        setTimeout(function () {
+          chrome.runtime.sendMessage({
+            type: "urls",
+            value: result_list,
+            rules: rule_info,
+          });
+        }, 100);
+        break;
     }
+  },
+  {
+    urls: ["http://*/*", "https://*/*"],
+    types: ["main_frame"],
+  }
+);
 
-    debugLog(src_list);
-    var j_list = [];
-    $.each(src_list,function(i,v){
-        var line = $.trim(v);
-        debugLog("line : "+line);
-        if(line != ''){
-            var regStr = line.split('####')[0];
-            var urlStr = line.split('####')[1];
-            j_list.push({
-                'regStr':regStr.replace(/\//g,'\\/').replace(/\*/g,'\.\*\?').replace(/\n/,'').replace(/\r/,''),
-                'urlStr':urlStr.replace(/\n/,'').replace(/\r/,'')
-            });
-        }
-    });
-
-    var result_list = [];
-    $.each(j_list,function(k,v){
-        var reg = new RegExp(".*"+ v.regStr,'i');
-        if (reg.test(url)){
-            var onlineUrl = url.replace(reg, v.urlStr);
-            if($.inArray(onlineUrl,result_list) == -1){
-                result_list.push(onlineUrl);
-            }
-        }
-    });
-
-    debugLog('result length ' + result_list.length);
-    debugLog(result_list,2);
-    switch (result_list.length){
-        case 0:
-            break;
-        case 1:
-//            return {redirectUrl:result_list[0]+'?t='+(+new Date)};
-            return {redirectUrl:result_list[0]};
-            break;
-        default:
-            chrome.tabs.update(details.tabId, {url:chrome.extension.getURL("chose.html")});
-            setTimeout(function(){
-                chrome.runtime.sendMessage({
-                    type: 'urls',
-                    value:result_list
-                })},100);
-            break;
-    }
-},{
-    urls:["http://*/*"
-        ,"https://*/*"
-    ],
-    types:["main_frame"]
-//    types:["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
-},["blocking"]);
-
-var show_debug_level = 2;
-function debugLog(obj,level){
-    level = level || 0;
-    if(level >= show_debug_level){
-        console.log(obj);
-    }
+var show_debug_level = 1;
+function debugLog(obj, level) {
+  level = level || 0;
+  if (level >= show_debug_level) {
+    console.log(obj);
+  }
 }

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRedirect 全功能测试页面</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6c757d;
+      font-size: 1.1em;
+      margin-bottom: 40px;
+    }
+
+    /* 模式选择器样式 */
+    .mode-selector {
+      background: linear-gradient(135deg, #f8faff, #e8f4f8);
+      padding: 30px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 2px solid #4facfe;
+      text-align: center;
+    }
+
+    .mode-selector h3 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      color: #495057;
+      border: 2px solid #dee2e6;
+      min-width: 140px;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      border-color: #4facfe;
+      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    }
+
+    /* 使用指南样式 */
+    .usage-guide {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 2px solid #ffd93d;
+    }
+
+    .usage-guide h3 {
+      color: #856404;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usage-steps {
+      counter-reset: step-counter;
+    }
+
+    .usage-step {
+      counter-increment: step-counter;
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      position: relative;
+      padding-left: 60px;
+    }
+
+    .usage-step::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ffc107;
+      color: #212529;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    /* 配置区域样式 */
+    .config-section {
+      background: #f8faff;
+      padding: 30px;
+      border-left: 5px solid #4facfe;
+      margin: 30px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .config-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .config-header h3 {
+      color: #2c3e50;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4em;
+    }
+
+    .copy-btn {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(135deg, #17a2b8, #138496);
+    }
+
+    .config-box {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 14px;
+      white-space: pre-line;
+      overflow-x: auto;
+      border: 1px solid #4a5568;
+      position: relative;
+    }
+
+    /* 测试案例样式 */
+    .test-cases {
+      margin: 30px 0;
+    }
+
+    .test-case {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e9ecef;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+    }
+
+    .test-case:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .test-case h4 {
+      margin-top: 0;
+      color: #495057;
+      font-size: 1.3em;
+      border-bottom: 2px solid #4facfe;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-link {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      border: 1px solid #ffd93d;
+      transition: all 0.3s ease;
+    }
+
+    .test-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    }
+
+    .test-link a {
+      color: #0066cc;
+      text-decoration: none;
+      word-break: break-all;
+      font-weight: 600;
+    }
+
+    .test-link a:hover {
+      text-decoration: underline;
+      color: #004499;
+    }
+
+    .expected {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-style: italic;
+      border-left: 3px solid #28a745;
+    }
+
+    .match-type-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      margin: 5px 5px 5px 0;
+    }
+
+    .exact {
+      background: #28a745;
+    }
+
+    .prefix {
+      background: #007bff;
+    }
+
+    .suffix {
+      background: #ffc107;
+      color: #212529;
+    }
+
+    .contains {
+      background: #dc3545;
+    }
+
+    /* 公共说明样式 */
+    .common-info {
+      background: linear-gradient(135deg, #e8f4f8, #d1ecf1);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 2px solid #17a2b8;
+    }
+
+    .common-info h3 {
+      color: #0c5460;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #f8faff, #e8f4f8);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #4facfe;
+    }
+
+    .feature-card h5 {
+      color: #2c3e50;
+      margin-top: 0;
+      font-size: 1.1em;
+    }
+
+    /* 隐藏/显示内容 */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* 成功提示样式 */
+    .success-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+      z-index: 1000;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+    }
+
+    .success-toast.show {
+      transform: translateX(0);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .mode-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .mode-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .config-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🚀 AutoRedirect 全功能测试</h1>
+    <p class="subtitle">选择测试模式，获取配置，开始测试</p>
+
+    <!-- 使用指南 -->
+    <div class="usage-guide">
+      <h3>📋 使用指南</h3>
+      <div class="usage-steps">
+        <div class="usage-step">
+          <strong>选择测试模式：</strong>根据您的需求选择基础测试、高级测试或完整测试模式
+        </div>
+        <div class="usage-step">
+          <strong>复制配置：</strong>点击"一键复制配置"按钮，将配置内容复制到剪贴板
+        </div>
+        <div class="usage-step">
+          <strong>设置扩展：</strong>打开AutoRedirect扩展的选项页面，粘贴配置并保存
+        </div>
+        <div class="usage-step">
+          <strong>启用扩展：</strong>确保扩展开关处于开启状态（图标应为粗体）
+        </div>
+        <div class="usage-step">
+          <strong>开始测试：</strong>按照页面下方的测试案例进行功能验证
+        </div>
+      </div>
+
+      <div
+        style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px solid #ffd93d;">
+        <h4 style="color: #856404; margin-top: 0;">⚠️ 隐私模式使用说明</h4>
+        <p style="margin-bottom: 10px; color: #856404;">如果您在隐私模式（无痕模式）下遇到 <code>ERR_BLOCKED_BY_CLIENT</code> 错误：</p>
+        <ol style="color: #856404; margin-bottom: 0;">
+          <li>打开 <code>chrome://extensions/</code></li>
+          <li>找到 AutoRedirect 扩展</li>
+          <li>点击"详细信息"</li>
+          <li>开启"在无痕模式下启用"选项</li>
+          <li>或者在普通浏览器窗口中进行测试</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 模式选择器 -->
+    <div class="mode-selector">
+      <h3>🎯 选择测试模式</h3>
+      <div class="mode-buttons">
+        <button class="mode-btn active" onclick="switchMode('basic')">
+          🔰 基础测试
+        </button>
+        <button class="mode-btn" onclick="switchMode('advanced')">
+          ⚡ 高级测试
+        </button>
+        <button class="mode-btn" onclick="switchMode('complete')">
+          🎯 完整测试
+        </button>
+      </div>
+    </div>
+
+    <!-- 基础测试配置 -->
+    <div id="basic-content" class="content-section active">
+      <div class="config-section">
+        <div class="config-header">
+          <h3><span class="icon">⚙️</span> 基础测试配置</h3>
+          <button class="copy-btn" onclick="copyConfig('basic')">
+            📋 一键复制配置
+          </button>
+        </div>
+        <p>包含所有基础匹配模式的测试配置，适合初次使用和功能验证：</p>
+        <div class="config-box" id="basic-config"></div>
+      </div>
+
+      <div class="test-cases">
+        <div class="test-case">
+          <h4>🎯 精确匹配测试</h4>
+          <p>测试精确匹配模式的准确性，使用 <span class="match-type-badge exact">=</span> 前缀。注意：精确匹配需要完整的URL格式</p>
+
+          <div class="test-link">
+            <strong>测试方法：</strong><br>
+            在地址栏访问：<code>https://example.com/</code> 或 <code>https://test.example.com/</code>
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 完整URL精确匹配跳转到对应目标网站
+          </div>
+        </div>
+
+        <div class="test-case">
+          <h4>🚀 开头匹配测试</h4>
+          <p>测试开头匹配模式，使用 <span class="match-type-badge prefix">^</span> 前缀或 <span
+              class="match-type-badge prefix">*</span> 后缀</p>
+
+          <div class="test-link">
+            <strong>测试方法：</strong><br>
+            在地址栏访问：<code>https://dev.mysite.com</code> 或 <code>https://api.service.com</code>
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> dev开头的URL跳转到 development.example.com，api开头的URL跳转到 api-service.example.com
+          </div>
+        </div>
+
+        <div class="test-case">
+          <h4>🏁 结尾匹配测试</h4>
+          <p>测试结尾匹配模式，使用 <span class="match-type-badge suffix">*</span> 前缀或 <span
+              class="match-type-badge suffix">$</span> 后缀</p>
+
+          <div class="test-link">
+            <strong>测试方法：</strong><br>
+            在地址栏访问：<code>https://myapp.local</code> 或 <code>https://myproject-test</code>
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> .local结尾的URL跳转到 local-to-prod.example.com，-test结尾的URL跳转到 test-environment.example.com
+          </div>
+        </div>
+
+        <div class="test-case">
+          <h4>📍 包含匹配测试</h4>
+          <p>测试包含匹配模式（默认模式，⚠️ 慎用！全局匹配易出错），匹配URL中包含指定字符串的情况</p>
+
+          <div class="test-link">
+            <strong>测试方法：</strong><br>
+            在地址栏访问：<code>http://localhost:3000/</code> 或包含 <code>demo</code> 的URL
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> localhost:3000 包含匹配跳转到 exact-localhost.example.com，demo 跳转到 GitHub
+          </div>
+        </div>
+
+        <div class="test-case">
+          <h4>🔗 智能URL提取测试</h4>
+          <p>测试基于规则模式的智能URL提取和解码功能</p>
+
+          <div class="test-link">
+            <strong>知乎链接测试：</strong><br>
+            <a href="https://link.zhihu.com/?target=https%3A//www.baidu.com" target="_blank">
+              知乎跳转到百度
+            </a>
+          </div>
+
+          <div class="test-link">
+            <strong>百度链接测试：</strong><br>
+            <a href="https://www.baidu.com/link?url=https%3A//www.google.com" target="_blank">
+              百度跳转到Google
+            </a>
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 基于匹配的规则模式自动提取并解码URL参数，直接跳转到目标网站
+          </div>
+        </div>
+
+        <div class="test-case">
+          <h4>🎯 URL模板替换测试</h4>
+          <p>测试URL模板替换功能</p>
+
+          <div class="test-link">
+            <strong>简单域名替换：</strong><br>
+            <a href="https://old-domain.com/path" target="_blank">
+              old-domain.com/path
+            </a>
+          </div>
+
+          <div class="test-link">
+            <strong>复杂路径重写：</strong><br>
+            <a href="http://example.com/page/subpage" target="_blank">
+              example.com/page/subpage
+            </a>
+          </div>
+
+          <div class="test-link">
+            <strong>多段路径重组：</strong><br>
+            <a href="old.com/category/item" target="_blank">
+              old.com/category/item
+            </a>
+          </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 根据规则跳转到新的目标网站
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 高级测试配置 -->
+  <div id="advanced-content" class="content-section">
+    <div class="config-section">
+      <div class="config-header">
+        <h3><span class="icon">⚡</span> 高级测试配置</h3>
+        <button class="copy-btn" onclick="copyConfig('advanced')">
+          📋 一键复制配置
+        </button>
+      </div>
+      <p>包含复杂匹配规则和开发场景的高级配置，适合深度测试：</p>
+      <div class="config-box" id="advanced-config"></div>
+    </div>
+
+    <div class="test-cases">
+      <div class="test-case">
+        <h4>🔧 开发工具重定向</h4>
+        <p>测试开发工具相关的URL重定向功能</p>
+
+        <div class="test-link">
+          <strong>测试方法：</strong><br>
+          访问包含 webpack、vscode、postman、swagger、jenkins 等关键词的URL
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 根据关键词跳转到对应的开发工具或文档站点
+        </div>
+      </div>
+
+      <div class="test-case">
+        <h4>🌐 内网映射测试</h4>
+        <p>测试内网IP到外网域名的映射功能</p>
+
+        <div class="test-link">
+          <strong>测试方法：</strong><br>
+          访问 <code>192.168.1.100</code> 或 <code>10.0.0.50</code> 等内网地址
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 内网IP地址自动跳转到 internal.mysite.com
+        </div>
+      </div>
+
+      <div class="test-case">
+        <h4>🎯 复杂匹配规则</h4>
+        <p>测试复合条件的匹配规则</p>
+
+        <div class="test-link">
+          <strong>测试方法：</strong><br>
+          访问 <code>beta.example.com</code> 或 <code>myapp-staging</code>
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> beta.开头的跳转到beta环境，-staging结尾的跳转到staging环境
+        </div>
+      </div>
+
+      <div class="test-case">
+        <h4>🎭 多结果选择测试</h4>
+        <p>测试多个匹配规则的选择功能</p>
+
+        <div class="test-link">
+          <strong>测试方法：</strong><br>
+          访问包含 <code>service</code> 的URL
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 显示选择页面，包含API、管理后台、仪表板等多个选项
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完整测试配置 -->
+  <div id="complete-content" class="content-section">
+    <div class="config-section">
+      <div class="config-header">
+        <h3><span class="icon">🎯</span> 完整测试配置</h3>
+        <button class="copy-btn" onclick="copyConfig('complete')">
+          📋 一键复制配置
+        </button>
+      </div>
+      <p>包含所有功能的完整配置，适合全面测试和生产环境使用：</p>
+      <div class="config-box" id="complete-config"></div>
+    </div>
+
+    <div class="test-cases">
+      <div class="test-case">
+        <h4>🎯 全功能综合测试</h4>
+        <p>测试所有匹配模式和功能的综合表现</p>
+
+        <div class="test-link">
+          <strong>精确匹配：</strong> 访问 example.com 或 test.example.com 进行精确匹配测试
+        </div>
+
+        <div class="test-link">
+          <strong>开头匹配：</strong> 访问dev、staging、test、api、admin、beta开头的URL
+        </div>
+
+        <div class="test-link">
+          <strong>结尾匹配：</strong> 访问test、.local、.dev、-staging、config.json结尾的URL
+        </div>
+
+        <div class="test-link">
+          <strong>包含匹配：</strong> 访问包含demo、prototype、example.com、localhost的URL（⚠️ 慎用！全局匹配易出错）
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 所有匹配模式都能正确工作，根据不同规则跳转到对应目标
+        </div>
+      </div>
+
+      <div class="test-case">
+        <h4>🔗 智能URL提取全测试</h4>
+        <p>测试所有支持的URL提取和解码功能</p>
+
+        <div class="test-link">
+          <strong>知乎链接：</strong><br>
+          <a href="https://link.zhihu.com/?target=https%3A//www.github.com" target="_blank">
+            知乎跳转到GitHub
+          </a>
+        </div>
+
+        <div class="test-link">
+          <strong>微信安全链接：</strong><br>
+          <a href="https://weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=https%3A//www.google.com"
+            target="_blank">
+            微信安全跳转
+          </a>
+        </div>
+
+        <div class="test-link">
+          <strong>QQ邮箱链接：</strong><br>
+          <a href="https://mail.qq.com/cgi-bin/readtemplate?gourl=https%3A//www.github.com" target="_blank">
+            QQ邮箱跳转
+          </a>
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 所有链接都能正确提取目标URL并直接跳转
+        </div>
+      </div>
+
+      <div class="test-case">
+        <h4>🎭 多选择和复杂场景</h4>
+        <p>测试多结果选择和复杂匹配场景</p>
+
+        <div class="test-link">
+          <strong>多选测试：</strong> 访问包含multi或service的URL
+        </div>
+
+        <div class="test-link">
+          <strong>开发工具：</strong> 访问包含webpack、vscode、postman等的URL
+        </div>
+
+        <div class="test-link">
+          <strong>内网映射：</strong> 访问192.168.1.*或10.0.0.*的内网地址
+        </div>
+
+        <div class="expected">
+          <strong>预期结果：</strong> 多选场景显示选择页面，其他场景正确跳转
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 公共说明信息 -->
+  <div class="common-info">
+    <h3>📚 匹配模式说明</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h5><span class="match-type-badge exact">精确匹配</span></h5>
+        <p>使用 <code>=</code> 前缀，只匹配完全相同的URL</p>
+        <p><small>最安全的匹配方式，避免误触发</small></p>
+      </div>
+      <div class="feature-card">
+        <h5><span class="match-type-badge prefix">开头匹配</span></h5>
+        <p>使用 <code>^</code> 前缀或 <code>*</code> 后缀</p>
+        <p><small>匹配以指定字符串开头的URL</small></p>
+      </div>
+      <div class="feature-card">
+        <h5><span class="match-type-badge suffix">结尾匹配</span></h5>
+        <p>使用 <code>*</code> 前缀或 <code>$</code> 后缀</p>
+        <p><small>匹配以指定字符串结尾的URL</small></p>
+      </div>
+      <div class="feature-card">
+        <h5><span class="match-type-badge contains">包含匹配</span></h5>
+        <p>默认模式（⚠️ 慎用！全局匹配易出错）</p>
+        <p><small>仅用于向后兼容或明确知道跳转规则的情况</small></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="common-info">
+    <h3>🔧 故障排除指南</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h5>常见问题</h5>
+        <ul>
+          <li><strong>隐私模式报错：</strong> ERR_BLOCKED_BY_CLIENT 错误，需要在扩展管理页面启用"在无痕模式下启用"</li>
+          <li><strong>重定向不工作：</strong> 检查扩展是否启用，规则格式是否正确</li>
+          <li><strong>匹配不准确：</strong> 确认使用了正确的匹配模式前缀</li>
+          <li><strong>页面无响应：</strong> 查看浏览器控制台错误信息</li>
+          <li><strong>部分功能失效：</strong> 重新加载扩展，清除缓存</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <h5>调试方法</h5>
+        <ul>
+          <li>打开浏览器开发者工具</li>
+          <li>查看Console标签页的日志</li>
+          <li>检查Network标签页的请求</li>
+          <li>在扩展管理页面查看Service Worker日志</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- 成功提示 -->
+  <div id="success-toast" class="success-toast">
+    ✅ 配置已复制到剪贴板！
+  </div>
+
+  <script>
+    // 配置数据
+    const configs = {
+      basic: `# AutoRedirect 基础测试配置
+
+# ===== 精确匹配测试 =====
+=https://example.com/####https://www.google.com
+=https://test.example.com/####https://exact-test.example.com
+
+# ===== 开头匹配测试 =====
+^dev####https://development.example.com
+api*####https://api-service.example.com
+
+# ===== 结尾匹配测试 =====
+*test$####https://test-environment.example.com
+*.local####https://local-to-prod.example.com
+
+# ===== URL模板替换测试 =====
+# 简单域名替换
+https://old-domain.com/*####https://new-domain.com/{1}
+# 复杂路径重写
+http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
+# 多段路径重组
+old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}
+
+# ===== 包含匹配测试（模糊匹配，慎用！） =====
+# localhost:3000####https://exact-localhost.example.com
+# demo####https://www.github.com
+# example.com####https://www.github.com
+
+# ===== 智能URL提取测试 =====
+link.zhihu.com/?target=####
+www.baidu.com/link?url=####
+
+# ===== 多结果选择测试 =====
+multi####https://www.google.com
+multi####https://www.bing.com
+multi####https://www.yahoo.com`,
+
+      advanced: `# AutoRedirect 高级测试配置
+
+# ===== 基础匹配（必需） =====
+=https://example.com/####https://www.google.com
+demo####https://www.github.com
+
+# ===== URL模板替换高级测试 =====
+# 域名和路径同时替换
+https://old.com/*/docs/*####https://new.com/{1}/documentation/{2}
+# 参数重新排列
+site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
+# 重复使用占位符
+old.com/user/*####new.com/{1}/profile/{1}/settings
+
+# ===== 复杂匹配测试 =====
+^beta.####https://beta.mysite.com
+*-staging$####https://staging.mysite.com
+=127.0.0.1:8080####https://backend.mysite.com
+
+# ===== 开发工具测试 =====
+*webpack*####https://webpack.mysite.com
+*vscode*####https://code.mysite.com
+*postman*####https://api-docs.mysite.com
+*swagger*####https://docs.mysite.com
+*jenkins*####https://ci.mysite.com
+
+# ===== 智能URL提取测试 =====
+link.zhihu.com/?target=####
+weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
+www.baidu.com/link?url=####
+mail.qq.com/cgi-bin/readtemplate?gourl=####
+redirect.example.com?target=####
+
+# ===== 内网映射测试 =====
+192.168.1.*####https://internal.mysite.com
+10.0.0.*####https://internal.mysite.com
+
+# ===== 多结果选择测试 =====
+service####https://api.mysite.com
+service####https://admin.mysite.com
+service####https://dashboard.mysite.com`,
+
+      complete: `# AutoRedirect 完整测试配置
+
+# ===== 精确匹配模式 =====
+=https://example.com/####https://www.google.com
+=https://test.example.com/####https://exact-test.example.com
+localhost:3000####https://exact-localhost.example.com
+=index.html####https://www.mysite.com
+
+# ===== 开头匹配模式 =====
+^dev####https://development.example.com
+^staging####https://staging.example.com
+^test####https://testing.example.com
+api*####https://api-service.example.com
+admin*####https://admin.example.com
+^beta.####https://beta.mysite.com
+
+# ===== 结尾匹配模式 =====
+*test$####https://test-environment.example.com
+*.local####https://local-to-prod.example.com
+*.dev####https://www.mysite.com
+*-staging$####https://staging.mysite.com
+*config.json$####https://config.mysite.com
+
+# ===== URL模板替换功能 =====
+# 基础域名替换
+https://old-domain.com/*####https://new-domain.com/{1}
+# 复杂路径重写
+http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
+# 多段路径重组
+old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}
+# 域名和路径同时替换
+https://legacy.com/*/docs/*####https://modern.com/{1}/documentation/{2}
+# 参数重新排列
+site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
+# 重复使用占位符
+old.com/user/*####new.com/{1}/profile/{1}/settings
+# 部分占位符使用
+old.com/*/category/*/item/*####new.com/{1}/products/{3}
+
+# ===== 包含匹配模式（慎用） =====
+# demo####https://www.github.com
+# prototype####https://www.github.com
+# example.com####https://www.github.com
+# localhost####https://production.mysite.com
+
+# ===== 智能URL提取功能 =====
+link.zhihu.com/?target=####
+weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
+www.baidu.com/link?url=####
+mail.qq.com/cgi-bin/readtemplate?gourl=####
+redirect.example.com?target=####
+
+# ===== 多结果选择测试 =====
+multi####https://www.google.com
+multi####https://www.bing.com
+multi####https://www.yahoo.com
+service####https://api.mysite.com
+service####https://admin.mysite.com
+service####https://dashboard.mysite.com
+
+# ===== 开发场景测试 =====
+*webpack*####https://webpack.mysite.com
+*vscode*####https://code.mysite.com
+*postman*####https://api-docs.mysite.com
+*swagger*####https://docs.mysite.com
+*jenkins*####https://ci.mysite.com
+
+# ===== 内网映射测试 =====
+192.168.1.*####https://internal.mysite.com
+10.0.0.*####https://internal.mysite.com`
+    }
+
+    // 切换模式
+    function switchMode(mode) {
+      // 更新按钮状态
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active')
+      })
+      event.target.classList.add('active')
+
+      // 隐藏所有内容区域
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active')
+      })
+
+      // 显示选中的内容区域
+      document.getElementById(mode + '-content').classList.add('active')
+    }
+
+    // 复制配置
+    async function copyConfig(mode) {
+      const btn = event.target
+      const originalText = btn.innerHTML
+
+      // 检查剪贴板API支持
+      if (!navigator.clipboard) {
+        console.warn('浏览器不支持剪贴板API，使用降级方案')
+        fallbackCopy(mode)
+        return
+      }
+
+      try {
+        const config = configs[mode]
+
+        // 尝试写入剪贴板
+        await navigator.clipboard.writeText(config)
+
+        // 验证是否真的复制成功
+        const clipboardText = await navigator.clipboard.readText()
+        if (clipboardText === config) {
+          console.log('复制成功验证通过')
+
+          // 更新按钮状态
+          btn.innerHTML = '✅ 已复制'
+          btn.classList.add('copied')
+
+          // 显示成功提示
+          showSuccessToast()
+
+          // 恢复按钮状态
+          setTimeout(() => {
+            btn.innerHTML = originalText
+            btn.classList.remove('copied')
+          }, 2000)
+        } else {
+          throw new Error('复制验证失败')
+        }
+
+      } catch (err) {
+        console.error('剪贴板操作失败:', err)
+        fallbackCopy(mode)
+      }
+    }
+
+    // 降级复制方案
+    function fallbackCopy(mode) {
+      try {
+        const configElement = document.getElementById(mode + '-config')
+        const range = document.createRange()
+        range.selectNode(configElement)
+        window.getSelection().removeAllRanges()
+        window.getSelection().addRange(range)
+
+        // 尝试使用旧的execCommand
+        const success = document.execCommand('copy')
+        if (success) {
+          console.log('降级复制成功')
+          showSuccessToast()
+        } else {
+          alert('自动复制失败，已为您选中配置内容，请按 Ctrl+C (Windows) 或 Cmd+C (Mac) 手动复制')
+        }
+      } catch (err) {
+        console.error('降级复制也失败:', err)
+        alert('自动复制失败，已为您选中配置内容，请按 Ctrl+C (Windows) 或 Cmd+C (Mac) 手动复制')
+      }
+    }
+
+    // 显示成功提示
+    function showSuccessToast() {
+      const toast = document.getElementById('success-toast')
+      toast.classList.add('show')
+
+      setTimeout(() => {
+        toast.classList.remove('show')
+      }, 3000)
+    }
+
+    // 页面加载完成后的初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      // 检查是否支持剪贴板API
+      if (!navigator.clipboard) {
+        console.warn('浏览器不支持剪贴板API，将使用降级方案')
+      }
+
+      // 初始化配置内容显示
+      initConfigDisplay()
+    })
+
+    // 初始化配置内容显示
+    function initConfigDisplay() {
+      // 将配置内容填充到对应的显示区域
+      Object.keys(configs).forEach(mode => {
+        const configElement = document.getElementById(mode + '-config')
+        if (configElement) {
+          configElement.textContent = configs[mode]
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

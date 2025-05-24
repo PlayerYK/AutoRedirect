@@ -1,0 +1,186 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AutoRedirect API参考规则
+
+## Chrome扩展API
+
+### chrome.tabs API
+在 [script/background.js](mdc:script/background.js) 中使用的标签页相关API：
+
+```javascript
+// 监听标签页更新事件
+chrome.tabs.onUpdated.addListener(checkForValidUrl);
+
+// 查询当前活动标签页
+chrome.tabs.query({active:true, windowId: chrome.windows.WINDOW_ID_CURRENT}, callback);
+
+// 更新标签页URL
+chrome.tabs.update(tabId, {url: newUrl});
+
+// 创建新标签页
+chrome.tabs.create({url: url, index: index, active: true}, callback);
+```
+
+### chrome.webRequest API
+用于拦截和重定向网络请求：
+
+```javascript
+// 监听请求前事件
+chrome.webRequest.onBeforeRequest.addListener(
+    function(details) { /* 处理逻辑 */ },
+    {
+        urls: ["http://*/*", "https://*/*"],
+        types: ["main_frame"]
+    },
+    ["blocking"]
+);
+
+// 返回重定向响应
+return {redirectUrl: newUrl};
+```
+
+### chrome.browserAction API
+控制扩展图标和弹出窗口：
+
+```javascript
+// 设置扩展图标
+chrome.browserAction.setIcon({path: "images/icon_19.png"});
+```
+
+### chrome.runtime API
+用于消息传递：
+
+```javascript
+// 发送消息
+chrome.runtime.sendMessage({
+    type: 'urls',
+    value: resultList
+});
+```
+
+### chrome.extension API
+获取扩展内部资源URL：
+
+```javascript
+// 获取扩展内部页面URL
+chrome.extension.getURL("chose.html");
+```
+
+## 核心函数参考
+
+### background.js 中的关键函数
+
+#### checkForValidUrl(tabId, changeInfo, tab)
+- **功能**：监听标签页URL变化的回调函数
+- **参数**：
+  - `tabId`: 标签页ID
+  - `changeInfo`: 变化信息对象
+  - `tab`: 标签页对象
+- **触发条件**：检测到file://协议的URL时启动处理流程
+
+#### startProcess(tab)
+- **功能**：处理本地文件重定向的核心函数
+- **参数**：`tab` - 当前标签页对象
+- **流程**：
+  1. 获取当前标签页URL
+  2. 解析重定向规则
+  3. 匹配URL模式
+  4. 执行重定向或显示选择页面
+
+#### debugLog(obj, level)
+- **功能**：调试信息输出函数
+- **参数**：
+  - `obj`: 要输出的对象或消息
+  - `level`: 调试级别（默认0）
+- **控制**：通过 `show_debug_level` 变量控制输出级别
+
+## 数据存储API
+
+### localStorage使用
+项目中使用localStorage存储用户配置：
+
+```javascript
+// 存储重定向规则
+localStorage['jump_list'] = ruleString;
+
+// 存储自动重定向开关状态
+localStorage['jump_list_auto'] = isEnabled;
+
+// 读取配置
+var jumpList = localStorage['jump_list'];
+var isAuto = localStorage['jump_list_auto'] || 0;
+```
+
+### 存储数据格式
+
+#### jump_list
+- **格式**：多行文本，每行一个规则
+- **规则格式**：`原始URL模式####目标URL模式`
+- **示例**：
+  ```
+  local/path####http://mydevurl.com/subpath/
+  myDevUrl.com/path####http://myOnlineUrl.com/subpath/
+  ```
+
+#### jump_list_auto
+- **格式**：数字字符串
+- **值**：`"0"` (关闭) 或 `"1"` (开启)
+
+### AJAX请求
+在 [script/background.js](mdc:script/background.js) 中加载远程规则：
+
+```javascript
+$.ajax({
+    url: regPatternUrl,
+    type: 'get',
+    dataType: 'text',
+    success: function(response) {
+        localStorage['jump_list'] = response;
+    }
+});
+```
+
+## 正则表达式处理
+
+### URL模式匹配
+在 [script/background.js](mdc:script/background.js) 中的模式处理：
+
+```javascript
+// 转义特殊字符
+var regStr = pattern
+    .replace(/\//g, '\\/')     // 转义斜杠
+    .replace(/\*/g, '\.\*\?')  // 通配符转正则
+    .replace(/\n/g, '')        // 移除换行
+    .replace(/\r/g, '');       // 移除回车
+
+// 创建正则表达式
+var reg = new RegExp(".*" + regStr, 'i');
+
+// 测试匹配
+if (reg.test(url)) {
+    var newUrl = url.replace(reg, targetPattern);
+}
+```
+
+## 事件处理模式
+
+### 扩展生命周期事件
+- **扩展启动**：background.js自动执行初始化代码
+- **标签页变化**：chrome.tabs.onUpdated事件
+- **网络请求**：chrome.webRequest.onBeforeRequest事件
+
+### 用户界面事件
+- **弹出窗口**：在 [script/popup_switch.js](mdc:script/popup_switch.js) 中处理开关切换
+- **选项页面**：在 [script/options.js](mdc:script/options.js) 中处理规则保存
+- **选择页面**：在 [script/chose.js](mdc:script/chose.js) 中处理用户选择
+
+## 错误处理模式
+
+### 常见错误处理
+- **规则解析错误**：检查规则格式是否包含"####"分隔符
+- **URL匹配失败**：返回空结果数组，不执行重定向
+- **权限错误**：确保manifest.json中声明了必要权限
+- **存储错误**：使用默认值处理localStorage读取失败

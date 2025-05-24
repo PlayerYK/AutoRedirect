@@ -1,1 +1,20 @@
+# AutoRedirect 规则配置文件
+# 格式：匹配模式####目标URL
+# 支持的匹配模式：
+# =pattern - 精确匹配
+# ^pattern 或 pattern* - 开头匹配  
+# *pattern 或 pattern$ - 结尾匹配
+# pattern - 包含匹配（默认）
+
+# 原有规则
 paipai/static/####http://static.paipaiimg.com/
+
+# 测试规则 - 针对您的具体文件路径
+# 方式1：结尾匹配（推荐，最安全）
+*autoredirect_test.html####https://www.google.com
+
+# 方式2：包含匹配（简单有效）
+autoredirect_test.html####https://www.google.com
+
+# 方式3：精确的完整路径匹配（如果需要完全精确）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.google.com
