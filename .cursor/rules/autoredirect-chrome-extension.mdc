@@ -83,7 +83,7 @@ AutoRedirect是一个功能强大的Chrome浏览器扩展，专门用于自动�
 *autoredirect_test.html$####https://www.example.com/autoRedirect/
 
 # 完整file://协议路径匹配（最精确）
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
 ```
 
 #### 通配符本地文件重定向
@@ -92,7 +92,7 @@ AutoRedirect是一个功能强大的Chrome浏览器扩展，专门用于自动�
 *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
 
 # file://协议的通配符匹配（最精确的批量匹配）
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
 ```
 
 #### 高级重定向场景

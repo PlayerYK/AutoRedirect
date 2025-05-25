@@ -17,4 +17,4 @@ paipai/static/####http://static.paipaiimg.com/
 autoredirect_test.html####https://www.google.com
 
 # 方式3：精确的完整路径匹配（如果需要完全精确）
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.google.com
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.google.com

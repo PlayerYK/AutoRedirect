@@ -8,7 +8,7 @@
 2. 访问 `chrome://extensions/`
 3. 启用右上角的"开发者模式"
 4. 点击"加载已解压的扩展程序"
-5. 选择项目根目录 `/Users/yukun/dev/ChromeStore/autoRedirect`
+5. 选择项目根目录 `/Users/ExtTeam/dev/ChromeStore/autoRedirect`
 
 ### 一键测试
 
@@ -67,9 +67,9 @@
 - ✅ 文件扩展名转换
 - ✅ 跨用户开发环境映射
 - **测试用例**:
-  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html` → `https://www.example.com/autoRedirect/`
-  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html` → `https://www.example.com/options/`
-  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/test.html` → `https://www.example.com/test.php`
+  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html` → `https://www.example.com/autoRedirect/`
+  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/options.html` → `https://www.example.com/options/`
+  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/test.html` → `https://www.example.com/test.php`
 
 ### 2. 精确匹配模式 (=前缀)
 - ✅ 完全匹配测试
@@ -190,9 +190,9 @@ link.zhihu.com/?target=####
 
 # 本地文件重定向测试（精简后的7个核心规则）
 *autoredirect_test.html$####https://www.example.com/autoRedirect/
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
 *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
 *ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
 =file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
 *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php

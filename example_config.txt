@@ -9,14 +9,14 @@
 *autoredirect_local.html$####https://www.example.com/autoRedirect/
 
 # 2. 完整file://协议路径匹配（最精确）
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html####https://www.example.com/autoRedirect/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html####https://www.example.com/autoRedirect/
 
 # --- 通配符本地文件重定向（URL模板替换） ---
 # 3. 路径通配符匹配（推荐用于批量重定向）
 *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
 
 # 4. file://协议的通配符匹配（最精确的批量匹配）
-=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
 
 # 5. 多通配符匹配（支持子目录结构）
 *ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
@@ -78,18 +78,18 @@ link.zhihu.com/?target=####
 # 以下是具体的测试用例，展示不同规则的实际效果
 
 # 测试用例1：基础文件重定向（包含匹配）
-# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html
+# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html
 # 输出: https://www.example.com/autoRedirect/
 # 规则: *autoredirect_local.html####https://www.example.com/autoRedirect/
 # 说明: 使用包含匹配，能正确匹配浏览器中本地文件的实际URL格式
 
 # 测试用例2：通配符文件名提取
-# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html
+# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/options.html
 # 输出: https://www.example.com/options/
 # 规则: *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
 
 # 测试用例3：多通配符子目录处理
-# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/subfolder/test.html
+# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/subfolder/test.html
 # 输出: https://www.example.com/subfolder/test/
 # 规则: *ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
 
@@ -123,12 +123,12 @@ multi####https://www.yahoo.com
 #    a) 基础匹配模式：
 #       - 包含匹配：*autoredirect_local.html（推荐，匹配任何包含该文件名的路径）
 #       - 路径包含匹配：*ChromeStore/autoRedirect/autoredirect_local.html（匹配包含指定路径的文件）
-#       - file://协议：file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html（最精确）
+#       - file://协议：file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html（最精确）
 #       - 注意：精确匹配如=autoredirect_local.html或=/ChromeStore/...不适用于本地文件，因为浏览器URL包含完整的file://协议路径
 #    b) 通配符模式（URL模板替换）：
 #       - 单通配符：*ChromeStore/autoRedirect/*.html -> {1}前缀路径，{2}文件名
 #       - 多通配符：*ChromeStore/autoRedirect/*/*.html -> {1}前缀路径，{2}子目录，{3}文件名
-#       - 精确通配符：=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html -> {1}文件名
+#       - 精确通配符：=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html -> {1}文件名
 #    c) 高级应用场景：
 #       - 开发环境映射：本地文件 -> 生产环境URL
 #       - 扩展名转换：.html -> .php
