@@ -13,6 +13,43 @@ const RedirectEngine = require('./script/redirect-engine.js');
 
 // 基于 example_config.txt 的实际测试用例
 const configTestCases = [
+    // ===== 本地文件重定向测试 =====
+    {
+        category: "本地文件重定向",
+        tests: [
+            {
+                name: "结尾匹配 - autoredirect_test.html",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html",
+                expected: "https://www.example.com/autoRedirect/"
+            },
+            {
+                name: "完整file://协议路径匹配",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html",
+                expected: "https://www.example.com/autoRedirect/"
+            },
+            {
+                name: "路径通配符匹配 - 提取文件名",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html",
+                expected: "https://www.example.com/options/"
+            },
+            {
+                name: "file://协议通配符匹配",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/popup.html",
+                expected: "https://www.example.com/popup/"
+            },
+            {
+                name: "多通配符匹配 - 子目录支持",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/subfolder/test.html",
+                expected: "https://www.example.com/subfolder/test/"
+            },
+            {
+                name: "文件扩展名转换",
+                input: "file:///Users/yukun/dev/ChromeStore/autoRedirect/test.html",
+                expected: "https://www.example.com/test.php"
+            }
+        ]
+    },
+    
     // ===== 精确匹配模式测试 =====
     {
         category: "精确匹配模式",

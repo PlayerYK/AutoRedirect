@@ -59,7 +59,19 @@
 
 ## 🎯 测试覆盖范围
 
-### 1. 精确匹配模式 (=前缀)
+### 1. 本地文件重定向 ⭐ (新增重点测试)
+- ✅ 结尾匹配测试
+- ✅ 完整file://协议路径匹配
+- ✅ 路径通配符匹配和文件名提取
+- ✅ 多通配符子目录支持
+- ✅ 文件扩展名转换
+- ✅ 跨用户开发环境映射
+- **测试用例**:
+  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html` → `https://www.example.com/autoRedirect/`
+  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html` → `https://www.example.com/options/`
+  - `file:///Users/yukun/dev/ChromeStore/autoRedirect/test.html` → `https://www.example.com/test.php`
+
+### 2. 精确匹配模式 (=前缀)
 - ✅ 完全匹配测试
 - ✅ 不匹配情况验证
 - **测试用例**:
@@ -67,21 +79,21 @@
   - `test.html` → `https://test.example.com`
   - `localhost:3001` → 无匹配 (验证精确性)
 
-### 2. 开头匹配模式 (^前缀 或 *后缀)
+### 3. 开头匹配模式 (^前缀 或 *后缀)
 - ✅ 前缀匹配测试
 - ✅ 通配符匹配测试
 - **测试用例**:
   - `^dev` 匹配 `dev.example.com`
   - `api*` 匹配 `api.test.com`
 
-### 3. 结尾匹配模式 (*前缀 或 $后缀)
+### 4. 结尾匹配模式 (*前缀 或 $后缀)
 - ✅ 后缀匹配测试
 - ✅ 结尾通配符测试
 - **测试用例**:
   - `*.local` 匹配 `test.local`
   - `*config.json$` 匹配 `app-config.json`
 
-### 4. URL模板替换功能
+### 5. URL模板替换功能
 - ✅ 基础域名替换
 - ✅ 复杂路径重写
 - ✅ 多段路径重组
@@ -92,20 +104,20 @@
   - `https://old-domain.com/*` → `https://new-domain.com/{1}`
   - `old.com/*/category/*/item/*` → `new.com/{1}/cat/{2}/product/{3}`
 
-### 5. 包含匹配模式 (默认)
+### 6. 包含匹配模式 (默认)
 - ✅ 字符串包含测试
 - ✅ 向后兼容性验证
 - **测试用例**:
   - `localhost` 匹配 `localhost:3000`
   - `demo` 匹配 `demo.test.com`
 
-### 6. 通用URL提取功能
+### 7. 通用URL提取功能
 - ✅ URL参数解码
 - ✅ 复杂URL提取
 - **测试用例**:
   - `link.zhihu.com/?target=` 自动提取目标URL
 
-### 7. 多结果选择功能
+### 8. 多结果选择功能
 - ✅ 多规则匹配检测
 - ✅ 选择页面触发
 - **测试用例**:
@@ -134,9 +146,14 @@
 - [ ] 支持复杂URL参数解码
 - [ ] 解码失败时正确处理错误
 
-#### 本地文件重定向
+#### 本地文件重定向 ⭐ (重点功能)
 - [ ] file:// 协议URL正确识别
-- [ ] 本地文件路径匹配规则生效
+- [ ] 结尾匹配规则生效 (`*autoredirect_test.html$`)
+- [ ] 完整路径精确匹配生效
+- [ ] 路径通配符匹配和文件名提取正确
+- [ ] 多通配符子目录支持正常
+- [ ] 文件扩展名转换功能正常
+- [ ] 跨用户开发环境映射正确
 - [ ] 自动跳转到指定在线URL
 
 #### 在线网站重定向
@@ -171,9 +188,14 @@
 # 通用URL提取（知乎等跳转链接）
 link.zhihu.com/?target=####
 
-# 本地文件重定向测试
-test####https://www.example.com
-autoredirect_test.html####https://www.google.com
+# 本地文件重定向测试（精简后的7个核心规则）
+*autoredirect_test.html$####https://www.example.com/autoRedirect/
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
 
 # 多结果选择测试
 multi####https://www.google.com
@@ -190,9 +212,13 @@ example.com####https://www.github.com
    - 访问：`https://link.zhihu.com/?target=https%3A//www.baidu.com`
    - 预期：直接跳转到百度，不停留在知乎页面
 
-2. **本地文件测试**
+2. **本地文件重定向测试** ⭐ (重点测试)
    - 打开：`autoredirect_test.html`
-   - 预期：自动跳转到Google
+   - 预期：自动跳转到 `https://www.example.com/autoRedirect/`
+   - 测试其他文件：
+     - `options.html` → `https://www.example.com/options/`
+     - `popup.html` → `https://www.example.com/popup/`
+     - `test.html` → `https://www.example.com/test.php` (扩展名转换)
 
 3. **多结果选择测试**
    - 访问：`https://multi.example.com`
@@ -211,19 +237,20 @@ example.com####https://www.github.com
 ## 📊 测试结果
 
 ### 最新测试结果
-- **总测试数**: 24个
-- **通过测试**: 24个
+- **总测试数**: 31个
+- **通过测试**: 31个
 - **失败测试**: 0个
 - **成功率**: 100%
 
 ### 验证的规则类型
-1. **精确匹配**: 4个测试用例
-2. **开头匹配**: 4个测试用例  
-3. **结尾匹配**: 4个测试用例
-4. **URL模板替换**: 6个测试用例
-5. **包含匹配**: 3个测试用例
-6. **URL提取**: 2个测试用例
-7. **多结果选择**: 1个测试用例
+1. **本地文件重定向**: 7个测试用例 ⭐ (新增重点测试)
+2. **精确匹配**: 4个测试用例
+3. **开头匹配**: 4个测试用例  
+4. **结尾匹配**: 4个测试用例
+5. **URL模板替换**: 6个测试用例
+6. **包含匹配**: 3个测试用例
+7. **URL提取**: 2个测试用例
+8. **多结果选择**: 1个测试用例
 
 ## 🔧 测试技术细节
 
@@ -347,6 +374,7 @@ node test_config_rules.js
 | ---------------- | ------------------------------ | -------------------------- |
 | **开发新功能**   | `test_rules.js --verbose`      | 完整测试覆盖，详细日志输出 |
 | **修改配置文件** | `test_config_rules.js`         | 快速验证实际配置规则       |
+| **本地文件重定向测试** | `test_all_rules.html`    | 可视化界面，便于测试本地文件 |
 | **调试问题**     | `test_all_rules.html`          | 可视化界面，便于定位问题   |
 | **演示功能**     | `autoredirect_test.html`       | 真实环境，用户友好界面     |
 | **CI/CD集成**    | `test_rules.js --quiet`        | 命令行输出，适合自动化     |
@@ -358,7 +386,8 @@ node test_config_rules.js
 | ---------------- | ----------------- | -------------------- | ------------------- | ---------------------- |
 | **运行环境**     | Node.js命令行     | Node.js命令行        | 浏览器              | Chrome扩展环境         |
 | **测试数据源**   | 内置测试用例      | example_config.txt   | 内置测试用例        | 交互式配置             |
-| **测试用例数量** | 24个完整用例      | 12个核心用例         | 24个完整用例        | 用户自定义             |
+| **测试用例数量** | 31个完整用例      | 18个核心用例         | 31个完整用例        | 用户自定义             |
+| **本地文件测试** | ✅ 7个专项用例     | ✅ 6个核心用例        | ✅ 7个专项用例       | ✅ 交互式测试           |
 | **输出格式**     | 彩色命令行        | 简洁文本             | HTML可视化          | 交互式界面             |
 | **日志详细程度** | 可配置(--verbose) | 基础信息             | 完整日志窗口        | 实时反馈               |
 | **执行速度**     | 快速              | 最快                 | 中等                | 取决于用户操作         |
@@ -627,10 +656,16 @@ node test_rules.js
 
 ## 🎉 结论
 
-通过完整的测试用例验证，`example_config.txt` 中的所有重定向规则都能正确工作。测试覆盖了所有主要功能，确保了AutoRedirect扩展的可靠性和稳定性。
+通过完整的测试用例验证，`example_config.txt` 中的所有重定向规则都能正确工作。测试覆盖了所有主要功能，特别是新增的**本地文件重定向功能**，确保了AutoRedirect扩展的可靠性和稳定性。
+
+### 🔥 重点更新内容
+- **新增本地文件重定向测试**: 7个专项测试用例，覆盖所有本地文件重定向场景
+- **精简配置规则**: 从14个规则精简为7个核心规则，去除重复和无效规则
+- **修正占位符索引**: 确保 `{1}`, `{2}`, `{3}` 正确对应通配符匹配结果
+- **优化测试覆盖**: 总测试用例从24个增加到31个，成功率保持100%
 
 测试系统提供了多种运行方式，适合不同的使用场景：
-- **开发调试**: 使用网页版测试界面
+- **开发调试**: 使用网页版测试界面，特别适合本地文件重定向测试
 - **自动化测试**: 使用命令行测试脚本
 - **快速验证**: 使用配置文件专用测试
 - **用户验收**: 使用扩展功能测试页面

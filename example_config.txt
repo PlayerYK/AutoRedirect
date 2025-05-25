@@ -1,6 +1,34 @@
 # AutoRedirect 配置示例
 # 支持井号注释功能 - 以#开头的行会被忽略
 
+# ===== 本地文件路径重定向规则汇总 =====
+# 支持多种本地文件路径格式和匹配模式
+
+# --- 基础本地文件重定向 ---
+# 1. 结尾匹配（推荐，安全且精确）
+*autoredirect_test.html$####https://www.example.com/autoRedirect/
+
+# 2. 完整file://协议路径匹配（最精确）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
+
+# --- 通配符本地文件重定向（URL模板替换） ---
+# 3. 路径通配符匹配（推荐用于批量重定向）
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+
+# 4. file://协议的通配符匹配（最精确的批量匹配）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+
+# 5. 多通配符匹配（支持子目录结构）
+*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+
+# --- 高级本地文件重定向场景 ---
+# 6. 本地开发环境到生产环境映射（跨用户通用）
+=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
+
+# 7. 本地文件扩展名转换
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
+
+
 # ===== 精确匹配模式 =====
 # 使用 = 前缀，只匹配完全相同的URL，避免误触发
 # 示例：=localhost:3000 只匹配 "localhost:3000"，不匹配 "localhost:3001" 或 "mylocalhost:3000"
@@ -47,6 +75,27 @@ demo####https://www.example.com
 # 示例：link.zhihu.com/?target=https%3A//example.com 会自动解码并跳转到 https://example.com
 link.zhihu.com/?target=####
 
+# ===== 本地文件重定向测试用例 =====
+# 以下是具体的测试用例，展示不同规则的实际效果
+
+# 测试用例1：基础文件重定向（包含匹配）
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html
+# 输出: https://www.example.com/autoRedirect/
+# 规则: *autoredirect_test.html####https://www.example.com/autoRedirect/
+# 说明: 使用包含匹配，能正确匹配浏览器中本地文件的实际URL格式
+
+# 测试用例2：通配符文件名提取
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html
+# 输出: https://www.example.com/options/
+# 规则: *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+
+# 测试用例3：多通配符子目录处理
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/subfolder/test.html
+# 输出: https://www.example.com/subfolder/test/
+# 规则: *ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+
+
+
 # ===== 多结果选择测试 =====
 # 当一个URL匹配多个规则时，会显示选择页面让用户选择
 # 示例：访问包含 "multi" 的URL时，会弹出选择页面让用户选择跳转到哪个目标
@@ -70,4 +119,24 @@ multi####https://www.yahoo.com
 #    - 支持占位符重复使用和重新排列
 #    - 示例：old.com/*/page/*####new.com/{1}/newpage/{2}
 # 7. 建议优先使用精确匹配，避免意外重定向
-# 8. 规则按从上到下的顺序匹配，精确匹配应放在前面 
+# 8. 规则按从上到下的顺序匹配，精确匹配应放在前面
+# 9. 本地文件路径重定向详细说明：
+#    a) 基础匹配模式：
+#       - 包含匹配：*autoredirect_test.html（推荐，匹配任何包含该文件名的路径）
+#       - 路径包含匹配：*ChromeStore/autoRedirect/autoredirect_test.html（匹配包含指定路径的文件）
+#       - file://协议：file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_test.html（最精确）
+#       - 注意：精确匹配如=autoredirect_test.html或=/ChromeStore/...不适用于本地文件，因为浏览器URL包含完整的file://协议路径
+#    b) 通配符模式（URL模板替换）：
+#       - 单通配符：*ChromeStore/autoRedirect/*.html -> {1}前缀路径，{2}文件名
+#       - 多通配符：*ChromeStore/autoRedirect/*/*.html -> {1}前缀路径，{2}子目录，{3}文件名
+#       - 精确通配符：=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html -> {1}文件名
+#    c) 高级应用场景：
+#       - 开发环境映射：本地文件 -> 生产环境URL
+#       - 扩展名转换：.html -> .php
+#       - 批量重定向：整个目录的文件统一重定向
+#       - 条件匹配：根据文件名模式（如test、config）重定向到不同服务
+#    d) 最佳实践：
+#       - 优先使用精确匹配（=前缀）避免误触发
+#       - 通配符规则放在精确规则之后
+#       - 测试时先用简单规则验证，再使用复杂通配符
+#       - 注意占位符索引{1},{2}对应通配符*的出现顺序 
