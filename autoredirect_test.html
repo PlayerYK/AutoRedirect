@@ -297,6 +297,10 @@
       background: #dc3545;
     }
 
+    .wildcard {
+      background: #6f42c1;
+    }
+
     /* 公共说明样式 */
     .common-info {
       background: linear-gradient(135deg, #e8f4f8, #d1ecf1);
@@ -362,6 +366,16 @@
       transform: translateX(0);
     }
 
+    /* 本地文件测试特殊样式 */
+    .local-file-section {
+      background: linear-gradient(135deg, #e8f5e8, #d4edda);
+      border: 2px solid #28a745;
+    }
+
+    .local-file-section h3 {
+      color: #155724;
+    }
+
     /* 响应式设计 */
     @media (max-width: 768px) {
       .container {
@@ -393,14 +407,14 @@
 <body>
   <div class="container">
     <h1>🚀 AutoRedirect 全功能测试</h1>
-    <p class="subtitle">选择测试模式，获取配置，开始测试</p>
+    <p class="subtitle">选择测试模式，获取配置，开始测试 - 支持本地文件重定向</p>
 
     <!-- 使用指南 -->
     <div class="usage-guide">
       <h3>📋 使用指南</h3>
       <div class="usage-steps">
         <div class="usage-step">
-          <strong>选择测试模式：</strong>根据您的需求选择基础测试、高级测试或完整测试模式
+          <strong>选择测试模式：</strong>根据您的需求选择基础测试、本地文件测试、高级测试或完整测试模式
         </div>
         <div class="usage-step">
           <strong>复制配置：</strong>点击"一键复制配置"按钮，将配置内容复制到剪贴板
@@ -437,6 +451,9 @@
         <button class="mode-btn active" onclick="switchMode('basic')">
           🔰 基础测试
         </button>
+        <button class="mode-btn" onclick="switchMode('localfile')">
+          📁 本地文件测试
+        </button>
         <button class="mode-btn" onclick="switchMode('advanced')">
           ⚡ 高级测试
         </button>
@@ -466,7 +483,7 @@
 
           <div class="test-link">
             <strong>测试方法：</strong><br>
-            在地址栏访问：<code>https://example.com/</code> 或 <code>https://test.example.com/</code>
+            在地址栏访问：<code>localhost:3000</code>
           </div>
 
           <div class="expected">
@@ -485,7 +502,7 @@
           </div>
 
           <div class="expected">
-            <strong>预期结果：</strong> dev开头的URL跳转到 development.example.com，api开头的URL跳转到 api-service.example.com
+            <strong>预期结果：</strong> dev开头的URL跳转到 development.example.com，api开头的URL跳转到 api.example.com
           </div>
         </div>
 
@@ -496,25 +513,11 @@
 
           <div class="test-link">
             <strong>测试方法：</strong><br>
-            在地址栏访问：<code>https://myapp.local</code> 或 <code>https://myproject-test</code>
+            在地址栏访问：<code>https://myapp.local</code> 或 <code>https://myproject-config.json</code>
           </div>
 
           <div class="expected">
-            <strong>预期结果：</strong> .local结尾的URL跳转到 local-to-prod.example.com，-test结尾的URL跳转到 test-environment.example.com
-          </div>
-        </div>
-
-        <div class="test-case">
-          <h4>📍 包含匹配测试</h4>
-          <p>测试包含匹配模式（默认模式，⚠️ 慎用！全局匹配易出错），匹配URL中包含指定字符串的情况</p>
-
-          <div class="test-link">
-            <strong>测试方法：</strong><br>
-            在地址栏访问：<code>http://localhost:3000/</code> 或包含 <code>demo</code> 的URL
-          </div>
-
-          <div class="expected">
-            <strong>预期结果：</strong> localhost:3000 包含匹配跳转到 exact-localhost.example.com，demo 跳转到 GitHub
+            <strong>预期结果：</strong> .local结尾的URL跳转到 production.example.com，config.json结尾的URL跳转到 config.example.com
           </div>
         </div>
 
@@ -529,13 +532,6 @@
             </a>
           </div>
 
-          <div class="test-link">
-            <strong>百度链接测试：</strong><br>
-            <a href="https://www.baidu.com/link?url=https%3A//www.google.com" target="_blank">
-              百度跳转到Google
-            </a>
-          </div>
-
           <div class="expected">
             <strong>预期结果：</strong> 基于匹配的规则模式自动提取并解码URL参数，直接跳转到目标网站
           </div>
@@ -543,7 +539,7 @@
 
         <div class="test-case">
           <h4>🎯 URL模板替换测试</h4>
-          <p>测试URL模板替换功能</p>
+          <p>测试URL模板替换功能，使用 <span class="match-type-badge wildcard">*</span> 通配符和 <code>{1}, {2}, {3}</code> 占位符</p>
 
           <div class="test-link">
             <strong>简单域名替换：</strong><br>
@@ -559,238 +555,297 @@
             </a>
           </div>
 
+          <div class="expected">
+            <strong>预期结果：</strong> 根据规则跳转到新的目标网站，路径参数被正确替换
+            </div>
+            </div>
+            </div>
+            </div>
+
+    <!-- 本地文件测试配置 -->
+    <div id="localfile-content" class="content-section">
+      <div class="config-section local-file-section">
+        <div class="config-header">
+          <h3><span class="icon">📁</span> 本地文件重定向测试配置</h3>
+          <button class="copy-btn" onclick="copyConfig('localfile')">
+            📋 一键复制配置
+          </button>
+          </div>
+        <p>专门用于测试本地文件路径重定向功能，支持多种本地文件路径格式和匹配模式：</p>
+        <div class="config-box" id="localfile-config"></div>
+        </div>
+
+      <div class="test-cases">
+        <div class="test-case">
+          <h4>📄 基础本地文件重定向</h4>
+          <p>测试基础的本地文件重定向功能</p>
+
           <div class="test-link">
-            <strong>多段路径重组：</strong><br>
-            <a href="old.com/category/item" target="_blank">
-              old.com/category/item
+            <strong>结尾匹配测试（推荐）：</strong><br>
+            在浏览器中打开本地文件：<code>file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html</code>
+            </div>
+            
+            <div class="test-link">
+              <strong>完整路径匹配测试：</strong><br>
+              使用精确的file://协议路径匹配
+            </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 本地HTML文件自动跳转到 https://www.example.com/autoRedirect/
+            </div>
+            </div>
+
+        <div class="test-case">
+          <h4>🎯 通配符本地文件重定向</h4>
+          <p>测试使用 <span class="match-type-badge wildcard">*</span> 通配符的批量本地文件重定向</p>
+
+          <div class="test-link">
+            <strong>路径通配符测试：</strong><br>
+            打开任意 <code>ChromeStore/autoRedirect/*.html</code> 文件
+            </div>
+            
+            <div class="test-link">
+              <strong>file://协议通配符测试：</strong><br>
+              使用完整的file://协议路径进行通配符匹配
+            </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 文件名被提取并用于构建目标URL，如 options.html → https://www.example.com/options/
+            </div>
+            </div>
+
+        <div class="test-case">
+          <h4>🔧 高级本地文件重定向场景</h4>
+          <p>测试复杂的本地文件重定向场景</p>
+
+          <div class="test-link">
+            <strong>跨用户通用映射：</strong><br>
+            支持不同用户目录的通用匹配模式
+            </div>
+            
+            <div class="test-link">
+              <strong>扩展名转换：</strong><br>
+              本地HTML文件重定向到PHP页面
+            </div>
+            
+            <div class="test-link">
+              <strong>子目录结构处理：</strong><br>
+              支持多级目录的文件重定向
+            </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 复杂的路径结构被正确解析和重定向
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- 高级测试配置 -->
+    <div id="advanced-content" class="content-section">
+      <div class="config-section">
+        <div class="config-header">
+          <h3><span class="icon">⚡</span> 高级测试配置</h3>
+          <button class="copy-btn" onclick="copyConfig('advanced')">
+            📋 一键复制配置
+          </button>
+        </div>
+        <p>包含复杂匹配规则和开发场景的高级配置，适合深度测试：</p>
+        <div class="config-box" id="advanced-config"></div>
+      </div>
+    
+      <div class="test-cases">
+        <div class="test-case">
+          <h4>🎭 多结果选择测试</h4>
+          <p>测试多个匹配规则的选择功能</p>
+
+          <div class="test-link">
+            <strong>测试方法：</strong><br>
+            访问包含 <code>multi</code> 的URL
+            </div>
+            
+            <div class="expected">
+              <strong>预期结果：</strong> 显示选择页面，包含Google、Bing、Yahoo等多个选项
+            </div>
+            </div>
+            
+            <div class="test-case">
+              <h4>🔧 复杂URL模板替换</h4>
+              <p>测试高级的URL模板替换功能</p>
+            
+              <div class="test-link">
+                <strong>参数重新排列：</strong><br>
+                <a href="site.com/user/page/settings/section/profile" target="_blank">
+                  site.com/user/page/settings/section/profile
+                </a>
+              </div>
+            
+              <div class="test-link">
+                <strong>重复使用占位符：</strong><br>
+                <a href="old.com/user/john" target="_blank">
+                  old.com/user/john
+                </a>
+              </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> URL参数被重新排列或重复使用，跳转到新的结构化URL
+            </div>
+            </div>
+            </div>
+            </div>
+
+    <!-- 完整测试配置 -->
+    <div id="complete-content" class="content-section">
+      <div class="config-section">
+        <div class="config-header">
+          <h3><span class="icon">🎯</span> 完整测试配置</h3>
+          <button class="copy-btn" onclick="copyConfig('complete')">
+            📋 一键复制配置
+          </button>
+        </div>
+        <p>包含所有功能的完整配置，适合全面测试和生产环境使用：</p>
+        <div class="config-box" id="complete-config"></div>
+      </div>
+
+      <div class="test-cases">
+        <div class="test-case">
+          <h4>🎯 全功能综合测试</h4>
+          <p>测试所有匹配模式和功能的综合表现</p>
+
+          <div class="test-link">
+            <strong>精确匹配：</strong> 访问 localhost:3000 进行精确匹配测试
+            </div>
+
+          <div class="test-link">
+            <strong>开头匹配：</strong> 访问dev、api开头的URL
+            </div>
+
+          <div class="test-link">
+            <strong>结尾匹配：</strong> 访问.local、config.json结尾的URL
+            </div>
+
+          <div class="test-link">
+            <strong>本地文件：</strong> 打开本地HTML文件测试重定向功能
+            </div>
+
+          <div class="expected">
+            <strong>预期结果：</strong> 所有匹配模式都能正确工作，根据不同规则跳转到对应目标
+          </div>
+          </div>
+
+        <div class="test-case">
+          <h4>🔗 智能URL提取全测试</h4>
+          <p>测试所有支持的URL提取和解码功能</p>
+
+          <div class="test-link">
+            <strong>知乎链接：</strong><br>
+            <a href="https://link.zhihu.com/?target=https%3A//www.github.com" target="_blank">
+              知乎跳转到GitHub
             </a>
           </div>
 
           <div class="expected">
-            <strong>预期结果：</strong> 根据规则跳转到新的目标网站
+            <strong>预期结果：</strong> 所有链接都能正确提取目标URL并直接跳转
           </div>
-        </div>
+          </div>
       </div>
-    </div>
-  </div>
-
-  <!-- 高级测试配置 -->
-  <div id="advanced-content" class="content-section">
-    <div class="config-section">
-      <div class="config-header">
-        <h3><span class="icon">⚡</span> 高级测试配置</h3>
-        <button class="copy-btn" onclick="copyConfig('advanced')">
-          📋 一键复制配置
-        </button>
-      </div>
-      <p>包含复杂匹配规则和开发场景的高级配置，适合深度测试：</p>
-      <div class="config-box" id="advanced-config"></div>
-    </div>
-
-    <div class="test-cases">
-      <div class="test-case">
-        <h4>🔧 开发工具重定向</h4>
-        <p>测试开发工具相关的URL重定向功能</p>
-
-        <div class="test-link">
-          <strong>测试方法：</strong><br>
-          访问包含 webpack、vscode、postman、swagger、jenkins 等关键词的URL
-        </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 根据关键词跳转到对应的开发工具或文档站点
-        </div>
       </div>
 
-      <div class="test-case">
-        <h4>🌐 内网映射测试</h4>
-        <p>测试内网IP到外网域名的映射功能</p>
-
-        <div class="test-link">
-          <strong>测试方法：</strong><br>
-          访问 <code>192.168.1.100</code> 或 <code>10.0.0.50</code> 等内网地址
+    <!-- 公共说明信息 -->
+    <div class="common-info">
+      <h3>📚 匹配模式说明</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h5><span class="match-type-badge exact">精确匹配</span></h5>
+          <p>使用 <code>=</code> 前缀，只匹配完全相同的URL</p>
+          <p><small>最安全的匹配方式，避免误触发</small></p>
         </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 内网IP地址自动跳转到 internal.mysite.com
+        <div class="feature-card">
+          <h5><span class="match-type-badge prefix">开头匹配</span></h5>
+          <p>使用 <code>^</code> 前缀或 <code>*</code> 后缀</p>
+          <p><small>匹配以指定字符串开头的URL</small></p>
         </div>
+        <div class="feature-card">
+          <h5><span class="match-type-badge suffix">结尾匹配</span></h5>
+          <p>使用 <code>*</code> 前缀或 <code>$</code> 后缀</p>
+          <p><small>匹配以指定字符串结尾的URL</small></p>
+        </div>
+        <div class="feature-card">
+          <h5><span class="match-type-badge contains">包含匹配</span></h5>
+          <p>默认模式（⚠️ 慎用！全局匹配易出错）</p>
+          <p><small>仅用于向后兼容或明确知道跳转规则的情况</small></p>
+        </div>
+        <div class="feature-card">
+          <h5><span class="match-type-badge wildcard">通配符匹配</span></h5>
+          <p>使用 <code>*</code> 通配符和 <code>{1}, {2}, {3}</code> 占位符</p>
+          <p><small>支持URL模板替换和参数重组</small></p>
+        </div>
+        </div>
+        </div>
+        
+        <div class="common-info">
+          <h3>📁 本地文件重定向说明</h3>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h5>基础匹配模式</h5>
+              <ul>
+                <li><strong>包含匹配：</strong> *autoredirect_local.html（推荐）</li>
+                <li><strong>路径包含：</strong> *ChromeStore/autoRedirect/test.html</li>
+                <li><strong>file://协议：</strong> =file:///完整路径（最精确）</li>
+              </ul>
+            </div>
+            <div class="feature-card">
+              <h5>通配符模式</h5>
+              <ul>
+                <li><strong>单通配符：</strong> *ChromeStore/autoRedirect/*.html</li>
+                <li><strong>多通配符：</strong> *ChromeStore/autoRedirect/*/*.html</li>
+                <li><strong>精确通配符：</strong> =file:///path/*.html</li>
+              </ul>
+            </div>
+            <div class="feature-card">
+              <h5>高级应用场景</h5>
+              <ul>
+                <li><strong>开发环境映射：</strong> 本地文件 → 生产环境URL</li>
+                <li><strong>扩展名转换：</strong> .html → .php</li>
+                <li><strong>批量重定向：</strong> 整个目录统一重定向</li>
+                <li><strong>跨用户通用：</strong> 支持不同用户目录</li>
+              </ul>
+            </div>
+            <div class="feature-card">
+              <h5>最佳实践</h5>
+              <ul>
+                <li>优先使用精确匹配（=前缀）避免误触发</li>
+                <li>通配符规则放在精确规则之后</li>
+                <li>测试时先用简单规则验证</li>
+                <li>注意占位符索引{1},{2}对应通配符*的出现顺序</li>
+              </ul>
+            </div>
+      </div>
       </div>
 
-      <div class="test-case">
-        <h4>🎯 复杂匹配规则</h4>
-        <p>测试复合条件的匹配规则</p>
+    <div class="common-info">
+      <h3>🔧 故障排除指南</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h5>常见问题</h5>
+          <ul>
+            <li><strong>隐私模式报错：</strong> ERR_BLOCKED_BY_CLIENT 错误，需要在扩展管理页面启用"在无痕模式下启用"</li>
+            <li><strong>重定向不工作：</strong> 检查扩展是否启用，规则格式是否正确</li>
+            <li><strong>匹配不准确：</strong> 确认使用了正确的匹配模式前缀</li>
+            <li><strong>本地文件不跳转：</strong> 检查文件路径格式，确保使用了正确的匹配模式</li>
+            </ul>
+            </div>
 
-        <div class="test-link">
-          <strong>测试方法：</strong><br>
-          访问 <code>beta.example.com</code> 或 <code>myapp-staging</code>
+        <div class="feature-card">
+          <h5>调试方法</h5>
+          <ul>
+            <li>打开浏览器开发者工具</li>
+            <li>查看Console标签页的日志</li>
+            <li>检查Network标签页的请求</li>
+            <li>在扩展管理页面查看Service Worker日志</li>
+          </ul>
         </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> beta.开头的跳转到beta环境，-staging结尾的跳转到staging环境
         </div>
-      </div>
-
-      <div class="test-case">
-        <h4>🎭 多结果选择测试</h4>
-        <p>测试多个匹配规则的选择功能</p>
-
-        <div class="test-link">
-          <strong>测试方法：</strong><br>
-          访问包含 <code>service</code> 的URL
         </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 显示选择页面，包含API、管理后台、仪表板等多个选项
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 完整测试配置 -->
-  <div id="complete-content" class="content-section">
-    <div class="config-section">
-      <div class="config-header">
-        <h3><span class="icon">🎯</span> 完整测试配置</h3>
-        <button class="copy-btn" onclick="copyConfig('complete')">
-          📋 一键复制配置
-        </button>
-      </div>
-      <p>包含所有功能的完整配置，适合全面测试和生产环境使用：</p>
-      <div class="config-box" id="complete-config"></div>
-    </div>
-
-    <div class="test-cases">
-      <div class="test-case">
-        <h4>🎯 全功能综合测试</h4>
-        <p>测试所有匹配模式和功能的综合表现</p>
-
-        <div class="test-link">
-          <strong>精确匹配：</strong> 访问 example.com 或 test.example.com 进行精确匹配测试
-        </div>
-
-        <div class="test-link">
-          <strong>开头匹配：</strong> 访问dev、staging、test、api、admin、beta开头的URL
-        </div>
-
-        <div class="test-link">
-          <strong>结尾匹配：</strong> 访问test、.local、.dev、-staging、config.json结尾的URL
-        </div>
-
-        <div class="test-link">
-          <strong>包含匹配：</strong> 访问包含demo、prototype、example.com、localhost的URL（⚠️ 慎用！全局匹配易出错）
-        </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 所有匹配模式都能正确工作，根据不同规则跳转到对应目标
-        </div>
-      </div>
-
-      <div class="test-case">
-        <h4>🔗 智能URL提取全测试</h4>
-        <p>测试所有支持的URL提取和解码功能</p>
-
-        <div class="test-link">
-          <strong>知乎链接：</strong><br>
-          <a href="https://link.zhihu.com/?target=https%3A//www.github.com" target="_blank">
-            知乎跳转到GitHub
-          </a>
-        </div>
-
-        <div class="test-link">
-          <strong>微信安全链接：</strong><br>
-          <a href="https://weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=https%3A//www.google.com"
-            target="_blank">
-            微信安全跳转
-          </a>
-        </div>
-
-        <div class="test-link">
-          <strong>QQ邮箱链接：</strong><br>
-          <a href="https://mail.qq.com/cgi-bin/readtemplate?gourl=https%3A//www.github.com" target="_blank">
-            QQ邮箱跳转
-          </a>
-        </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 所有链接都能正确提取目标URL并直接跳转
-        </div>
-      </div>
-
-      <div class="test-case">
-        <h4>🎭 多选择和复杂场景</h4>
-        <p>测试多结果选择和复杂匹配场景</p>
-
-        <div class="test-link">
-          <strong>多选测试：</strong> 访问包含multi或service的URL
-        </div>
-
-        <div class="test-link">
-          <strong>开发工具：</strong> 访问包含webpack、vscode、postman等的URL
-        </div>
-
-        <div class="test-link">
-          <strong>内网映射：</strong> 访问192.168.1.*或10.0.0.*的内网地址
-        </div>
-
-        <div class="expected">
-          <strong>预期结果：</strong> 多选场景显示选择页面，其他场景正确跳转
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 公共说明信息 -->
-  <div class="common-info">
-    <h3>📚 匹配模式说明</h3>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h5><span class="match-type-badge exact">精确匹配</span></h5>
-        <p>使用 <code>=</code> 前缀，只匹配完全相同的URL</p>
-        <p><small>最安全的匹配方式，避免误触发</small></p>
-      </div>
-      <div class="feature-card">
-        <h5><span class="match-type-badge prefix">开头匹配</span></h5>
-        <p>使用 <code>^</code> 前缀或 <code>*</code> 后缀</p>
-        <p><small>匹配以指定字符串开头的URL</small></p>
-      </div>
-      <div class="feature-card">
-        <h5><span class="match-type-badge suffix">结尾匹配</span></h5>
-        <p>使用 <code>*</code> 前缀或 <code>$</code> 后缀</p>
-        <p><small>匹配以指定字符串结尾的URL</small></p>
-      </div>
-      <div class="feature-card">
-        <h5><span class="match-type-badge contains">包含匹配</span></h5>
-        <p>默认模式（⚠️ 慎用！全局匹配易出错）</p>
-        <p><small>仅用于向后兼容或明确知道跳转规则的情况</small></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="common-info">
-    <h3>🔧 故障排除指南</h3>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h5>常见问题</h5>
-        <ul>
-          <li><strong>隐私模式报错：</strong> ERR_BLOCKED_BY_CLIENT 错误，需要在扩展管理页面启用"在无痕模式下启用"</li>
-          <li><strong>重定向不工作：</strong> 检查扩展是否启用，规则格式是否正确</li>
-          <li><strong>匹配不准确：</strong> 确认使用了正确的匹配模式前缀</li>
-          <li><strong>页面无响应：</strong> 查看浏览器控制台错误信息</li>
-          <li><strong>部分功能失效：</strong> 重新加载扩展，清除缓存</li>
-        </ul>
-      </div>
-
-      <div class="feature-card">
-        <h5>调试方法</h5>
-        <ul>
-          <li>打开浏览器开发者工具</li>
-          <li>查看Console标签页的日志</li>
-          <li>检查Network标签页的请求</li>
-          <li>在扩展管理页面查看Service Worker日志</li>
-        </ul>
-      </div>
-    </div>
-  </div>
   </div>
 
   <!-- 成功提示 -->
@@ -804,132 +859,90 @@
       basic: `# AutoRedirect 基础测试配置
 
 # ===== 精确匹配测试 =====
-=https://example.com/####https://www.google.com
-=https://test.example.com/####https://exact-test.example.com
+=localhost:3000####https://dev.example.com
 
 # ===== 开头匹配测试 =====
 ^dev####https://development.example.com
-api*####https://api-service.example.com
+api*####https://api.example.com
 
 # ===== 结尾匹配测试 =====
-*test$####https://test-environment.example.com
-*.local####https://local-to-prod.example.com
+*.local#  on$####https://config.example.com
 
 # ===== URL模板替换测试 =====
 # 简单域名替换
 https://old-domain.com/*####https://new-domain.com/{1}
 # 复杂路径重写
-http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
-# 多段路径重组
-old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}
-
-# ===== 包含匹配测试（模糊匹配，慎用！） =====
-# localhost:3000####https://exact-localhost.example.com
-# demo####https://www.github.com
-# example.com####https://www.github.com
+http://example.com/*/page/*####https://newsiteewpage/{2}
 
 # ===== 智能URL提取测试 =====
-link.zhihu.com/?target=####
-www.baidu.com/link?url=####
+link.z#
 
 # ===== 多结果选择测试 =====
 multi####https://www.google.com
 multi####https://www.bing.com
 multi####https://www.yahoo.com`,
 
+      localfile: `# AutoRedirect 本地文件重定向测试配置
+
+# ===== 基础本地文件重定向 =====
+# 1. 结尾匹配（推荐，安全且精确）
+*autoredirect_local.html$####https://www.example.com/autoRedirect/
+
+# 2. 完整file://协议路径匹配（最精确）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html####https://www.example.com/autoRedirect/
+
+# ===== 通配符本地文件重定向（URL模板替换） =====
+# 3. 路径通配符匹配（推荐用于批量重定向）
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+
+# 4. file://协议的通配符匹配（最精确的批量匹配）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+
+# 5. 多通配符匹配（支持子目录结构）
+*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+
+# ===== 高级本地文件重定向场景 =====
+# 6. 本地开发环境到生产环境映射（跨用户通用）
+=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
+
+# 7. 本地文件扩展名转换
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
+
+# ===== 测试用例说明 =====
+# 测试用例1：基础文件重定向（包含匹配）
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html
+# 输出: https://www.example.com/autoRedirect/
+
+# 测试用例2：通配符文件名提取
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/options.html
+# 输出: https://www.example.com/options/
+
+# 测试用例3：多通配符子目录处理
+# 输入: file:///Users/yukun/dev/ChromeStore/autoRedirect/subfolder/test.html
+# 输出: https://www.example.com/subfolder/test/`,
+
       advanced: `# AutoRedirect 高级测试配置
 
 # ===== 基础匹配（必需） =====
-=https://example.com/####https://www.google.com
+=localhost:3000####https://dev.example.com
 demo####https://www.github.com
 
 # ===== URL模板替换高级测试 =====
-# 域名和路径同时替换
-https://old.com/*/docs/*####https://new.com/{1}/documentation/{2}
 # 参数重新排列
 site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
 # 重复使用占位符
 old.com/user/*####new.com/{1}/profile/{1}/settings
+# 精确路径重组
+=old.com/electronics/category/phones/item/iphone####new.com/electronics/cat/phones/product/iphone
 
 # ===== 复杂匹配测试 =====
 ^beta.####https://beta.mysite.com
 *-staging$####https://staging.mysite.com
-=127.0.0.1:8080####https://backend.mysite.com
-
-# ===== 开发工具测试 =====
-*webpack*####https://webpack.mysite.com
-*vscode*####https://code.mysite.com
-*postman*####https://api-docs.mysite.com
-*swagger*####https://docs.mysite.com
-*jenkins*####https://ci.mysite.com
 
 # ===== 智能URL提取测试 =====
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 www.baidu.com/link?url=####
-mail.qq.com/cgi-bin/readtemplate?gourl=####
-redirect.example.com?target=####
-
-# ===== 内网映射测试 =====
-192.168.1.*####https://internal.mysite.com
-10.0.0.*####https://internal.mysite.com
-
-# ===== 多结果选择测试 =====
-service####https://api.mysite.com
-service####https://admin.mysite.com
-service####https://dashboard.mysite.com`,
-
-      complete: `# AutoRedirect 完整测试配置
-
-# ===== 精确匹配模式 =====
-=https://example.com/####https://www.google.com
-=https://test.example.com/####https://exact-test.example.com
-localhost:3000####https://exact-localhost.example.com
-=index.html####https://www.mysite.com
-
-# ===== 开头匹配模式 =====
-^dev####https://development.example.com
-^staging####https://staging.example.com
-^test####https://testing.example.com
-api*####https://api-service.example.com
-admin*####https://admin.example.com
-^beta.####https://beta.mysite.com
-
-# ===== 结尾匹配模式 =====
-*test$####https://test-environment.example.com
-*.local####https://local-to-prod.example.com
-*.dev####https://www.mysite.com
-*-staging$####https://staging.mysite.com
-*config.json$####https://config.mysite.com
-
-# ===== URL模板替换功能 =====
-# 基础域名替换
-https://old-domain.com/*####https://new-domain.com/{1}
-# 复杂路径重写
-http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
-# 多段路径重组
-old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}
-# 域名和路径同时替换
-https://legacy.com/*/docs/*####https://modern.com/{1}/documentation/{2}
-# 参数重新排列
-site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
-# 重复使用占位符
-old.com/user/*####new.com/{1}/profile/{1}/settings
-# 部分占位符使用
-old.com/*/category/*/item/*####new.com/{1}/products/{3}
-
-# ===== 包含匹配模式（慎用） =====
-# demo####https://www.github.com
-# prototype####https://www.github.com
-# example.com####https://www.github.com
-# localhost####https://production.mysite.com
-
-# ===== 智能URL提取功能 =====
-link.zhihu.com/?target=####
-weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
-www.baidu.com/link?url=####
-mail.qq.com/cgi-bin/readtemplate?gourl=####
-redirect.example.com?target=####
 
 # ===== 多结果选择测试 =====
 multi####https://www.google.com
@@ -937,18 +950,70 @@ multi####https://www.bing.com
 multi####https://www.yahoo.com
 service####https://api.mysite.com
 service####https://admin.mysite.com
-service####https://dashboard.mysite.com
+service####https://dashboard.mysite.com`,
 
-# ===== 开发场景测试 =====
-*webpack*####https://webpack.mysite.com
-*vscode*####https://code.mysite.com
-*postman*####https://api-docs.mysite.com
-*swagger*####https://docs.mysite.com
-*jenkins*####https://ci.mysite.com
+      complete: `# AutoRedirect 完整测试配置
+# 支持井号注释功能 - 以#开头的行会被忽略
 
-# ===== 内网映射测试 =====
-192.168.1.*####https://internal.mysite.com
-10.0.0.*####https://internal.mysite.com`
+# ===== 本地文件路径重定向规则汇总 =====
+# 支持多种本地文件路径格式和匹配模式
+
+# --- 基础本地文件重定向 ---
+# 1. 结尾匹配（推荐，安全且精确）
+*autoredirect_local.html$####https://www.example.com/autoRedirect/
+
+# 2. 完整file://协议路径匹配（最精确）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html####https://www.example.com/autoRedirect/
+
+# --- 通配符本地文件重定向（URL模板替换） ---
+# 3. 路径通配符匹配（推荐用于批量重定向）
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+
+# 4. file://协议的通配符匹配（最精确的批量匹配）
+=file:///Users/yukun/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
+
+# 5. 多通配符匹配（支持子目录结构）
+*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+
+# --- 高级本地文件重定向场景 ---
+# 6. 本地开发环境到生产环境映射（跨用户通用）
+=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
+
+# 7. 本地文件扩展名转换
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
+
+# ===== 精确匹配模式 =====
+=localhost:3000####https://dev.example.com
+
+# ===== 开头匹配模式 =====
+^dev####https://development.example.com
+api*####https://api.example.com
+
+# ===== 结尾匹配模式 =====
+*.local####https://production.example.com
+*config.json$####https://config.example.com
+
+# ===== URL模板替换功能 =====
+# 基础域名替换：将old-domain.com的所有路径转移到new-domain.com
+https://old-domain.com/*####https://new-domain.com/{1}
+# 复杂路径重写：重新组织URL结构
+http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
+# 精确路径重组：将特定路径重新排列
+=old.com/electronics/category/phones/item/iphone####new.com/electronics/cat/phones/product/iphone
+# 参数重新排列：改变URL段的顺序
+site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
+# 重复使用占位符：同一个捕获组可以多次使用
+old.com/user/*####new.com/{1}/profile/{1}/settings
+
+# ===== 通用URL提取功能 =====
+# 目标URL为空，用于自动提取和解码URL参数
+link.zhihu.com/?target=####
+
+# ===== 多结果选择测试 =====
+# 当一个URL匹配多个规则时，会显示选择页面让用户选择
+multi####https://www.google.com
+multi####https://www.bing.com
+multi####https://www.yahoo.com`
     }
 
     // 切换模式

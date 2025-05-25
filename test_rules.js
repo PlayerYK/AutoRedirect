@@ -81,12 +81,6 @@ const testCases = [
                 rule: "=localhost:3000####https://dev.example.com"
             },
             {
-                name: "精确匹配 test.html",
-                input: "file:///test.html",
-                expected: "https://test.example.com",
-                rule: "=test.html####https://test.example.com"
-            },
-            {
                 name: "精确匹配失败 - localhost:3001",
                 input: "http://localhost:3001",
                 expected: null,

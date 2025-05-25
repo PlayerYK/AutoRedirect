@@ -148,13 +148,18 @@ function smartProcessUrlPattern(pattern) {
     return pattern;
   }
   
-  // 检查是否是本地文件路径模式
-  if (pattern.match(/^[a-zA-Z]:\\/) || pattern.match(/^\//) || pattern.endsWith('.html') || pattern.endsWith('.htm')) {
-    // 对于本地文件，创建一个能匹配多种协议的模式
-    // 先转义pattern中的特殊字符，然后构建正则表达式
+  // 检查是否是明确的本地文件路径
+  if (pattern.match(/^[a-zA-Z]:\\/) || pattern.match(/^\//) || pattern.startsWith('file://')) {
+    // 明确的本地文件路径
     const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
-    const result = `(?:file:///|file://|[a-zA-Z]:/)?.*?${escapedPattern}`;
-    Logger.debug(`本地文件模式处理`, { originalPattern: pattern, result });
+    const result = `(?:file:///|file://)?.*?${escapedPattern}`;
+    Logger.debug(`明确本地文件模式处理`, { originalPattern: pattern, result });
+    return result;
+  } else if (pattern.endsWith('.html') || pattern.endsWith('.htm')) {
+    // 可能是网络文件，也添加http/https支持
+    const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+    const result = `(?:https?://.*?${escapedPattern}|file:///.*?${escapedPattern}|${escapedPattern})`;
+    Logger.debug(`网络/本地文件模式处理`, { originalPattern: pattern, result });
     return result;
   }
   

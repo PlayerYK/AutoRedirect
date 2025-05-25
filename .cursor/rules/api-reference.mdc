@@ -69,7 +69,79 @@ chrome.runtime.sendMessage({
 chrome.extension.getURL("chose.html");
 ```
 
-## 核心函数参考
+## 重定向引擎API
+
+### RedirectEngine 核心类 ([script/redirect-engine.js](mdc:script/redirect-engine.js))
+
+#### 构造函数
+```javascript
+const engine = new RedirectEngine(options);
+```
+
+#### 主要方法
+
+##### processUrl(url, rules)
+- **功能**：处理URL重定向的核心方法
+- **参数**：
+  - `url`: 要处理的原始URL
+  - `rules`: 重定向规则数组
+- **返回值**：重定向结果对象或null
+- **示例**：
+```javascript
+const result = engine.processUrl('http://example.com', rulesList);
+```
+
+##### parseRules(rulesText)
+- **功能**：解析规则文本为规则对象数组
+- **参数**：`rulesText` - 多行规则文本
+- **返回值**：解析后的规则对象数组
+- **规则格式**：`原始URL模式####目标URL模式`
+
+##### matchPattern(url, pattern, matchType)
+- **功能**：根据匹配类型测试URL是否匹配模式
+- **参数**：
+  - `url`: 要测试的URL
+  - `pattern`: 匹配模式
+  - `matchType`: 匹配类型（exact, start, end, contain）
+- **返回值**：匹配结果对象
+
+##### replaceWithWildcards(url, pattern, target)
+- **功能**：使用通配符进行URL模板替换
+- **参数**：
+  - `url`: 原始URL
+  - `pattern`: 包含通配符的模式
+  - `target`: 目标URL模板
+- **返回值**：替换后的URL
+
+### 匹配类型枚举
+
+#### 精确匹配 (exact)
+```javascript
+// 使用 = 前缀
+"=localhost:3000####https://dev.example.com"
+```
+
+#### 开头匹配 (start)
+```javascript
+// 使用 ^ 前缀或 * 后缀
+"^dev####https://development.example.com"
+"api*####https://api.example.com"
+```
+
+#### 结尾匹配 (end)
+```javascript
+// 使用 * 前缀或 $ 后缀
+"*.local####https://production.example.com"
+"*config.json$####https://config.example.com"
+```
+
+#### 包含匹配 (contain)
+```javascript
+// 默认模式，无前缀
+"localhost####https://production.example.com"
+```
+
+## 后台脚本API
 
 ### background.js 中的关键函数
 
@@ -86,16 +158,76 @@ chrome.extension.getURL("chose.html");
 - **参数**：`tab` - 当前标签页对象
 - **流程**：
   1. 获取当前标签页URL
-  2. 解析重定向规则
-  3. 匹配URL模式
-  4. 执行重定向或显示选择页面
+  2. 调用重定向引擎处理URL
+  3. 根据结果执行重定向或显示选择页面
 
 #### debugLog(obj, level)
 - **功能**：调试信息输出函数
 - **参数**：
   - `obj`: 要输出的对象或消息
   - `level`: 调试级别（默认0）
-- **控制**：通过 `show_debug_level` 变量控制输出级别
+- **控制**：通过 `debugLevel` 变量控制输出级别
+
+## 测试框架API
+
+### 测试引擎 ([test_rules.js](mdc:test_rules.js))
+
+#### TestRunner 类
+```javascript
+const runner = new TestRunner();
+runner.runAllTests();
+```
+
+#### 测试用例结构
+```javascript
+const testCase = {
+    name: "测试用例名称",
+    url: "测试URL",
+    rules: ["规则1", "规则2"],
+    expected: "期望结果",
+    description: "测试描述"
+};
+```
+
+#### 主要测试方法
+
+##### testExactMatch()
+- **功能**：测试精确匹配功能
+- **覆盖**：=前缀的各种匹配场景
+
+##### testWildcardMatch()
+- **功能**：测试通配符匹配功能
+- **覆盖**：*通配符和{1},{2},{3}占位符替换
+
+##### testLocalFileRedirect()
+- **功能**：测试本地文件重定向
+- **覆盖**：file://协议的各种路径格式
+
+##### testPerformance()
+- **功能**：测试大量规则下的性能
+- **指标**：处理时间、内存使用
+
+### 配置测试 ([test_config_rules.js](mdc:test_config_rules.js))
+
+#### ConfigTester 类
+```javascript
+const tester = new ConfigTester();
+tester.testExampleConfig();
+```
+
+#### 配置验证方法
+
+##### validateRuleFormat(rule)
+- **功能**：验证规则格式是否正确
+- **检查项**：是否包含####分隔符、格式是否有效
+
+##### testCommentHandling()
+- **功能**：测试注释行处理
+- **验证**：#开头的行是否被正确忽略
+
+##### testRuleExamples()
+- **功能**：测试 [example_config.txt](mdc:example_config.txt) 中的所有示例
+- **覆盖**：所有配置示例的正确性
 
 ## 数据存储API
 
@@ -119,49 +251,182 @@ var isAuto = localStorage['jump_list_auto'] || 0;
 #### jump_list
 - **格式**：多行文本，每行一个规则
 - **规则格式**：`原始URL模式####目标URL模式`
+- **注释支持**：以#开头的行为注释
 - **示例**：
   ```
-  local/path####http://mydevurl.com/subpath/
-  myDevUrl.com/path####http://myOnlineUrl.com/subpath/
+  # 这是注释行
+  *autoredirect_test.html####https://www.example.com/autoRedirect/
+  =localhost:3000####https://dev.example.com
   ```
 
 #### jump_list_auto
 - **格式**：数字字符串
 - **值**：`"0"` (关闭) 或 `"1"` (开启)
 
-### AJAX请求
-在 [script/background.js](mdc:script/background.js) 中加载远程规则：
+### 配置管理API
 
+#### loadRulesFromStorage()
 ```javascript
-$.ajax({
-    url: regPatternUrl,
-    type: 'get',
-    dataType: 'text',
-    success: function(response) {
-        localStorage['jump_list'] = response;
-    }
-});
+function loadRulesFromStorage() {
+    const rulesText = localStorage['jump_list'] || '';
+    return parseRules(rulesText);
+}
+```
+
+#### saveRulesToStorage(rules)
+```javascript
+function saveRulesToStorage(rules) {
+    const rulesText = rules.join('\n');
+    localStorage['jump_list'] = rulesText;
+}
+```
+
+#### loadRemoteRules(url)
+```javascript
+function loadRemoteRules(url) {
+    return fetch(url)
+        .then(response => response.text())
+        .then(text => parseRules(text));
+}
+```
+
+## 用户界面API
+
+### 选项页面 ([script/options.js](mdc:script/options.js))
+
+#### 规则编辑器API
+```javascript
+// 获取规则文本
+function getRulesText() {
+    return document.getElementById('rules-textarea').value;
+}
+
+// 设置规则文本
+function setRulesText(text) {
+    document.getElementById('rules-textarea').value = text;
+}
+
+// 验证规则格式
+function validateRules(rulesText) {
+    // 返回验证结果对象
+}
+```
+
+#### 配置导入导出
+```javascript
+// 导出配置
+function exportConfig() {
+    const config = {
+        rules: localStorage['jump_list'],
+        auto: localStorage['jump_list_auto']
+    };
+    return JSON.stringify(config);
+}
+
+// 导入配置
+function importConfig(configJson) {
+    const config = JSON.parse(configJson);
+    localStorage['jump_list'] = config.rules;
+    localStorage['jump_list_auto'] = config.auto;
+}
+```
+
+### 选择页面 ([script/chose.js](mdc:script/chose.js))
+
+#### 选择处理API
+```javascript
+// 显示选择选项
+function showChoices(choices) {
+    choices.forEach((choice, index) => {
+        createChoiceElement(choice, index);
+    });
+}
+
+// 处理用户选择
+function handleChoice(index) {
+    const selectedUrl = choices[index];
+    redirectToUrl(selectedUrl);
+}
+```
+
+### 弹出窗口 ([script/popup_switch.js](mdc:script/popup_switch.js))
+
+#### 开关控制API
+```javascript
+// 获取开关状态
+function getSwitchState() {
+    return localStorage['jump_list_auto'] === '1';
+}
+
+// 设置开关状态
+function setSwitchState(enabled) {
+    localStorage['jump_list_auto'] = enabled ? '1' : '0';
+    updateIcon(enabled);
+}
+
+// 更新图标
+function updateIcon(enabled) {
+    const iconPath = enabled ? 
+        "images/icon_19.png" : 
+        "images/icon_19_disabled.png";
+    chrome.browserAction.setIcon({path: iconPath});
+}
 ```
 
 ## 正则表达式处理
 
 ### URL模式匹配
-在 [script/background.js](mdc:script/background.js) 中的模式处理：
+在 [script/redirect-engine.js](mdc:script/redirect-engine.js) 中的模式处理：
 
 ```javascript
 // 转义特殊字符
-var regStr = pattern
-    .replace(/\//g, '\\/')     // 转义斜杠
-    .replace(/\*/g, '\.\*\?')  // 通配符转正则
-    .replace(/\n/g, '')        // 移除换行
-    .replace(/\r/g, '');       // 移除回车
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
-// 创建正则表达式
-var reg = new RegExp(".*" + regStr, 'i');
+// 通配符转正则表达式
+function wildcardToRegex(pattern) {
+    return pattern
+        .replace(/\*/g, '(.*?)')  // 通配符转捕获组
+        .replace(/\//g, '\\/')    // 转义斜杠
+        .replace(/\./g, '\\.');   // 转义点号
+}
 
-// 测试匹配
-if (reg.test(url)) {
-    var newUrl = url.replace(reg, targetPattern);
+// 创建匹配正则
+function createMatchRegex(pattern, matchType) {
+    let regexPattern = escapeRegExp(pattern);
+    
+    switch(matchType) {
+        case 'exact':
+            return new RegExp(`^${regexPattern}$`, 'i');
+        case 'start':
+            return new RegExp(`^${regexPattern}`, 'i');
+        case 'end':
+            return new RegExp(`${regexPattern}$`, 'i');
+        case 'contain':
+        default:
+            return new RegExp(regexPattern, 'i');
+    }
+}
+```
+
+### 通配符替换处理
+```javascript
+// 提取通配符匹配的内容
+function extractWildcardMatches(url, pattern) {
+    const regex = wildcardToRegex(pattern);
+    const matches = url.match(regex);
+    return matches ? matches.slice(1) : []; // 排除完整匹配
+}
+
+// 替换目标URL中的占位符
+function replaceTargetPlaceholders(target, matches) {
+    let result = target;
+    matches.forEach((match, index) => {
+        const placeholder = `{${index + 1}}`;
+        result = result.replace(new RegExp(placeholder, 'g'), match);
+    });
+    return result;
 }
 ```
 
@@ -177,10 +442,99 @@ if (reg.test(url)) {
 - **选项页面**：在 [script/options.js](mdc:script/options.js) 中处理规则保存
 - **选择页面**：在 [script/chose.js](mdc:script/chose.js) 中处理用户选择
 
+### 测试事件
+- **测试运行**：在 [test_all_rules.html](mdc:test_all_rules.html) 中触发测试
+- **结果显示**：实时更新测试结果和性能指标
+
 ## 错误处理模式
 
 ### 常见错误处理
-- **规则解析错误**：检查规则格式是否包含"####"分隔符
-- **URL匹配失败**：返回空结果数组，不执行重定向
-- **权限错误**：确保manifest.json中声明了必要权限
-- **存储错误**：使用默认值处理localStorage读取失败
+```javascript
+// 规则解析错误
+function handleRuleParseError(rule, error) {
+    console.warn(`规则解析失败: ${rule}`, error);
+    return null; // 跳过无效规则
+}
+
+// URL匹配失败
+function handleMatchFailure(url, rules) {
+    debugLog(`URL匹配失败: ${url}`, 1);
+    return []; // 返回空结果数组
+}
+
+// 权限错误
+function handlePermissionError(error) {
+    console.error('权限错误:', error);
+    // 显示用户友好的错误信息
+}
+
+// 存储错误
+function handleStorageError(error) {
+    console.error('存储错误:', error);
+    // 使用默认配置
+    return getDefaultConfig();
+}
+```
+
+### 调试和日志系统
+```javascript
+// 调试级别控制
+const DEBUG_LEVELS = {
+    ERROR: 0,
+    WARN: 1,
+    INFO: 2,
+    DEBUG: 3
+};
+
+// 调试日志函数
+function debugLog(message, level = DEBUG_LEVELS.INFO) {
+    if (level <= currentDebugLevel) {
+        console.log(`[AutoRedirect] ${message}`);
+    }
+}
+
+// 性能监控
+function measurePerformance(operation, func) {
+    const start = performance.now();
+    const result = func();
+    const end = performance.now();
+    debugLog(`${operation} 耗时: ${end - start}ms`, DEBUG_LEVELS.DEBUG);
+    return result;
+}
+```
+
+## 配置文件格式
+
+### 规则配置格式 ([example_config.txt](mdc:example_config.txt))
+```
+# 注释行以#开头
+# 规则格式：原始URL模式####目标URL模式
+
+# 精确匹配
+=localhost:3000####https://dev.example.com
+
+# 通配符匹配
+*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+
+# 本地文件重定向
+*autoredirect_test.html$####https://www.example.com/autoRedirect/
+```
+
+### 测试配置格式
+```javascript
+// 测试用例配置
+const testConfig = {
+    testSuites: [
+        {
+            name: "精确匹配测试",
+            tests: [
+                {
+                    url: "localhost:3000",
+                    rule: "=localhost:3000####https://dev.example.com",
+                    expected: "https://dev.example.com"
+                }
+            ]
+        }
+    ]
+};
+```
