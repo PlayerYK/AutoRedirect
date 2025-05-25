@@ -141,10 +141,11 @@ site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
 ## 权限说明
 扩展需要以下权限（在 [manifest.json](mdc:manifest.json) 中定义）：
 - `tabs` - 访问标签页信息
-- `webRequest` - 监听网络请求
-- `webRequestBlocking` - 阻塞和修改网络请求
-- `http://*/*` 和 `https://*/*` - 访问所有HTTP/HTTPS网站
-- `file:///*` - 访问本地文件
+- `storage` - 存储扩展的设置和规则
+- `webRequest` - 监听和分析网络请求，用于实现URL重定向
+- `host_permissions`：
+    - `http://*/*` 和 `https://*/*` - 允许扩展在所有 HTTP 和 HTTPS 网站上操作
+    - `file://*/*` - 允许扩展访问本地文件系统上的文件，用于本地文件重定向
 
 ## 最佳实践
 

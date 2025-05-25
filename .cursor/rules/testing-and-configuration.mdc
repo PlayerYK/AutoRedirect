@@ -11,10 +11,10 @@ AutoRedirect项目拥有完整的测试框架，包括单元测试、集成测�
 
 ### 测试文件结构
 - [test_all_rules.html](mdc:test_all_rules.html) - 主测试页面，提供完整的测试界面
-- [test_rules.js](mdc:test_rules.js) - 核心测试引擎，包含所有测试逻辑
-- [test_config_rules.js](mdc:test_config_rules.js) - 配置规则专门测试模块
+- [test_rules.js](mdc:script/test_rules.js) - 核心测试引擎，包含所有测试逻辑
+- [test_config_rules.js](mdc:script/test_config_rules.js) - 配置规则专门测试模块
 - [autoredirect_test.html](mdc:autoredirect_test.html) - 本地文件重定向测试页面
-- [TESTING_GUIDE.md](mdc:TESTING_GUIDE.md) - 详细的测试指南和最佳实践
+- [TESTING_GUIDE.md](mdc:test/TESTING_GUIDE.md) - 详细的测试指南和最佳实践
 
 ## 主测试页面 ([test_all_rules.html](mdc:test_all_rules.html))
 
@@ -39,7 +39,7 @@ AutoRedirect项目拥有完整的测试框架，包括单元测试、集成测�
 - **性能测试**：大量规则下的性能验证
 - **边界测试**：异常输入和边界条件
 
-## 测试引擎 ([test_rules.js](mdc:test_rules.js))
+## 测试引擎 ([test_rules.js](mdc:script/test_rules.js))
 
 ### 核心测试类
 
@@ -97,7 +97,7 @@ const testCase = {
 - **错误报告**：详细的失败原因和调试信息
 - **覆盖率分析**：代码覆盖率和功能覆盖率
 
-## 配置测试 ([test_config_rules.js](mdc:test_config_rules.js))
+## 配置测试 ([test_config_rules.js](mdc:script/test_config_rules.js))
 
 ### 配置验证功能
 1. **规则格式验证**：检查规则是否符合`原始URL####目标URL`格式
@@ -176,7 +176,7 @@ tester.testCommentHandling(); // 测试注释处理
 3. **合理使用正则**：避免复杂的正则表达式
 4. **规则数量控制**：保持合理的规则数量
 
-## 测试指南 ([TESTING_GUIDE.md](mdc:TESTING_GUIDE.md))
+## 测试指南 ([TESTING_GUIDE.md](mdc:test/TESTING_GUIDE.md))
 
 ### 测试流程
 1. **功能测试**：验证基本功能正常工作
@@ -256,3 +256,61 @@ tester.testCommentHandling(); // 测试注释处理
 - **用例文档**：维护详细的用例文档
 
 这个测试系统确保了AutoRedirect扩展的高质量和稳定性，为开发和维护提供了强有力的支持。
+
+## 详细测试覆盖范围 (参考 [TESTING_GUIDE.md](mdc:test/TESTING_GUIDE.md))
+
+### 1. 本地文件重定向 (重点测试)
+- 结尾匹配测试
+- 完整file://协议路径匹配
+- 路径通配符匹配和文件名提取
+- 多通配符子目录支持
+- 文件扩展名转换
+- 跨用户开发环境映射
+
+### 2. 精确匹配模式 (=前缀)
+- 完全匹配测试
+- 不匹配情况验证
+
+### 3. 开头匹配模式 (^前缀 或 *后缀)
+- 前缀匹配测试
+- 通配符匹配测试
+
+### 4. 结尾匹配模式 (*前缀 或 $后缀)
+- 后缀匹配测试
+- 结尾通配符测试
+
+### 5. URL模板替换功能
+- 基础域名替换
+- 复杂路径重写
+- 多段路径重组
+- 参数重新排列
+- 重复使用占位符
+- 部分占位符使用
+
+### 6. 包含匹配模式 (默认)
+- 字符串包含测试
+- 向后兼容性验证
+
+### 7. 通用URL提取功能
+- URL参数解码
+- 复杂URL提取
+
+### 8. 多结果选择功能
+- 多规则匹配检测
+- 选择页面触发
+
+## 完整功能测试清单 (参考 [TESTING_GUIDE.md](mdc:test/TESTING_GUIDE.md))
+
+### 1. 基础功能验证
+- 扩展状态检查 (加载、图标、弹出窗口、开关)
+- 配置管理 (选项页面、规则编辑、保存、错误验证)
+
+### 2. 核心重定向功能
+- 通用URL提取功能 (知乎链接解码等)
+- 本地文件重定向 (file://协议、各种匹配模式、扩展名转换等)
+- 在线网站重定向 (HTTP/HTTPS、模式匹配、目标正确性)
+- 多结果选择 (触发选择页面、选项显示、跳转正确性)
+
+### 3. 高级功能测试
+- 规则格式支持 (基本格式、通配符、空目标URL)
+- 错误处理 (无效规则、循环重定向、空目标URL)

@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 // 导入重定向引擎
-const RedirectEngine = require('./script/redirect-engine.js');
+const RedirectEngine = require('../script/redirect-engine.js');
 
 // 基于 example_config.txt 的实际测试用例
 const configTestCases = [

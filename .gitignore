@@ -1,6 +1,11 @@
 _site/*
 _theme_packages/*
 .idea/*
+.vscode/*
+.cursor/*
+dist/*
+.editorconfig
+.prettierrc
 
 Thumbs.db
 .DS_Store

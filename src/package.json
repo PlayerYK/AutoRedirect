@@ -1,0 +1,22 @@
+{
+  "name": "auto-redirect",
+  "version": "0.1.0",
+  "description": "智能URL重定向工具 - Chrome扩展",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js",
+    "package": "node build.js",
+    "pack": "node build.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "redirect",
+    "url",
+    "browser"
+  ],
+  "author": "yukun",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+} 
