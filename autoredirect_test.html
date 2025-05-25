@@ -332,6 +332,56 @@
       border: 1px solid #4facfe;
     }
 
+    /* 本地文件重定向说明专用样式 */
+    .localfile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin: 25px 0;
+    }
+
+    .localfile-card {
+      background: linear-gradient(135deg, #f8fff8, #e8f8e8);
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid #28a745;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+    }
+
+    .localfile-card h5 {
+      color: #155724;
+      margin-top: 0;
+      font-size: 1.2em;
+      border-bottom: 2px solid #28a745;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+
+    .localfile-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .localfile-card li {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .localfile-card strong {
+      color: #155724;
+      font-weight: 600;
+    }
+
+    .localfile-card code {
+      background: #d4edda;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.9em;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
     .feature-card h5 {
       color: #2c3e50;
       margin-top: 0;
@@ -400,6 +450,196 @@
       h1 {
         font-size: 2em;
       }
+
+      /* 本地文件重定向说明响应式 */
+      .localfile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .localfile-card {
+        padding: 20px;
+      }
+
+      .localfile-card h5 {
+        font-size: 1.1em;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .localfile-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      }
+    }
+
+    /* Chrome Web Store 安装链接样式 */
+    .install-banner {
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 30px 0;
+      box-shadow: 0 8px 25px rgba(66, 133, 244, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .install-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+      }
+
+      100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+      }
+    }
+
+    .install-banner h3 {
+      margin: 0 0 15px 0;
+      font-size: 1.5em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .install-banner p {
+      margin: 0 0 20px 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .install-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      color: #4285f4;
+      padding: 15px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      color: #4285f4;
+      text-decoration: none;
+    }
+
+    .install-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Footer 样式 */
+    .footer {
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: white;
+      padding: 40px 0;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer h3 {
+      margin: 0 0 20px 0;
+      font-size: 1.8em;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer p {
+      margin: 0 0 25px 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .footer-install-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      padding: 18px 35px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .footer-install-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(79, 172, 254, 0.6);
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-links {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    /* 响应式设计更新 */
+    @media (max-width: 768px) {
+      .install-banner {
+        padding: 15px;
+        margin: 20px 0;
+      }
+
+      .install-banner h3 {
+        font-size: 1.3em;
+      }
+
+      .install-btn {
+        padding: 12px 25px;
+        font-size: 14px;
+      }
+
+      .footer {
+        padding: 30px 0;
+      }
+
+      .footer h3 {
+        font-size: 1.5em;
+      }
+
+      .footer-install-btn {
+        padding: 15px 30px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -408,6 +648,16 @@
   <div class="container">
     <h1>🚀 AutoRedirect 全功能测试</h1>
     <p class="subtitle">选择测试模式，获取配置，开始测试 - 支持本地文件重定向</p>
+
+    <!-- Chrome Web Store 安装横幅 -->
+    <div class="install-banner">
+      <h3>🎯 还没有安装 AutoRedirect 扩展？</h3>
+      <p>立即从 Chrome Web Store 安装，开始享受智能重定向功能！</p>
+      <a href="https://chromewebstore.google.com/detail/edgiaaakbcjloebnmehbnfiajbhcpbcf" target="_blank"
+        class="install-btn">
+        🛒 立即安装扩展
+      </a>
+    </div>
 
     <!-- 使用指南 -->
     <div class="usage-guide">
@@ -428,6 +678,9 @@
         <div class="usage-step">
           <strong>开始测试：</strong>按照页面下方的测试案例进行功能验证
         </div>
+        <div class="usage-step">
+          <strong>高级测试：</strong>使用扩展选项页面的测试工具进行更详细的规则验证和调试
+        </div>
       </div>
 
       <div
@@ -441,6 +694,42 @@
           <li>开启"在无痕模式下启用"选项</li>
           <li>或者在普通浏览器窗口中进行测试</li>
         </ol>
+      </div>
+      <div style="background: #e8f4f8; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #17a2b8;">
+        <h4 style="color: #0c5460; margin-top: 0;">🧪 高级测试工具 - 扩展选项页面</h4>
+        <p style="margin-bottom: 15px; color: #0c5460;">需要更详细的规则测试和调试？请按以下方法打开扩展选项页面：</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin: 15px 0;">
+          <div style="background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 8px; border: 1px solid #bee5eb;">
+            <h5 style="color: #0c5460; margin: 0 0 10px 0; font-size: 1em;">🔧 方法一：扩展图标</h5>
+            <ol style="margin: 0; padding-left: 20px; color: #0c5460; font-size: 0.9em;">
+              <li>右键点击浏览器工具栏中的 AutoRedirect 图标</li>
+              <li>选择"选项"或"扩展程序选项"</li>
+            </ol>
+          </div>
+          
+          <div style="background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 8px; border: 1px solid #bee5eb;">
+            <h5 style="color: #0c5460; margin: 0 0 10px 0; font-size: 1em;">🔧 方法二：扩展管理</h5>
+            <ol style="margin: 0; padding-left: 20px; color: #0c5460; font-size: 0.9em;">
+              <li>地址栏输入：<code>chrome://extensions/</code></li>
+              <li>找到 AutoRedirect → 详细信息 → 扩展程序选项</li>
+            </ol>
+          </div>
+          
+          <div style="background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 8px; border: 1px solid #bee5eb;">
+            <h5 style="color: #0c5460; margin: 0 0 10px 0; font-size: 1em;">🔧 方法三：直接访问</h5>
+            <div style="margin: 0; color: #0c5460; font-size: 0.9em;">
+              地址栏输入：<br>
+              <code style="background: #d1ecf1; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; word-break: break-all;">chrome-extension://edgiaaakbcjloebnmehbnfiajbhcpbcf/options.html</code>
+            </div>
+          </div>
+        </div>
+        
+        <div style="background: #d1ecf1; padding: 12px; border-radius: 6px; margin-top: 15px;">
+          <p style="margin: 0; color: #0c5460; font-size: 0.9em;">
+            💡 <strong>选项页面功能：</strong>重定向路径追踪、循环检测、详细匹配日志、规则验证工具等
+          </p>
+        </div>
       </div>
     </div>
 
@@ -557,10 +846,10 @@
 
           <div class="expected">
             <strong>预期结果：</strong> 根据规则跳转到新的目标网站，路径参数被正确替换
-            </div>
-            </div>
-            </div>
-            </div>
+          </div>
+          </div>
+          </div>
+          </div>
 
     <!-- 本地文件测试配置 -->
     <div id="localfile-content" class="content-section">
@@ -570,10 +859,10 @@
           <button class="copy-btn" onclick="copyConfig('localfile')">
             📋 一键复制配置
           </button>
-          </div>
+        </div>
         <p>专门用于测试本地文件路径重定向功能，支持多种本地文件路径格式和匹配模式：</p>
         <div class="config-box" id="localfile-config"></div>
-        </div>
+      </div>
 
       <div class="test-cases">
         <div class="test-case">
@@ -583,17 +872,17 @@
           <div class="test-link">
             <strong>结尾匹配测试（推荐）：</strong><br>
             在浏览器中打开本地文件：<code>file:///Users/yukun/dev/ChromeStore/autoRedirect/autoredirect_local.html</code>
-            </div>
-            
-            <div class="test-link">
-              <strong>完整路径匹配测试：</strong><br>
-              使用精确的file://协议路径匹配
-            </div>
+          </div>
+          
+          <div class="test-link">
+            <strong>完整路径匹配测试：</strong><br>
+            使用精确的file://协议路径匹配
+          </div>
 
           <div class="expected">
             <strong>预期结果：</strong> 本地HTML文件自动跳转到 https://www.example.com/autoRedirect/
-            </div>
-            </div>
+          </div>
+          </div>
 
         <div class="test-case">
           <h4>🎯 通配符本地文件重定向</h4>
@@ -602,17 +891,17 @@
           <div class="test-link">
             <strong>路径通配符测试：</strong><br>
             打开任意 <code>ChromeStore/autoRedirect/*.html</code> 文件
-            </div>
-            
-            <div class="test-link">
-              <strong>file://协议通配符测试：</strong><br>
-              使用完整的file://协议路径进行通配符匹配
-            </div>
+          </div>
+          
+          <div class="test-link">
+            <strong>file://协议通配符测试：</strong><br>
+            使用完整的file://协议路径进行通配符匹配
+          </div>
 
           <div class="expected">
             <strong>预期结果：</strong> 文件名被提取并用于构建目标URL，如 options.html → https://www.example.com/options/
-            </div>
-            </div>
+          </div>
+          </div>
 
         <div class="test-case">
           <h4>🔧 高级本地文件重定向场景</h4>
@@ -621,23 +910,23 @@
           <div class="test-link">
             <strong>跨用户通用映射：</strong><br>
             支持不同用户目录的通用匹配模式
-            </div>
-            
-            <div class="test-link">
-              <strong>扩展名转换：</strong><br>
-              本地HTML文件重定向到PHP页面
-            </div>
-            
-            <div class="test-link">
-              <strong>子目录结构处理：</strong><br>
-              支持多级目录的文件重定向
-            </div>
+          </div>
+          
+          <div class="test-link">
+            <strong>扩展名转换：</strong><br>
+            本地HTML文件重定向到PHP页面
+          </div>
+          
+          <div class="test-link">
+            <strong>子目录结构处理：</strong><br>
+            支持多级目录的文件重定向
+          </div>
 
           <div class="expected">
             <strong>预期结果：</strong> 复杂的路径结构被正确解析和重定向
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
 
     <!-- 高级测试配置 -->
@@ -652,7 +941,7 @@
         <p>包含复杂匹配规则和开发场景的高级配置，适合深度测试：</p>
         <div class="config-box" id="advanced-config"></div>
       </div>
-    
+
       <div class="test-cases">
         <div class="test-case">
           <h4>🎭 多结果选择测试</h4>
@@ -661,37 +950,37 @@
           <div class="test-link">
             <strong>测试方法：</strong><br>
             访问包含 <code>multi</code> 的URL
+          </div>
+          
+          <div class="expected">
+            <strong>预期结果：</strong> 显示选择页面，包含Google、Bing、Yahoo等多个选项
+          </div>
+          </div>
+          
+          <div class="test-case">
+            <h4>🔧 复杂URL模板替换</h4>
+            <p>测试高级的URL模板替换功能</p>
+          
+            <div class="test-link">
+              <strong>参数重新排列：</strong><br>
+              <a href="site.com/user/page/settings/section/profile" target="_blank">
+                site.com/user/page/settings/section/profile
+              </a>
             </div>
-            
-            <div class="expected">
-              <strong>预期结果：</strong> 显示选择页面，包含Google、Bing、Yahoo等多个选项
+          
+            <div class="test-link">
+              <strong>重复使用占位符：</strong><br>
+              <a href="old.com/user/john" target="_blank">
+                old.com/user/john
+              </a>
             </div>
-            </div>
-            
-            <div class="test-case">
-              <h4>🔧 复杂URL模板替换</h4>
-              <p>测试高级的URL模板替换功能</p>
-            
-              <div class="test-link">
-                <strong>参数重新排列：</strong><br>
-                <a href="site.com/user/page/settings/section/profile" target="_blank">
-                  site.com/user/page/settings/section/profile
-                </a>
-              </div>
-            
-              <div class="test-link">
-                <strong>重复使用占位符：</strong><br>
-                <a href="old.com/user/john" target="_blank">
-                  old.com/user/john
-                </a>
-              </div>
 
           <div class="expected">
             <strong>预期结果：</strong> URL参数被重新排列或重复使用，跳转到新的结构化URL
-            </div>
-            </div>
-            </div>
-            </div>
+          </div>
+          </div>
+          </div>
+          </div>
 
     <!-- 完整测试配置 -->
     <div id="complete-content" class="content-section">
@@ -713,24 +1002,24 @@
 
           <div class="test-link">
             <strong>精确匹配：</strong> 访问 localhost:3000 进行精确匹配测试
-            </div>
+          </div>
 
           <div class="test-link">
             <strong>开头匹配：</strong> 访问dev、api开头的URL
-            </div>
+          </div>
 
           <div class="test-link">
             <strong>结尾匹配：</strong> 访问.local、config.json结尾的URL
-            </div>
+          </div>
 
           <div class="test-link">
             <strong>本地文件：</strong> 打开本地HTML文件测试重定向功能
-            </div>
+          </div>
 
           <div class="expected">
             <strong>预期结果：</strong> 所有匹配模式都能正确工作，根据不同规则跳转到对应目标
           </div>
-          </div>
+        </div>
 
         <div class="test-case">
           <h4>🔗 智能URL提取全测试</h4>
@@ -746,13 +1035,120 @@
           <div class="expected">
             <strong>预期结果：</strong> 所有链接都能正确提取目标URL并直接跳转
           </div>
-          </div>
+        </div>
       </div>
-      </div>
+    </div>
 
-    <!-- 公共说明信息 -->
+    <!-- 详细使用指南 -->
     <div class="common-info">
-      <h3>📚 匹配模式说明</h3>
+      <h3>📖 详细使用指南</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h5>🎯 匹配模式详解</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li><strong>精确匹配：</strong> <code>=example.com####target</code> （完全匹配）</li>
+            <li><strong>开头匹配：</strong> <code>^test####target</code> 或 <code>test*####target</code> （以指定内容开头）</li>
+            <li><strong>结尾匹配：</strong> <code>test*####target</code> 或 <code>test$####target</code> （以指定内容结尾）</li>
+            <li><strong>包含匹配：</strong> <code>test####target</code> （默认模式，⚠️ 慎用！）</li>
+            <li><strong>通配符：</strong> 在任意匹配模式中使用 <code>*</code> 匹配任意字符</li>
+            <li><strong>模板替换：</strong> 使用 <code>{1}</code>, <code>{2}</code> 等占位符引用通配符匹配的内容</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>🔧 URL模板替换功能</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li><strong>基础语法：</strong> 使用 <code>*</code> 匹配任意字符，用 <code>{1}, {2}, {3}</code> 引用匹配内容</li>
+            <li><strong>域名替换：</strong> <code>old.com/*####new.com/{1}</code></li>
+            <li><strong>路径重写：</strong> <code>site.com/*/page/*####newsite.com/{1}/newpage/{2}</code></li>
+            <li><strong>多段重组：</strong> <code>old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</code></li>
+            <li><strong>参数重排：</strong> <code>site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}</code></li>
+            <li><strong>重复使用：</strong> <code>old.com/user/*####new.com/{1}/profile/{1}/settings</code></li>
+            <li><strong>选择性使用：</strong> <code>old.com/*/category/*/item/*####new.com/{1}/products/{3}</code></li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>⚙️ 高级功能</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li>支持注释： 以 <code>#</code> 开头的行为注释行</li>
+            <li>空行会被忽略</li>
+            <li>规则按顺序匹配，第一个匹配的规则生效</li>
+            <li><strong>注意：</strong>避免循环重定向</li>
+            <li>支持多结果选择（同一URL匹配多个规则时显示选择页面）</li>
+            <li>智能URL提取和解码功能</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>📝 配置示例与用法</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li><strong>基础格式：</strong> <code>原始URL####目标URL</code> （每行一条规则）</li>
+            <li><strong>精确匹配：</strong> <code>=example.com####https://new-example.com</code></li>
+            <li><strong>开头匹配：</strong> <code>^old-site.com####https://new-site.com</code></li>
+            <li><strong>结尾匹配：</strong> <code>old.com$####https://new.com</code></li>
+            <li><strong>包含匹配：</strong> <code>demo####https://example.com</code> （默认模式，慎用）</li>
+            <li><strong>模板替换：</strong> <code>old.com/*####new.com/{1}</code> （域名迁移，保持路径）</li>
+            <li><strong>智能提取：</strong> <code>link.zhihu.com/?target=####</code> （空目标URL，自动提取参数）</li>
+            <li><strong>本地开发：</strong> <code>localhost:3000####https://myapp.com</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 故障排除指南 -->
+    <div class="common-info">
+      <h3>🔧 故障排除与调试指南</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h5>❗ 常见问题</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li><strong>隐私模式报错：</strong> ERR_BLOCKED_BY_CLIENT 错误，需要在扩展管理页面启用"在无痕模式下启用"</li>
+            <li><strong>重定向不工作：</strong> 检查扩展是否启用，规则格式是否正确</li>
+            <li><strong>匹配不准确：</strong> 确认使用了正确的匹配模式前缀</li>
+            <li><strong>本地文件不跳转：</strong> 检查文件路径格式，确保使用了正确的匹配模式</li>
+            <li><strong>循环重定向：</strong> 检查规则是否会导致目标URL再次匹配源规则</li>
+            <li><strong>规则不生效：</strong> 确认规则顺序，第一个匹配的规则会生效</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>🔍 调试方法</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li>打开浏览器开发者工具（F12）</li>
+            <li>查看Console标签页的日志</li>
+            <li>检查Network标签页的请求</li>
+            <li>在扩展管理页面查看Service Worker日志</li>
+            <li>使用扩展选项页面的测试工具验证规则</li>
+            <li>逐步简化规则，定位问题所在</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>💡 最佳实践</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li>优先使用精确匹配（<code>=</code>前缀）避免误触发</li>
+            <li>通配符规则放在精确规则之后</li>
+            <li>测试时先用简单规则验证功能</li>
+            <li>注意占位符索引<code>{1},{2}</code>对应通配符<code>*</code>的出现顺序</li>
+            <li>使用结尾匹配（<code>$</code>后缀）提高匹配精度</li>
+            <li>定期检查和清理不需要的规则</li>
+            <li>为复杂规则添加注释说明</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h5>🧪 测试建议</h5>
+          <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+            <li>配置规则后先在测试页面验证</li>
+            <li>使用扩展选项页面的测试工具</li>
+            <li>测试多种URL格式和边界情况</li>
+            <li>验证通配符和占位符的正确性</li>
+            <li>确保不会产生循环重定向</li>
+            <li>测试本地文件重定向功能</li>
+            <li>在不同浏览器模式下测试（普通/隐私模式）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 匹配模式快速参考 -->
+    <div class="common-info">
+      <h3>📚 匹配模式快速参考</h3>
       <div class="feature-grid">
         <div class="feature-card">
           <h5><span class="match-type-badge exact">精确匹配</span></h5>
@@ -779,74 +1175,82 @@
           <p>使用 <code>*</code> 通配符和 <code>{1}, {2}, {3}</code> 占位符</p>
           <p><small>支持URL模板替换和参数重组</small></p>
         </div>
-        </div>
-        </div>
-        
-        <div class="common-info">
-          <h3>📁 本地文件重定向说明</h3>
-          <div class="feature-grid">
-            <div class="feature-card">
-              <h5>基础匹配模式</h5>
-              <ul>
-                <li><strong>包含匹配：</strong> *autoredirect_local.html（推荐）</li>
-                <li><strong>路径包含：</strong> *ChromeStore/autoRedirect/test.html</li>
-                <li><strong>file://协议：</strong> =file:///完整路径（最精确）</li>
-              </ul>
-            </div>
-            <div class="feature-card">
-              <h5>通配符模式</h5>
-              <ul>
-                <li><strong>单通配符：</strong> *ChromeStore/autoRedirect/*.html</li>
-                <li><strong>多通配符：</strong> *ChromeStore/autoRedirect/*/*.html</li>
-                <li><strong>精确通配符：</strong> =file:///path/*.html</li>
-              </ul>
-            </div>
-            <div class="feature-card">
-              <h5>高级应用场景</h5>
-              <ul>
-                <li><strong>开发环境映射：</strong> 本地文件 → 生产环境URL</li>
-                <li><strong>扩展名转换：</strong> .html → .php</li>
-                <li><strong>批量重定向：</strong> 整个目录统一重定向</li>
-                <li><strong>跨用户通用：</strong> 支持不同用户目录</li>
-              </ul>
-            </div>
-            <div class="feature-card">
-              <h5>最佳实践</h5>
-              <ul>
-                <li>优先使用精确匹配（=前缀）避免误触发</li>
-                <li>通配符规则放在精确规则之后</li>
-                <li>测试时先用简单规则验证</li>
-                <li>注意占位符索引{1},{2}对应通配符*的出现顺序</li>
-              </ul>
-            </div>
       </div>
       </div>
-
-    <div class="common-info">
-      <h3>🔧 故障排除指南</h3>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h5>常见问题</h5>
+      
+      <div class="common-info">
+        <h3>📁 本地文件重定向说明</h3>
+      <div class="localfile-grid">
+        <div class="localfile-card">
+          <h5>🎯 基础匹配模式</h5>
           <ul>
-            <li><strong>隐私模式报错：</strong> ERR_BLOCKED_BY_CLIENT 错误，需要在扩展管理页面启用"在无痕模式下启用"</li>
-            <li><strong>重定向不工作：</strong> 检查扩展是否启用，规则格式是否正确</li>
-            <li><strong>匹配不准确：</strong> 确认使用了正确的匹配模式前缀</li>
-            <li><strong>本地文件不跳转：</strong> 检查文件路径格式，确保使用了正确的匹配模式</li>
+            <li><strong>包含匹配：</strong> <code>*autoredirect_local.html</code>（推荐，安全且精确）</li>
+            <li><strong>路径包含：</strong> <code>*ChromeStore/autoRedirect/test.html</code></li>
+            <li><strong>file://协议：</strong> <code>=file:///完整路径</code>（最精确的匹配方式）</li>
+            <li><strong>结尾匹配：</strong> <code>*autoredirect_local.html$</code>（严格结尾匹配）</li>
             </ul>
             </div>
-
-        <div class="feature-card">
-          <h5>调试方法</h5>
+        <div class="localfile-card">
+          <h5>🔧 通配符模式</h5>
           <ul>
-            <li>打开浏览器开发者工具</li>
-            <li>查看Console标签页的日志</li>
-            <li>检查Network标签页的请求</li>
-            <li>在扩展管理页面查看Service Worker日志</li>
-          </ul>
-        </div>
-        </div>
-        </div>
+            <li><strong>单通配符：</strong> <code>*ChromeStore/autoRedirect/*.html</code></li>
+            <li><strong>多通配符：</strong> <code>*ChromeStore/autoRedirect/*/*.html</code></li>
+            <li><strong>精确通配符：</strong> <code>=file:///path/*.html</code></li>
+            <li><strong>跨用户通配符：</strong> <code>=file:///Users/*/dev/*/*.html</code></li>
+            </ul>
+            </div>
+        <div class="localfile-card">
+          <h5>🚀 高级应用场景</h5>
+          <ul>
+            <li><strong>开发环境映射：</strong> 本地文件 → 生产环境URL</li>
+            <li><strong>扩展名转换：</strong> <code>.html</code> → <code>.php</code></li>
+            <li><strong>批量重定向：</strong> 整个目录统一重定向到远程服务器</li>
+            <li><strong>跨用户通用：</strong> 支持不同用户目录的通用匹配</li>
+            <li><strong>子目录结构：</strong> 保持原有目录层级关系</li>
+            </ul>
+            </div>
+        <div class="localfile-card">
+          <h5>💡 最佳实践</h5>
+          <ul>
+            <li>优先使用精确匹配（<code>=</code>前缀）避免误触发</li>
+            <li>通配符规则放在精确规则之后</li>
+            <li>测试时先用简单规则验证功能</li>
+            <li>注意占位符索引<code>{1},{2}</code>对应通配符<code>*</code>的出现顺序</li>
+            <li>使用结尾匹配（<code>$</code>后缀）提高匹配精度</li>
+            </ul>
+            </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>🚀 AutoRedirect - 智能重定向扩展</h3>
+      <p>
+        AutoRedirect 是一款功能强大的 Chrome 浏览器扩展，支持多种匹配模式的智能重定向功能。<br>
+        无论是开发环境切换、本地文件映射，还是复杂的URL重写，都能轻松应对。
+      </p>
+  
+      <a href="https://chromewebstore.google.com/detail/edgiaaakbcjloebnmehbnfiajbhcpbcf" target="_blank"
+        class="footer-install-btn">
+        🛒 立即从 Chrome Web Store 安装
+      </a>
+  
+      <div class="footer-links">
+        <p>
+          🌟 支持精确匹配、开头匹配、结尾匹配、通配符匹配等多种模式<br>
+          📁 专业的本地文件重定向功能，完美支持开发环境<br>
+          🔧 智能URL提取和解码，自动处理复杂跳转链接<br>
+          ⚡ 高性能、低延迟，不影响浏览体验
+        </p>
+        <p style="margin-top: 15px;">
+          © 2025 AutoRedirect. 让重定向更智能，让开发更高效。
+        </p>
+      </div>
+    </div>
+  </footer>
 
   <!-- 成功提示 -->
   <div id="success-toast" class="success-toast">
@@ -866,7 +1270,7 @@
 api*####https://api.example.com
 
 # ===== 结尾匹配测试 =====
-*.local#  on$####https://config.example.com
+*.local$####https://config.example.com
 
 # ===== URL模板替换测试 =====
 # 简单域名替换
@@ -875,7 +1279,7 @@ https://old-domain.com/*####https://new-domain.com/{1}
 http://example.com/*/page/*####https://newsiteewpage/{2}
 
 # ===== 智能URL提取测试 =====
-link.z#
+link.zhihu.com/?target=####
 
 # ===== 多结果选择测试 =====
 multi####https://www.google.com
@@ -1132,6 +1536,8 @@ multi####https://www.yahoo.com`
         }
       })
     }
+
+ 
   </script>
 </body>
 

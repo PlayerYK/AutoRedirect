@@ -182,10 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
       await chrome.storage.local.set({ jump_list: srcList });
       const tips = document.getElementById("tips");
       tips.style.display = "block";
-      tips.textContent = "保存成功！";
+      tips.textContent = "保存成功！新规则已生效，扩展程序将立即使用更新后的规则。";
       setTimeout(function () {
         tips.style.display = "none";
-      }, 1000);
+      }, 3000);
     } else {
       var errAlert = "<h3>Redirect loop found!</h3><br>";
       errorArr.forEach(function (v, i) {
@@ -272,6 +272,24 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("test_url").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       document.getElementById("test_redirect").click();
+    }
+  });
+
+  // 添加全局键盘快捷键支持
+  document.addEventListener("keydown", function (e) {
+    // 检查是否按下了 Ctrl+S (Windows/Linux) 或 Cmd+S (Mac)
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault(); // 阻止浏览器默认的保存行为
+      document.getElementById("save").click(); // 触发保存按钮点击事件
+    }
+  });
+
+  // 为输入框添加特定的键盘快捷键支持
+  document.getElementById("jump_list").addEventListener("keydown", function (e) {
+    // 检查是否按下了 Ctrl+S (Windows/Linux) 或 Cmd+S (Mac)
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault(); // 阻止浏览器默认的保存行为
+      document.getElementById("save").click(); // 触发保存按钮点击事件
     }
   });
 });
