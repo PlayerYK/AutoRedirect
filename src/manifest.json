@@ -12,25 +12,31 @@
   "action": {
     "default_title": "Auto Redirect",
     "default_icon": {
-      "19": "images/icon_19.png",
-      "38": "images/icon_38.png"
-    },
-    "default_popup": "popup.html"
+      "19": "images/icon_19_off.png",
+      "38": "images/icon_38_off.png"
+    }
   },
   "icons": {
-    "16": "images/icon_19.png",
-    "48": "images/icon_48.png",
-    "128": "images/icon_128.png"
+    "16": "images/icon_16_off.png",
+    "48": "images/icon_48_off.png",
+    "96": "images/icon_96_off.png",
+    "128": "images/icon_128_off.png"
   },
   "web_accessible_resources": [
     {
       "resources": [
-        "images/icon_19.png",
-        "images/icon_19_bold.png",
-        "images/icon_38.png",
-        "images/icon_48.png",
-        "images/icon_128.png",
-        "images/icon_128_b.png"
+        "images/icon_16_on.png",
+        "images/icon_16_off.png",
+        "images/icon_19_on.png",
+        "images/icon_19_off.png",
+        "images/icon_38_on.png",
+        "images/icon_38_off.png",
+        "images/icon_48_on.png",
+        "images/icon_48_off.png",
+        "images/icon_96_on.png",
+        "images/icon_96_off.png",
+        "images/icon_128_on.png",
+        "images/icon_128_off.png"
       ],
       "matches": ["<all_urls>"]
     }

@@ -260,18 +260,130 @@
         }
 
         .msg-correct {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
             position: fixed;
-            padding: 15px 30px;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
             border-radius: 4px;
-            display: none;
+            padding: 15px 20px;
+            font-size: 14px;
             z-index: 1000;
-            font-weight: 500;
+            display: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 扩展开关样式 */
+        .extension-switch-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .switch-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .switch-status {
+            font-size: 1rem;
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .switch-status.enabled {
+            color: #28a745;
+        }
+
+        .switch-status.disabled {
+            color: #dc3545;
+        }
+
+        /* 开关样式 - 从popup.html复制 */
+        input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .slideThree {
+            width: 80px;
+            height: 26px;
+            background: #333;
+            margin: 0;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            position: relative;
+            -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+            -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+            box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+        }
+
+        .slideThree:after {
+            content: 'OFF';
+            font: 12px/26px Arial, sans-serif;
+            color: #000;
+            position: absolute;
+            right: 10px;
+            z-index: 0;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+        }
+
+        .slideThree:before {
+            content: 'ON';
+            font: 12px/26px Arial, sans-serif;
+            color: #00bf00;
+            position: absolute;
+            left: 10px;
+            z-index: 0;
+            font-weight: bold;
+        }
+
+        .slideThree label {
+            display: block;
+            width: 34px;
+            height: 20px;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            -webkit-transition: all .1s ease;
+            -moz-transition: all .1s ease;
+            -o-transition: all .1s ease;
+            -ms-transition: all .1s ease;
+            transition: all .1s ease;
+            cursor: pointer;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            z-index: 1;
+            -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+            -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+            box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+            background: #fcfff4;
+            background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+        }
+
+        .slideThree input[type=checkbox]:checked + label {
+            left: 43px;
         }
 
         /* 隐藏滚动条但保持滚动功能 */
@@ -794,6 +906,27 @@
         #test-tab .config-panel:last-child {
             flex-shrink: 0;
         }
+
+        /* 消息提示样式 */
+        .msg-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            display: block;
+        }
+
+        .msg-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            display: block;
+        }
     </style>
     <script type="text/javascript" src="script/redirect-engine.js"></script>
     <script type="text/javascript" src="script/config-manager.js"></script>
@@ -803,196 +936,201 @@
     <div class="container">
         <div id="header">
             <div id="title">Auto Redirect Options</div>
+            
+            <!-- 扩展总开关 -->
+            <div class="extension-switch-container">
+                <div class="switch-wrapper">
+                    <span class="switch-label">扩展状态：</span>
+                    <div class="slideThree">
+                        <input type="checkbox" value="None" id="extension_enabled_switch" name="extension_enabled_switch" />
+                        <label for="extension_enabled_switch"></label>
+                    </div>
+                    <span class="switch-status" id="switch_status">关闭</span>
+                </div>
+            </div>
+            
             <div class="subtitle">配置您的自动重定向规则</div>
+        </div>
+        <div class="main-content">
+            <!-- 左侧配置面板 -->
+            <div class="config-panel">
+                <div class="section-header">重定向规则配置</div>
+                <div class="section-content">
+                    <div class="option">
+                        <div class="option-name">
+                            <a href="https://extcreator.com/autoredirect/autoredirect_test.html" target="_blank"
+                                style="color: #007acc; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                                🧪 打开测试页面获取配置示例
+                            </a>
+                        </div>
+                        <div class="line">
+                            <textarea name="jump_list" id="jump_list" class="jump-list"
+                                placeholder="请在此输入您的重定向规则，每行一条规则，格式：原始URL####目标URL"></textarea>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" id="save">💾 保存配置</button>
+                    </div>
+                    <div id="msg-alert"></div>
+                </div>
             </div>
-            <div class="main-content">
-                <!-- 左侧配置面板 -->
-                <div class="config-panel">
-                    <div class="section-header">重定向规则配置</div>
-                    <div class="section-content">
-                        <div class="option">
-                            <div class="option-name">
-                                <a href="https://extcreator.com/autoredirect/autoredirect_test.html" target="_blank"
-                                    style="color: #007acc; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                                    🧪 打开测试页面获取配置示例
-                                </a>
+            <!-- 右侧面板容器 -->
+            <div class="right-panel">
+                <!-- 标签页导航 -->
+                <div class="tab-navigation">
+                    <button class="tab-button active" data-tab="guide">📚 使用指南</button>
+                    <button class="tab-button" data-tab="test">🧪 测试工具</button>
+                </div>
+            
+                <!-- 使用指南标签页 -->
+                <div class="tab-content active" id="guide-tab">
+                    <!-- 帮助面板 -->
+                    <div class="help-panel">
+                        <div class="section-header">使用指南</div>
+                        <div class="help-content">
+                            <div class="help-section">
+                                <h3>匹配模式说明</h3>
+                                <ul>
+                                    <li>精确匹配： <span class="match-symbol exact">=</span>example.com####target （完全匹配）</li>
+                                    <li>开头匹配： <span class="match-symbol prefix">^</span>test####target 或 <span
+                                            class="match-symbol prefix">*</span>test####target
+                                        （以指定内容开头）</li>
+                                    <li>结尾匹配： test<span class="match-symbol suffix">*</span>####target 或 test<span
+                                            class="match-symbol suffix">$</span>####target （以指定内容结尾）</li>
+                                    <li>包含匹配： test####target （默认模式，⚠️ 慎用！全局匹配易出错）</li>
+                                    <li><strong>通配符：</strong> 在任意匹配模式中使用 <span class="match-symbol contains">*</span> 匹配任意字符
+                                    </li>
+                                    <li><strong>模板替换：</strong> 使用 <span class="match-symbol prefix">{1}</span>, <span
+                                            class="match-symbol prefix">{2}</span> 等占位符引用通配符匹配的内容</li>
+                                </ul>
                             </div>
-                            <div class="line">
-                                <textarea name="jump_list" id="jump_list" class="jump-list"
-                                    placeholder="请在此输入您的重定向规则，每行一条规则，格式：原始URL####目标URL"></textarea>
+                            <div class="help-section">
+                                <h3>URL模板替换功能</h3>
+                                <ul>
+                                    <li><strong>基础语法：</strong> 使用 <span class="match-example">*</span> 匹配任意字符，用 <span
+                                            class="match-example">{1}, {2}, {3}</span> 引用匹配内容</li>
+                                    <li><strong>域名替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span></li>
+                                    <li><strong>路径重写：</strong> <span
+                                            class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span></li>
+                                    <li><strong>多段重组：</strong> <span
+                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
+                                    </li>
+                                    <li><strong>参数重排：</strong> <span
+                                            class="match-example">site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}</span></li>
+                                    <li><strong>重复使用：</strong> <span
+                                            class="match-example">old.com/user/*####new.com/{1}/profile/{1}/settings</span></li>
+                                    <li><strong>选择性使用：</strong> <span
+                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/products/{3}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="help-section">
+                                <h3>高级功能</h3>
+                                <ul>
+                                    <li>支持注释： 以 <span class="match-symbol comment">#</span> 开头的行为注释行</li>
+                                    <li>空行会被忽略</li>
+                                    <li>规则按顺序匹配，第一个匹配的规则生效</li>
+                                    <li><strong>注意：</strong>避免循环重定向</li>
+                                </ul>
+                            </div>
+                            <div class="help-section">
+                                <h3>配置示例与用法</h3>
+                                <ul>
+                                    <li><strong>基础格式：</strong> <span class="match-example">原始URL####目标URL</span> （每行一条规则）</li>
+                                    <li><strong>精确匹配：</strong> <span
+                                            class="match-example">=example.com####https://new-example.com</span></li>
+                                    <li><strong>开头匹配：</strong> <span
+                                            class="match-example">^old-site.com####https://new-site.com</span> 或
+                                        <span class="match-example">https://old-site.com*####https://new.com</span>
+                                    </li>
+                                    <li><strong>结尾匹配：</strong> <span class="match-example">old.com*####https://new.com</span> 或
+                                        <span class="match-example">old.com$####https://new.com</span>
+                                    </li>
+                                    <li><strong>包含匹配：</strong> <span class="match-example">demo####https://example.com</span>
+                                        （默认模式，慎用）</li>
+                                    <li><strong>模板替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span>
+                                        （域名迁移，保持路径）</li>
+                                    <li><strong>路径重写：</strong> <span
+                                            class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span>
+                                        （重新组织URL结构）</li>
+                                    <li><strong>多段重组：</strong> <span
+                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
+                                        （三段路径重新排列）</li>
+                                    <li><strong>智能提取：</strong> <span class="match-example">link.zhihu.com/?target=####</span>
+                                        （空目标URL，自动提取参数）</li>
+                                    <li><strong>本地开发：</strong> <span
+                                            class="match-example">localhost:3000####https://myapp.com</span></li>
+                                    <li><strong>开发环境：</strong> <span
+                                            class="match-example">dev.mysite.com####https://prod.mysite.com</span></li>
+                                    <li><strong>协议升级：</strong> <span
+                                            class="match-example">^http://site.com####https://site.com</span></li>
+                                    <li><strong>通配符使用：</strong> <span class="match-example">*.old.com####https://new.com</span>
+                                        （匹配所有子域名）</li>
+                                    <li><strong>注意：</strong>规则按顺序匹配，第一个匹配的规则生效</li>
+                                </ul>
+                            </div>
+                            <div class="help-section">
+                                <h3>测试工具使用</h3>
+                                <ul>
+                                    <li>在测试工具中输入URL，查看重定向路径</li>
+                                    <li>支持多步重定向链路追踪</li>
+                                    <li>自动检测循环重定向</li>
+                                    <li>显示匹配的规则和类型</li>
+                                    <li>最多追踪5步重定向，防止无限循环</li>
+                                    <li><strong>建议：</strong>配置规则后先测试，确保符合预期</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 测试工具标签页 -->
+                <div class="tab-content" id="test-tab">
+                    <!-- 测试工具区域 -->
+                    <div class="config-panel">
+                        <div class="section-header">🧪 重定向测试工具</div>
+                        <div class="section-content">
+                            <div class="option">
+                                <div class="option-name">测试URL</div>
+                                <div class="line">
+                                    <input type="text" id="test_url" class="test-input" placeholder="请输入要测试的URL，例如：https://example.com/path" />
                                 </div>
+                            </div>
+                            <div class="button-container">
+                                <button type="button" id="test_redirect">🔍 测试重定向</button>
+                            </div>
+                            <div id="test_result" class="test-result"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 日志显示区域 -->
+                    <div class="config-panel" style="margin-top: 20px;">
+                        <div class="section-header">📋 测试日志</div>
+                        <div class="section-content">
+                            <div class="log-controls">
+                                <div class="log-control-group">
+                                    <label for="log_level">日志级别：</label>
+                                    <select id="log_level" class="log-level-select">
+                                        <option value="0">DEBUG (详细)</option>
+                                        <option value="1" selected>INFO (一般)</option>
+                                        <option value="2">WARN (警告)</option>
+                                        <option value="3">ERROR (错误)</option>
+                                    </select>
                                 </div>
-                                <div class="button-container">
-                                    <button type="button" id="save">💾 保存配置</button>
+                                <div class="log-control-group">
+                                    <button type="button" id="copy_logs" class="copy-logs-btn">📋 复制日志</button>
+                                    <button type="button" id="clear_logs" class="clear-logs-btn">🗑️ 清空日志</button>
                                 </div>
-                                <div id="msg-alert"></div>
-                                </div>
-                                </div>
-                                <!-- 右侧面板容器 -->
-                                <div class="right-panel">
-                                    <!-- 标签页导航 -->
-                                    <div class="tab-navigation">
-                                        <button class="tab-button active" data-tab="guide">📚 使用指南</button>
-                                        <button class="tab-button" data-tab="test">🧪 测试工具</button>
-                                    </div>
-                                
-                                    <!-- 使用指南标签页 -->
-                                    <div class="tab-content active" id="guide-tab">
-                                        <!-- 帮助面板 -->
-                                        <div class="help-panel">
-                                            <div class="section-header">使用指南</div>
-                                            <div class="help-content">
-                                                <div class="help-section">
-                                                    <h3>匹配模式说明</h3>
-                                                    <ul>
-                                                        <li>精确匹配： <span class="match-symbol exact">=</span>example.com####target （完全匹配）</li>
-                                                        <li>开头匹配： <span class="match-symbol prefix">^</span>test####target 或 <span
-                                                                class="match-symbol prefix">*</span>test####target
-                                                            （以指定内容开头）</li>
-                                                        <li>结尾匹配： test<span class="match-symbol suffix">*</span>####target 或 test<span
-                                                                class="match-symbol suffix">$</span>####target （以指定内容结尾）</li>
-                                                        <li>包含匹配： test####target （默认模式，⚠️ 慎用！全局匹配易出错）</li>
-                                                        <li><strong>通配符：</strong> 在任意匹配模式中使用 <span class="match-symbol contains">*</span> 匹配任意字符
-                                                        </li>
-                                                        <li><strong>模板替换：</strong> 使用 <span class="match-symbol prefix">{1}</span>, <span
-                                                                class="match-symbol prefix">{2}</span> 等占位符引用通配符匹配的内容</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="help-section">
-                                                    <h3>URL模板替换功能</h3>
-                                                    <ul>
-                                                        <li><strong>基础语法：</strong> 使用 <span class="match-example">*</span> 匹配任意字符，用 <span
-                                                                class="match-example">{1}, {2}, {3}</span> 引用匹配内容</li>
-                                                        <li><strong>域名替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span></li>
-                                                        <li><strong>路径重写：</strong> <span
-                                                                class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span></li>
-                                                        <li><strong>多段重组：</strong> <span
-                                                                class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
-                                                        </li>
-                                                        <li><strong>参数重排：</strong> <span
-                                                                class="match-example">site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}</span></li>
-                                                        <li><strong>重复使用：</strong> <span
-                                                                class="match-example">old.com/user/*####new.com/{1}/profile/{1}/settings</span></li>
-                                                        <li><strong>选择性使用：</strong> <span
-                                                                class="match-example">old.com/*/category/*/item/*####new.com/{1}/products/{3}</span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="help-section">
-                                                    <h3>高级功能</h3>
-                                                    <ul>
-                                                        <li>支持注释： 以 <span class="match-symbol comment">#</span> 开头的行为注释行</li>
-                                                        <li>空行会被忽略</li>
-                                                        <li>规则按顺序匹配，第一个匹配的规则生效</li>
-                                                        <li><strong>注意：</strong>避免循环重定向</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="help-section">
-                                                    <h3>配置示例与用法</h3>
-                                                    <ul>
-                                                        <li><strong>基础格式：</strong> <span class="match-example">原始URL####目标URL</span> （每行一条规则）</li>
-                                                        <li><strong>精确匹配：</strong> <span
-                                                                class="match-example">=example.com####https://new-example.com</span></li>
-                                                        <li><strong>开头匹配：</strong> <span
-                                                                class="match-example">^old-site.com####https://new-site.com</span> 或
-                                                            <span class="match-example">https://old-site.com*####https://new.com</span>
-                                                        </li>
-                                                        <li><strong>结尾匹配：</strong> <span class="match-example">old.com*####https://new.com</span> 或
-                                                            <span class="match-example">old.com$####https://new.com</span>
-                                                        </li>
-                                                        <li><strong>包含匹配：</strong> <span class="match-example">demo####https://example.com</span>
-                                                            （默认模式，慎用）</li>
-                                                        <li><strong>模板替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span>
-                                                            （域名迁移，保持路径）</li>
-                                                        <li><strong>路径重写：</strong> <span
-                                                                class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span>
-                                                            （重新组织URL结构）</li>
-                                                        <li><strong>多段重组：</strong> <span
-                                                                class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
-                                                            （三段路径重新排列）</li>
-                                                        <li><strong>智能提取：</strong> <span class="match-example">link.zhihu.com/?target=####</span>
-                                                            （空目标URL，自动提取参数）</li>
-                                                        <li><strong>本地开发：</strong> <span
-                                                                class="match-example">localhost:3000####https://myapp.com</span></li>
-                                                        <li><strong>开发环境：</strong> <span
-                                                                class="match-example">dev.mysite.com####https://prod.mysite.com</span></li>
-                                                        <li><strong>协议升级：</strong> <span
-                                                                class="match-example">^http://site.com####https://site.com</span></li>
-                                                        <li><strong>通配符使用：</strong> <span class="match-example">*.old.com####https://new.com</span>
-                                                            （匹配所有子域名）</li>
-                                                        <li><strong>注意：</strong>规则按顺序匹配，第一个匹配的规则生效</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="help-section">
-                                                    <h3>测试工具使用</h3>
-                                                    <ul>
-                                                        <li>在测试工具中输入URL，查看重定向路径</li>
-                                                        <li>支持多步重定向链路追踪</li>
-                                                        <li>自动检测循环重定向</li>
-                                                        <li>显示匹配的规则和类型</li>
-                                                        <li>最多追踪5步重定向，防止无限循环</li>
-                                                        <li><strong>建议：</strong>配置规则后先测试，确保符合预期</li>
-                                                        </ul>
-                                                        </div>
-                                                        </div>
-                                        </div>
-                                        </div>
-                                        
-                                        <!-- 测试工具标签页 -->
-                                        <div class="tab-content" id="test-tab">
-                                            <!-- 测试工具区域 -->
-                                            <div class="config-panel">
-                                                <div class="section-header">🧪 重定向测试工具</div>
-                                                <div class="section-content">
-                                                    <div class="option">
-                                                        <div class="option-name">测试URL</div>
-                                                <div class="line">
-                                                    <input type="text" id="test_url" class="test-input" placeholder="请输入要测试的URL，例如：https://example.com/path" />
-                                                    </div>
-                                                    </div>
-                                                    <div class="button-container">
-                                                        <button type="button" id="test_redirect">🔍 测试重定向</button>
-                                                    </div>
-                                                    <div id="test_result" class="test-result"></div>
-                                                    </div>
-                                                    </div>
-                                                    
-                                                    <!-- 日志显示区域 -->
-                                                    <div class="config-panel" style="margin-top: 20px;">
-                                                        <div class="section-header">📋 测试日志</div>
-                                                        <div class="section-content">
-                                                            <div class="log-controls">
-                                                                <div class="log-control-group">
-                                                                    <label for="log_level">日志级别：</label>
-                                                                    <select id="log_level" class="log-level-select">
-                                                                        <option value="0">DEBUG (详细)</option>
-                                                                        <option value="1" selected>INFO (一般)</option>
-                                                                        <option value="2">WARN (警告)</option>
-                                                                        <option value="3">ERROR (错误)</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="log-control-group">
-                                                                    <button type="button" id="copy_logs" class="copy-logs-btn">📋 复制日志</button>
-                                                                    <button type="button" id="clear_logs" class="clear-logs-btn">🗑️ 清空日志</button>
-                                                                </div>
-                                                            </div>
-                                                            <div id="test_logs" class="test-logs">
-                                                                <div class="no-logs">暂无日志，请先进行重定向测试</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>
+                            </div>
+                            <div id="test_logs" class="test-logs">
+                                <div class="no-logs">暂无日志，请先进行重定向测试</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
+    </div>
 
     <div class="msg-correct" id="tips"></div>
 </body>

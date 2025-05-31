@@ -2,94 +2,76 @@
 importScripts('redirect-engine.js');
 importScripts('config-manager.js');
 
-// 调试函数定义
-var show_debug_level = 1;
-function debugLog(obj, level) {
-  level = level || 0;
-  if (level >= show_debug_level) {
-    console.log(obj);
-  }
-}
-
 // Initialize extension
-chrome.runtime.onInstalled.addListener(() => {
-  initializeExtension();
+chrome.runtime.onInstalled.addListener(async (details) => {
+  await initializeExtension();
 });
 
-chrome.runtime.onStartup.addListener(() => {
-  initializeExtension();
+chrome.runtime.onStartup.addListener(async () => {
+  await initializeExtension();
 });
 
 async function initializeExtension() {
-  debugLog("initializeExtension called");
-  
   try {
     const result = await chrome.storage.local.get(["jump_list_auto"]);
-    let isAuto = result.jump_list_auto;
-  
-    debugLog("Current jump_list_auto value: " + isAuto);
-  
-    if (isAuto === undefined) {
+    let isAutoStoredValue = result.jump_list_auto;
+    let isAuto;
+
+    if (isAutoStoredValue === undefined) {
       isAuto = 1;
       await chrome.storage.local.set({ jump_list_auto: 1 });
-      debugLog("First install, set jump_list_auto to 1");
     } else {
-      isAuto = isAuto || 0;
+      isAuto = Number(isAutoStoredValue);
     }
 
-    debugLog("Final isAuto value: " + isAuto);
+    const iconPath19On = chrome.runtime.getURL("images/icon_19_on.png");
+    const iconPath19Off = chrome.runtime.getURL("images/icon_19_off.png");
+    const iconPath38On = chrome.runtime.getURL("images/icon_38_on.png");
+    const iconPath38Off = chrome.runtime.getURL("images/icon_38_off.png");
 
-    if (isAuto == 1) {
+    if (isAuto === 1) {
       await chrome.action.setIcon({
         path: {
-          19: chrome.runtime.getURL("images/icon_19_bold.png"),
-          38: chrome.runtime.getURL("images/icon_38.png"),
+          19: iconPath19On,
+          38: iconPath38On,
         },
       });
       await chrome.action.setTitle({
         title: "Auto Redirect - On"
       });
-      debugLog("Set title to: Auto Redirect - On");
     } else {
       await chrome.action.setIcon({
         path: {
-          19: chrome.runtime.getURL("images/icon_19.png"),
-          38: chrome.runtime.getURL("images/icon_38.png"),
+          19: iconPath19Off,
+          38: iconPath38Off,
         },
       });
       await chrome.action.setTitle({
         title: "Auto Redirect - Off"
       });
-      debugLog("Set title to: Auto Redirect - Off");
     }
   } catch (error) {
-    debugLog("Failed to set icon or title: " + error);
+    console.error("Error in initializeExtension:", error); // 保留一个顶层错误记录以防万一
   }
 }
 
 // Called when the url of a tab changes.
 async function checkForValidUrl(tabId, changeInfo, tab) {
-  // If the letter 'file:///' is found in the tab's URL...
   if (tab && tab.url && tab.url.indexOf("file:///") > -1) {
-    // ...check options and start jump.
     const result = await chrome.storage.local.get(["jump_list_auto"]);
-
     try {
-      // 确保ConfigManager可用
       const configManager = self.ConfigManager || ConfigManager;
       if (!configManager) {
         throw new Error('ConfigManager未加载');
       }
-      
-      // 使用配置管理器获取配置
       const jump_list = await configManager.getConfig();
-      
       const isAuto = result.jump_list_auto || 0;
       if (isAuto == 1) {
         startProcess(tab, jump_list);
       }
     } catch (error) {
-      debugLog("Failed to get config: " + error.message);
+      // Consider logging this error if important for production
+      // console.error("Failed to get config for file URL:", error);
       return;
     }
   }
@@ -104,36 +86,27 @@ async function startProcess(tab, jump_list = null) {
     windowId: chrome.windows.WINDOW_ID_CURRENT,
   });
   const currentTab = tabs[0];
-  // 不要对URL进行编码，保持原始URL用于匹配
   const url = currentTab.url;
-  debugLog("local tab url " + url, 1);
 
-  // 如果没有传入配置，则获取配置
   if (!jump_list) {
     try {
-      // 确保ConfigManager可用
       const configManager = self.ConfigManager || ConfigManager;
       if (!configManager) {
         throw new Error('ConfigManager未加载');
       }
-      
       jump_list = await configManager.getConfig();
     } catch (error) {
-      debugLog("Failed to get config: " + error.message);
+      // console.error("Failed to get config in startProcess:", error);
       return;
     }
   }
 
-  // 使用共享的重定向引擎
   const rules = RedirectEngine.parseRedirectRules(jump_list);
   const src_list = jump_list.split("\n");
   const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
 
-  debugLog(result_list, 2);
-
   switch (result_list.length) {
     case 0:
-      // No matches found
       break;
     case 1:
       chrome.tabs.update(currentTab.id, {
@@ -158,14 +131,9 @@ async function startProcess(tab, jump_list = null) {
 // Handle web requests using declarativeNetRequest
 chrome.webRequest.onBeforeRequest.addListener(
   async function (details) {
-    debugLog("called details params");
-    debugLog(details);
-    debugLog("online tab url " + details.url, 2);
-
     const result = await chrome.storage.local.get(["jump_list_auto"]);
     const isAuto = result.jump_list_auto || 0;
 
-    debugLog("auto redirect: isAuto " + isAuto);
     if (isAuto != 1) {
       return;
     }
@@ -173,22 +141,14 @@ chrome.webRequest.onBeforeRequest.addListener(
     const url = details.url;
 
     try {
-      // 确保ConfigManager可用
       const configManager = self.ConfigManager || ConfigManager;
       if (!configManager) {
         throw new Error('ConfigManager未加载');
       }
-      
-      // 使用配置管理器获取配置
       const jump_list = await configManager.getConfig();
-
-      // 使用共享的重定向引擎
       const rules = RedirectEngine.parseRedirectRules(jump_list);
       const src_list = jump_list.split("\n");
       const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
-
-      debugLog("result length " + result_list.length);
-      debugLog(result_list, 2);
 
       switch (result_list.length) {
         case 0:
@@ -212,7 +172,7 @@ chrome.webRequest.onBeforeRequest.addListener(
           break;
       }
     } catch (error) {
-      debugLog("Failed to get config: " + error.message);
+      // console.error("Failed to get config in onBeforeRequest:", error);
       return;
     }
   },
@@ -225,10 +185,24 @@ chrome.webRequest.onBeforeRequest.addListener(
 // 立即执行初始化，确保service worker每次启动时都设置正确的状态
 (async () => {
   try {
-    debugLog("Starting async initialization");
     await initializeExtension();
-    debugLog("Async initialization completed");
   } catch (error) {
-    debugLog("Error in immediate initialization: " + error);
+    console.error("Error in immediate initialization:", error);
   }
 })();
+
+// 监听扩展图标点击事件，打开选项页面
+chrome.action.onClicked.addListener((tab) => {
+  chrome.runtime.openOptionsPage();
+});
+
+// 监听存储变化，更新图标和标题
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+  if (namespace === 'local' && changes.jump_list_auto) {
+    try {
+      await initializeExtension();
+    } catch (error) {
+      console.error("Failed to re-initialize after storage change:", error);
+    }
+  }
+});

@@ -116,6 +116,71 @@ async function initValue() {
   }
 }
 
+// 初始化扩展开关
+async function initExtensionSwitch() {
+  try {
+    // 获取当前扩展状态
+    const result = await chrome.storage.local.get(["jump_list_auto"]);
+    const isAuto = result.jump_list_auto || 0;
+    
+    // 设置开关状态
+    const switchElement = document.getElementById("extension_enabled_switch");
+    if (switchElement) {
+      switchElement.checked = isAuto == 1;
+      updateSwitchStatus(isAuto == 1);
+    }
+    
+    // 添加开关事件监听器
+    if (switchElement) {
+      switchElement.addEventListener("change", async function() {
+        const newState = this.checked ? 1 : 0;
+        
+        try {
+          // 保存新状态到存储
+          await chrome.storage.local.set({ jump_list_auto: newState });
+          updateSwitchStatus(this.checked);
+          
+          // 显示状态更新消息
+          showMessage(this.checked ? "扩展已启用" : "扩展已禁用", "success");
+        } catch (error) {
+          console.error("Failed to update extension state:", error);
+          showMessage("状态更新失败: " + error.message, "error");
+          // 恢复开关状态
+          this.checked = !this.checked;
+          updateSwitchStatus(this.checked);
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Failed to initialize extension switch:", error);
+    showMessage("开关初始化失败: " + error.message, "error");
+  }
+}
+
+// 更新开关状态显示
+function updateSwitchStatus(isEnabled) {
+  const statusElement = document.getElementById("switch_status");
+  if (statusElement) {
+    statusElement.textContent = isEnabled ? "开启" : "关闭";
+    statusElement.className = isEnabled ? "switch-status enabled" : "switch-status disabled";
+  }
+}
+
+// 显示消息提示
+function showMessage(message, type = "info") {
+  const msgAlert = document.getElementById("msg-alert");
+  if (msgAlert) {
+    msgAlert.innerHTML = message;
+    msgAlert.className = type === "error" ? "msg-error" : "msg-success";
+    msgAlert.style.display = "block";
+    
+    // 3秒后自动隐藏
+    setTimeout(() => {
+      msgAlert.style.display = "none";
+    }, 3000);
+  }
+}
+
 function checkCircleRedirect(src_list) {
   src_list = src_list.split("\n");
   var errorList = [];
@@ -159,6 +224,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   initValue();
+
+  // 初始化扩展开关
+  initExtensionSwitch();
 
   // 标签页切换功能
   function initTabSwitching() {
