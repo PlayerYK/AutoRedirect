@@ -8,120 +8,106 @@
 2. 访问 `chrome://extensions/`
 3. 启用右上角的"开发者模式"
 4. 点击"加载已解压的扩展程序"
-5. 选择项目根目录 `/Users/ExtTeam/dev/ChromeStore/autoRedirect`
+5. 选择项目根目录 `/Users/yukun/dev/ChromeStore/autoRedirect`
 
 ### 一键测试
 
 **推荐使用综合测试文件：**
-- 打开 `autoredirect_test.html` 文件
+- 打开 `test/autoredirect_test.html` 文件
 - 按照页面指引完成所有功能测试
 - 该文件包含完整的配置说明和测试用例
 
 ## 🧪 测试工具和文件
 
-### 1. `test_all_rules.html` - 网页版测试界面
-- **功能**: 提供可视化的测试界面，支持浏览器运行
+### 1. `autoredirect_test.html` - 完整交互式测试页面 ⭐ (推荐)
+- **功能**: 提供完整的交互式测试界面和配置演示
 - **特点**: 
-  - 美观的用户界面
-  - 实时测试结果显示
-  - 详细的日志输出
-  - 测试报告导出功能
-- **使用方法**: 在浏览器中打开该文件即可运行测试
+  - 美观的用户界面，与 `example_config.txt` 完全统一
+  - 8种测试用例类型，覆盖所有功能
+  - 一键复制配置功能
+  - 详细的使用说明和最佳实践
+  - 安全警告和注意事项
+- **使用方法**: 在浏览器中打开该文件，按照指引进行测试
 
-### 2. `test_rules.js` - 命令行测试脚本
-- **功能**: 完整的命令行测试工具，包含所有测试用例
+### 2. `example_config.txt` - 标准配置示例
+- **功能**: 完整的配置规则示例和详细说明
 - **特点**:
-  - 彩色输出，易于阅读
-  - 详细的测试日志
-  - 支持多种运行模式
-- **使用方法**: 
-  ```bash
-  node test_rules.js           # 运行所有测试
-  node test_rules.js --verbose # 显示详细日志
-  node test_rules.js --quiet   # 静默模式
-  ```
-
-### 3. `test_config_rules.js` - 配置文件专用测试
-- **功能**: 专门测试 `example_config.txt` 中的实际规则
-- **特点**:
-  - 针对配置文件优化
-  - 简洁的输出格式
-  - 配置文件统计信息
-- **使用方法**:
-  ```bash
-  node test_config_rules.js        # 运行配置文件测试
-  node test_config_rules.js --quiet # 静默模式
-  ```
-
-### 4. `autoredirect_test.html` - 扩展功能测试
-- **功能**: 测试扩展在实际浏览器环境中的功能
-- **使用方法**: 在Chrome中打开该文件进行交互式测试
+  - 包含所有支持的规则类型
+  - 详细的注释和使用说明
+  - 最佳实践建议
+  - 安全性提醒
+- **使用方法**: 作为配置参考，复制需要的规则到扩展选项页面
 
 ## 🎯 测试覆盖范围
 
-### 1. 本地文件重定向 ⭐ (新增重点测试)
-- ✅ 结尾匹配测试
-- ✅ 完整file://协议路径匹配
-- ✅ 路径通配符匹配和文件名提取
-- ✅ 多通配符子目录支持
-- ✅ 文件扩展名转换
-- ✅ 跨用户开发环境映射
-- **测试用例**:
-  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html` → `https://www.example.com/autoRedirect/`
-  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/options.html` → `https://www.example.com/options/`
-  - `file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/test.html` → `https://www.example.com/test.php`
-
-### 2. 精确匹配模式 (=前缀)
+### 1. 精确匹配模式 (=前缀) ⭐
 - ✅ 完全匹配测试
+- ✅ 本地文件精确路径匹配
+- ✅ 跨用户通用路径匹配
 - ✅ 不匹配情况验证
 - **测试用例**:
-  - `localhost:3000` → `https://dev.example.com`
-  - `test.html` → `https://test.example.com`
-  - `localhost:3001` → 无匹配 (验证精确性)
+  - `=localhost:3000` → `https://www.example.com`
+  - `=file:///Downloads/full/test_local.html` → `https://www.example.com/full/`
+  - `=file:///Users/*/dev/*/pickone/*.html` → `https://production.example.com/{3}`
 
-### 3. 开头匹配模式 (^前缀 或 *后缀)
-- ✅ 前缀匹配测试
-- ✅ 通配符匹配测试
+### 2. 开头匹配模式 (^前缀 或 *后缀)
+- ✅ 标准域名格式匹配
+- ✅ 带端口的localhost匹配
+- ✅ 内网域名匹配
 - **测试用例**:
-  - `^dev` 匹配 `dev.example.com`
-  - `api*` 匹配 `api.test.com`
+  - `^dev.localhost` → `https://development.example.com`
+  - `^api.localhost` → `https://api.example.com`
+  - `^localhost:8` → `https://development.example.com`
+  - `staging.internal*` → `https://staging.example.com`
 
-### 4. 结尾匹配模式 (*前缀 或 $后缀)
-- ✅ 后缀匹配测试
-- ✅ 结尾通配符测试
+### 3. 简单字符串匹配 (特殊场景 - 谨慎使用) ⚠️
+- ✅ danger_前缀安全标识
+- ✅ 地址栏输入限制说明
+- ✅ 适用场景明确说明
 - **测试用例**:
-  - `*.local` 匹配 `test.local`
-  - `*config.json$` 匹配 `app-config.json`
+  - `^danger_dev` → `https://development.example.com`
+  - `danger_api*` → `https://api.example.com`
+  - `^danger_docs` → `https://documentation.example.com`
 
-### 5. URL模板替换功能
+### 4. URL模板替换功能
 - ✅ 基础域名替换
 - ✅ 复杂路径重写
-- ✅ 多段路径重组
-- ✅ 参数重新排列
-- ✅ 重复使用占位符
-- ✅ 部分占位符使用
+- ✅ 占位符重复使用
 - **测试用例**:
-  - `https://old-domain.com/*` → `https://new-domain.com/{1}`
-  - `old.com/*/category/*/item/*` → `new.com/{1}/cat/{2}/product/{3}`
+  - `old-domain.com/*` → `new-domain.com/{1}`
+  - `example.com/*/page/*` → `https://newsite.com/{1}/newpage/{2}`
+  - `user.com/profile/*` → `newuser.com/{1}/dashboard/{1}`
 
-### 6. 包含匹配模式 (默认)
-- ✅ 字符串包含测试
-- ✅ 向后兼容性验证
+### 5. 智能URL提取功能
+- ✅ 自动解码URL参数
+- ✅ 跳过中间跳转页面
 - **测试用例**:
-  - `localhost` 匹配 `localhost:3000`
-  - `demo` 匹配 `demo.test.com`
+  - `link.zhihu.com/?target=` → 自动提取目标URL
+  - `weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=` → 自动提取目标URL
 
-### 7. 通用URL提取功能
-- ✅ URL参数解码
-- ✅ 复杂URL提取
+### 6. 本地文件重定向功能 ⭐
+- ✅ 特定项目文件匹配
+- ✅ 通用demo文件匹配
+- ✅ 路径结构保持
+- ✅ 占位符引用
 - **测试用例**:
-  - `link.zhihu.com/?target=` 自动提取目标URL
+  - `*ChromeStore/localfile/*.html$` → `https://www.example.com/{2}/`
+  - `*demo_local.html$` → `https://www.example.com/demo/`
+  - `*autoredirect_local.html$` → `https://www.example.com/demo/`
+  - `*ChromeStore/autoRedirect/*.html` → `https://www.example.com/{2}/`
 
-### 8. 多结果选择功能
+### 7. 多结果选择功能
 - ✅ 多规则匹配检测
-- ✅ 选择页面触发
+- ✅ 选择页面显示
 - **测试用例**:
-  - `multi` 匹配多个目标URL
+  - `multi` → 显示Google、Bing、Yahoo三个选项
+
+### 8. 结尾匹配功能
+- ✅ 特定后缀匹配
+- ✅ 文件扩展名匹配
+- **测试用例**:
+  - `*.localprod` → `https://production.example.com`
+  - `*config.json$` → `https://config.example.com`
 
 ## 📋 完整功能测试清单
 
@@ -141,25 +127,28 @@
 
 ### 2. 核心重定向功能
 
-#### 通用URL提取功能 ⭐
+#### 智能URL提取功能 ⭐
 - [ ] 知乎链接自动解码跳转
+- [ ] 微信安全链接自动解码
 - [ ] 支持复杂URL参数解码
 - [ ] 解码失败时正确处理错误
 
-#### 本地文件重定向 ⭐ (重点功能)
-- [ ] file:// 协议URL正确识别
-- [ ] 结尾匹配规则生效 (`*autoredirect_test.html$`)
-- [ ] 完整路径精确匹配生效
-- [ ] 路径通配符匹配和文件名提取正确
-- [ ] 多通配符子目录支持正常
-- [ ] 文件扩展名转换功能正常
-- [ ] 跨用户开发环境映射正确
-- [ ] 自动跳转到指定在线URL
+#### 精确匹配重定向 ⭐
+- [ ] localhost端口精确匹配
+- [ ] 本地文件精确路径匹配
+- [ ] 跨用户通用路径匹配
+- [ ] 不匹配情况正确处理
 
-#### 在线网站重定向
-- [ ] HTTP/HTTPS网站重定向正常
-- [ ] URL模式匹配准确
-- [ ] 重定向目标正确
+#### 开头匹配重定向
+- [ ] 标准域名格式匹配
+- [ ] 内网域名匹配
+- [ ] 带端口localhost匹配
+
+#### 本地文件重定向 ⭐
+- [ ] ChromeStore项目文件重定向
+- [ ] 通用demo文件重定向
+- [ ] 路径结构保持正确
+- [ ] 占位符引用正确
 
 #### 多结果选择
 - [ ] 多个匹配规则触发选择页面
@@ -170,8 +159,11 @@
 
 #### 规则格式支持
 - [ ] 基本格式：`pattern####target`
-- [ ] 通配符支持：`pattern*####target`
+- [ ] 精确匹配：`=pattern####target`
+- [ ] 开头匹配：`^pattern####target` 或 `pattern*####target`
+- [ ] 结尾匹配：`*pattern####target` 或 `pattern$####target`
 - [ ] 空目标URL触发参数提取：`pattern####`
+- [ ] URL模板替换：`pattern/*####target/{1}`
 
 #### 错误处理
 - [ ] 无效规则格式检测
@@ -182,51 +174,82 @@
 
 ### 步骤1：配置测试规则
 
-在扩展选项页面添加以下规则：
+**方法1：使用交互式测试页面 (推荐)**
+1. 打开 `test/autoredirect_test.html`
+2. 选择需要测试的功能类型
+3. 点击"复制配置"按钮
+4. 在扩展选项页面粘贴配置
+
+**方法2：手动配置**
+在扩展选项页面添加以下核心规则：
 
 ```
-# 通用URL提取（知乎等跳转链接）
-link.zhihu.com/?target=####
+# 精确匹配测试
+=localhost:3000####https://www.example.com
+=file:///Downloads/full/test_local.html####https://www.example.com/full/
+=file:///Users/*/dev/*/pickone/*.html####https://production.example.com/{3}
 
-# 本地文件重定向测试（精简后的7个核心规则）
-*autoredirect_test.html$####https://www.example.com/autoRedirect/
-=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html####https://www.example.com/autoRedirect/
+# 开头匹配测试
+^dev.localhost####https://development.example.com
+^api.localhost####https://api.example.com
+^localhost:8####https://development.example.com
+staging.internal*####https://staging.example.com
+
+# 简单字符串匹配（特殊场景）
+^danger_dev####https://development.example.com
+danger_api*####https://api.example.com
+^danger_docs####https://documentation.example.com
+
+# URL模板替换测试
+old-domain.com/*####new-domain.com/{1}
+example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
+user.com/profile/*####newuser.com/{1}/dashboard/{1}
+
+# 智能URL提取测试
+link.zhihu.com/?target=####
+weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
+
+# 本地文件重定向测试
+*ChromeStore/localfile/*.html$####https://www.example.com/{2}/
+*demo_local.html$####https://www.example.com/demo/
+*autoredirect_local.html$####https://www.example.com/demo/
 *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
-=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
-*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
-=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
-*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
 
 # 多结果选择测试
 multi####https://www.google.com
 multi####https://www.bing.com
 multi####https://www.yahoo.com
 
-# 网站重定向测试
-example.com####https://www.github.com
+# 结尾匹配测试
+*.localprod####https://production.example.com
+*config.json$####https://config.example.com
 ```
 
 ### 步骤2：执行功能测试
 
-1. **知乎链接测试**
-   - 访问：`https://link.zhihu.com/?target=https%3A//www.baidu.com`
-   - 预期：直接跳转到百度，不停留在知乎页面
+1. **智能URL提取测试**
+   - 访问：`https://link.zhihu.com/?target=https%3A//www.github.com`
+   - 预期：直接跳转到GitHub，不停留在知乎页面
 
-2. **本地文件重定向测试** ⭐ (重点测试)
-   - 打开：`autoredirect_test.html`
-   - 预期：自动跳转到 `https://www.example.com/autoRedirect/`
-   - 测试其他文件：
-     - `options.html` → `https://www.example.com/options/`
-     - `popup.html` → `https://www.example.com/popup/`
-     - `test.html` → `https://www.example.com/test.php` (扩展名转换)
+2. **精确匹配测试**
+   - 在地址栏输入：`localhost:3000`
+   - 预期：自动跳转到 `https://www.example.com`
 
-3. **多结果选择测试**
-   - 访问：`https://multi.example.com`
+3. **开头匹配测试**
+   - 在地址栏输入：`dev.localhost` 或 `localhost:8000`
+   - 预期：自动跳转到对应的开发环境
+
+4. **本地文件重定向测试** ⭐
+   - 打开本地HTML文件（如果有的话）
+   - 预期：自动跳转到对应的远程URL
+
+5. **多结果选择测试**
+   - 创建书签指向：`http://multi`
    - 预期：显示选择页面，包含3个选项
 
-4. **网站重定向测试**
-   - 访问：`https://www.example.com`
-   - 预期：自动跳转到GitHub
+6. **结尾匹配测试**
+   - 访问：`https://test.localprod` 或 `https://app.config.json`
+   - 预期：自动跳转到对应目标
 
 ### 步骤3：验证扩展状态
 
@@ -236,333 +259,61 @@ example.com####https://www.github.com
 
 ## 📊 测试结果
 
-### 最新测试结果
-- **总测试数**: 31个
-- **通过测试**: 31个
-- **失败测试**: 0个
-- **成功率**: 100%
+### 当前测试状态
+- **配置规则数**: 与 `example_config.txt` 完全统一
+- **测试用例类型**: 8种完整功能类型
+- **交互式测试**: 完全支持
+- **配置一致性**: 100%
 
 ### 验证的规则类型
-1. **本地文件重定向**: 7个测试用例 ⭐ (新增重点测试)
-2. **精确匹配**: 4个测试用例
-3. **开头匹配**: 4个测试用例  
-4. **结尾匹配**: 4个测试用例
-5. **URL模板替换**: 6个测试用例
-6. **包含匹配**: 3个测试用例
-7. **URL提取**: 2个测试用例
-8. **多结果选择**: 1个测试用例
+1. **精确匹配重定向**: 包含本地文件支持 ⭐
+2. **开头匹配重定向**: 标准域名格式 ⭐
+3. **简单字符串匹配**: 带安全警告的特殊场景 ⚠️
+4. **URL模板替换**: 复杂重写功能
+5. **智能URL提取**: 自动解码跳转链接
+6. **本地文件重定向**: 完整的文件映射功能 ⭐
+7. **多结果选择**: 多规则匹配功能
+8. **结尾匹配重定向**: 后缀匹配功能
 
 ## 🔧 测试技术细节
 
-### 测试引擎
-- 使用 `script/redirect-engine.js` 作为核心测试引擎
-- 支持重定向链测试和循环检测
-- 提供详细的日志记录功能
+### 测试文件结构
+```
+test/
+├── autoredirect_test.html    # 完整交互式测试页面 (主要)
+└── example_config.txt        # 标准配置示例 (参考)
+```
+
+### 配置统一性
+- `autoredirect_test.html` 中的所有配置规则与 `example_config.txt` 完全一致
+- 包含安全警告和最佳实践建议
+- 提供详细的使用说明和适用场景
 
 ### 测试方法
-- 单元测试：每个规则类型独立测试
-- 集成测试：完整配置文件验证
-- 边界测试：验证不匹配情况
-
-### 日志系统
-- 支持多级别日志 (DEBUG, INFO, WARN, ERROR)
-- 提供HTML和文本格式输出
-- 包含时间戳和详细数据
+- **交互式测试**: 通过 `autoredirect_test.html` 进行完整功能验证
+- **配置验证**: 通过复制粘贴功能快速应用测试规则
+- **实时反馈**: 在实际浏览器环境中验证重定向效果
 
 ## 🚀 使用建议
 
-### 开发时测试
+### 新用户测试流程
+1. **了解功能**: 阅读 `autoredirect_test.html` 中的详细说明
+2. **选择规则**: 根据需求选择合适的规则类型
+3. **复制配置**: 使用一键复制功能获取配置
+4. **应用测试**: 在扩展选项页面粘贴并保存配置
+5. **验证效果**: 按照测试链接验证功能
 
-#### 🔧 测试工具详细对比
-
-##### 1. `test_rules.js` - 完整单元测试套件
-```bash
-# 运行完整测试套件
-node test_rules.js #- 显示所有测试结果
-node test_rules.js --verbose #- 显示详细日志
-node test_rules.js --quiet #- 静默模式，显示所有测试但减少输出
-node test_rules.js --errors-only #- 只显示错误和失败的测试
-```
-**功能特点：**
-- 📋 **测试范围**：包含24个预定义测试用例，覆盖所有规则类型
-- 🎯 **测试方式**：独立测试用例，不依赖配置文件
-- 🔍 **测试深度**：每个规则类型都有多个测试场景（成功/失败/边界情况）
-- 📊 **输出格式**：彩色命令行输出，支持详细日志模式
-- 🚀 **适用场景**：开发新功能、回归测试、CI/CD集成
-- ⚡ **执行速度**：较快，因为使用预定义测试数据
-
-**测试用例结构：**
-```javascript
-{
-    category: "精确匹配模式",
-    description: "使用 = 前缀，只匹配完全相同的URL",
-    tests: [
-        {
-            name: "精确匹配 localhost:3000",
-            input: "localhost:3000",
-            expected: "https://dev.example.com",
-            rule: "=localhost:3000####https://dev.example.com"  // 内置规则
-        }
-    ]
-}
-```
-
-##### 2. `test_config_rules.js` - 配置文件专用测试
-```bash
-# 快速验证配置文件
-node test_config_rules.js
-```
-**功能特点：**
-- 📁 **测试范围**：专门测试 `example_config.txt` 中的实际规则
-- 🔗 **测试方式**：读取真实配置文件，验证实际部署的规则
-- 🎯 **测试深度**：针对配置文件优化，测试用例与配置文件规则一一对应
-- 📈 **输出格式**：简洁输出，包含配置文件统计信息
-- 🚀 **适用场景**：配置文件修改后验证、部署前检查
-- ⚡ **执行速度**：最快，测试用例较少且针对性强
-
-**与配置文件的关系：**
-```javascript
-// 测试用例直接对应 example_config.txt 中的规则
-{
-    name: "精确匹配 localhost:3000",
-    input: "localhost:3000",
-    expected: "https://dev.example.com"  // 不包含rule，从配置文件读取
-}
-```
-
-##### 3. `test_all_rules.html` - 网页版可视化测试
-```bash
-# 网页版可视化测试
-# 在浏览器中打开 test_all_rules.html
-```
-**功能特点：**
-- 🎨 **界面设计**：美观的Web界面，实时显示测试结果
-- 📊 **可视化**：测试进度条、彩色结果显示、统计图表
-- 🔍 **交互性**：可以单独运行某个测试类别，查看详细日志
-- 📋 **功能完整**：包含所有测试用例，功能等同于 `test_rules.js`
-- 💾 **导出功能**：支持测试报告导出
-- 🚀 **适用场景**：演示、调试、非技术人员使用
-
-**界面特色：**
-- 实时测试结果显示
-- 详细的日志输出窗口
-- 测试统计和成功率显示
-- 支持测试报告导出
-
-##### 4. `autoredirect_test.html` - 扩展功能集成测试
-```bash
-# 扩展功能测试（需要在Chrome中打开）
-# 测试扩展在实际浏览器环境中的功能
-```
-**功能特点：**
-- 🔌 **集成测试**：测试扩展在真实Chrome环境中的完整功能
-- 🎮 **交互测试**：包含用户交互场景（开关切换、选项设置等）
-- 🌐 **环境真实**：在实际浏览器环境中测试，包含扩展API调用
-- 📋 **功能全面**：测试配置管理、重定向功能、多结果选择等
-- 🎯 **用户导向**：面向最终用户的验收测试
-- 🚀 **适用场景**：用户验收测试、功能演示、问题复现
-
-**测试内容：**
-- 扩展安装和加载验证
-- 配置界面功能测试
-- 实际重定向功能验证
-- 多结果选择页面测试
-
-#### 📊 测试工具选择指南
-
-| 测试场景         | 推荐工具                       | 原因                       |
-| ---------------- | ------------------------------ | -------------------------- |
-| **开发新功能**   | `test_rules.js --verbose`      | 完整测试覆盖，详细日志输出 |
-| **修改配置文件** | `test_config_rules.js`         | 快速验证实际配置规则       |
-| **本地文件重定向测试** | `test_all_rules.html`    | 可视化界面，便于测试本地文件 |
-| **调试问题**     | `test_all_rules.html`          | 可视化界面，便于定位问题   |
-| **演示功能**     | `autoredirect_test.html`       | 真实环境，用户友好界面     |
-| **CI/CD集成**    | `test_rules.js --quiet`        | 命令行输出，适合自动化     |
-| **部署前验证**   | `test_config_rules.js --quiet` | 快速检查配置文件正确性     |
-
-#### 🔍 详细技术对比
-
-| 特性             | test_rules.js     | test_config_rules.js | test_all_rules.html | autoredirect_test.html |
-| ---------------- | ----------------- | -------------------- | ------------------- | ---------------------- |
-| **运行环境**     | Node.js命令行     | Node.js命令行        | 浏览器              | Chrome扩展环境         |
-| **测试数据源**   | 内置测试用例      | example_config.txt   | 内置测试用例        | 交互式配置             |
-| **测试用例数量** | 31个完整用例      | 18个核心用例         | 31个完整用例        | 用户自定义             |
-| **本地文件测试** | ✅ 7个专项用例     | ✅ 6个核心用例        | ✅ 7个专项用例       | ✅ 交互式测试           |
-| **输出格式**     | 彩色命令行        | 简洁文本             | HTML可视化          | 交互式界面             |
-| **日志详细程度** | 可配置(--verbose) | 基础信息             | 完整日志窗口        | 实时反馈               |
-| **执行速度**     | 快速              | 最快                 | 中等                | 取决于用户操作         |
-| **自动化支持**   | ✅ 完全支持        | ✅ 完全支持           | ❌ 需要手动          | ❌ 需要手动             |
-| **调试友好性**   | ⭐⭐⭐               | ⭐⭐                   | ⭐⭐⭐⭐⭐               | ⭐⭐⭐⭐                   |
-| **新手友好性**   | ⭐⭐                | ⭐⭐                   | ⭐⭐⭐⭐⭐               | ⭐⭐⭐⭐⭐                  |
-
-#### 💡 实际使用示例
-
-##### 场景1：开发新的URL匹配规则
-```bash
-# 1. 先运行完整测试确保现有功能正常
-node test_rules.js --verbose
-
-# 2. 添加新规则到 example_config.txt
-echo "^newpattern####https://new-target.com" >> example_config.txt
-
-# 3. 验证新规则是否正确工作
-node test_config_rules.js
-
-# 4. 如果需要调试，使用网页版工具
-open test_all_rules.html
-```
-
-##### 场景2：修复配置文件中的问题
-```bash
-# 1. 快速检查当前配置文件状态
-node test_config_rules.js --quiet
-
-# 2. 如果有失败，查看详细信息
-node test_config_rules.js
-
-# 3. 修复配置文件后再次验证
-node test_config_rules.js --quiet
-```
-
-##### 场景3：向用户演示功能
-```bash
-# 1. 在Chrome中加载扩展
-# 2. 打开 autoredirect_test.html
-# 3. 按照页面指引进行交互式演示
-```
-
-##### 场景4：CI/CD集成
-```bash
-#!/bin/bash
-# 在部署脚本中添加测试验证
-
-echo "运行AutoRedirect测试..."
-
-# 静默模式快速检查
-if node test_config_rules.js --quiet; then
-    echo "✅ 配置文件测试通过"
-else
-    echo "❌ 配置文件测试失败"
-    exit 1
-fi
-
-# 完整功能测试
-if node test_rules.js --quiet; then
-    echo "✅ 完整功能测试通过"
-else
-    echo "❌ 完整功能测试失败"
-    exit 1
-fi
-
-echo "🎉 所有测试通过，可以部署"
-```
-
-#### ⚙️ 测试工具内部机制
-
-##### 1. test_rules.js 工作原理
-```javascript
-// 内置完整的测试规则和期望结果
-const testCases = [
-    {
-        category: "精确匹配模式",
-        tests: [
-            {
-                name: "测试名称",
-                input: "输入URL",
-                expected: "期望结果",
-                rule: "测试规则"  // 独立的规则定义
-            }
-        ]
-    }
-];
-
-// 对每个测试用例独立验证
-testCases.forEach(category => {
-    category.tests.forEach(test => {
-        const result = RedirectEngine.testRedirectChain(test.input, test.rule);
-        // 比较实际结果与期望结果
-    });
-});
-```
-
-##### 2. test_config_rules.js 工作原理
-```javascript
-// 读取实际的配置文件
-const configContent = fs.readFileSync('example_config.txt', 'utf8');
-
-// 测试用例只包含输入和期望输出
-const configTestCases = [
-    {
-        name: "测试名称",
-        input: "输入URL",
-        expected: "期望结果"  // 不包含规则，从配置文件中匹配
-    }
-];
-
-// 使用真实配置文件进行测试
-configTestCases.forEach(test => {
-    const result = RedirectEngine.testRedirectChain(test.input, configContent);
-    // 验证结果
-});
-```
-
-##### 3. test_all_rules.html 工作原理
-```javascript
-// 在浏览器中加载重定向引擎
-// 提供可视化界面和交互功能
-function runTests() {
-    const testResults = [];
-    
-    testCases.forEach(category => {
-        category.tests.forEach(test => {
-            const result = RedirectEngine.testRedirectChain(test.input, test.rule);
-            testResults.push({
-                category: category.category,
-                test: test,
-                result: result,
-                success: result === test.expected
-            });
-            
-            // 实时更新UI显示
-            updateTestUI(testResults);
-        });
-    });
-}
-```
-
-##### 4. autoredirect_test.html 工作原理
-```javascript
-// 在Chrome扩展环境中测试
-// 调用实际的扩展API
-function testExtensionFeatures() {
-    // 测试扩展状态
-    chrome.storage.local.get(['enabled'], (result) => {
-        console.log('扩展状态:', result.enabled);
-    });
-    
-    // 测试配置保存
-    chrome.storage.local.set({rules: testRules}, () => {
-        console.log('配置保存成功');
-    });
-    
-    // 测试实际重定向（通过页面跳转）
-    window.location.href = 'test-url';
-}
-```
+### 开发者测试流程
+1. **功能开发**: 修改扩展代码
+2. **配置更新**: 更新 `example_config.txt` 中的规则
+3. **同步测试**: 确保 `autoredirect_test.html` 中的配置与配置文件一致
+4. **完整验证**: 使用交互式测试页面验证所有功能
 
 ### 部署前验证
-```bash
-# 静默模式快速检查
-node test_config_rules.js --quiet
-
-# 完整测试验证
-node test_rules.js
-```
-
-### 调试问题
-1. 使用网页版测试界面 (`test_all_rules.html`) 进行可视化调试
-2. 查看详细日志输出定位问题
-3. 使用单个测试用例进行精确验证
+1. 打开 `autoredirect_test.html`
+2. 逐一测试所有功能类型
+3. 确认配置复制功能正常
+4. 验证所有测试链接和说明正确
 
 ## 🔧 故障排除
 
@@ -574,7 +325,7 @@ node test_rules.js
 | 重定向不工作   | 扩展未启用或规则错误  | 确认开关状态，检查规则格式    |
 | 部分功能失效   | 缓存问题              | 重新加载扩展，清除缓存        |
 | 选择页面不显示 | 规则冲突              | 检查规则优先级和格式          |
-| 测试脚本报错   | Node.js环境问题       | 确认Node.js版本，重新安装依赖 |
+| 配置复制失败   | 浏览器权限问题        | 使用手动选择复制的降级方案    |
 
 ### 调试方法
 
@@ -593,32 +344,29 @@ node test_rules.js
    - 在background.js中设置 `show_debug_level = 0`
    - 重新加载扩展查看详细日志
 
-4. **使用测试工具调试**
-   ```bash
-   # 查看详细测试日志
-   node test_rules.js --verbose
-   
-   # 测试特定规则
-   node test_config_rules.js
-   ```
+4. **使用测试页面调试**
+   - 打开 `autoredirect_test.html`
+   - 查看浏览器控制台的详细输出
+   - 使用复制功能验证配置正确性
 
 ## 📝 维护说明
 
-### 添加新测试用例
-1. 在相应的测试文件中添加测试用例
-2. 确保包含输入URL、期望结果和测试描述
-3. 运行测试验证新用例的正确性
+### 添加新功能时
+1. 在 `example_config.txt` 中添加新的规则示例
+2. 在 `autoredirect_test.html` 中添加对应的测试用例
+3. 确保配置规则和测试说明保持一致
+4. 更新本测试指南文档
 
 ### 更新配置文件后
-1. 运行 `node test_config_rules.js` 验证所有规则
-2. 检查是否有新的规则类型需要添加测试用例
-3. 更新测试文档
+1. 同步更新 `autoredirect_test.html` 中的配置
+2. 验证所有复制功能正常工作
+3. 检查说明文档的准确性
+4. 测试所有功能类型
 
-### 测试文件维护
-- `test_all_rules.html`: 网页版测试界面，适合可视化调试
-- `test_rules.js`: 完整的命令行测试，适合CI/CD集成
-- `test_config_rules.js`: 配置文件专用测试，适合快速验证
-- `autoredirect_test.html`: 扩展功能测试，适合用户验收测试
+### 文档维护
+- `autoredirect_test.html`: 主要的交互式测试界面，需要与配置文件保持同步
+- `example_config.txt`: 标准配置示例，作为权威参考
+- `TESTING_GUIDE.md`: 本文档，提供完整的测试指导
 
 ## ✅ 测试完成标准
 
@@ -631,20 +379,23 @@ node test_rules.js
 - [x] 图标状态正确显示
 
 ### 核心功能 (必须)
-- [x] 知乎链接自动解码
+- [x] 智能URL提取功能
+- [x] 精确匹配重定向
+- [x] 开头匹配重定向
 - [x] 本地文件重定向
-- [x] 在线网站重定向
 - [x] 多结果选择功能
 
 ### 高级功能 (推荐)
+- [x] URL模板替换
+- [x] 结尾匹配功能
 - [x] 错误规则检测
 - [x] 循环重定向防护
-- [x] 通用URL参数提取
 
-### 自动化测试 (推荐)
-- [x] 所有单元测试通过
-- [x] 配置文件规则验证通过
-- [x] 边界情况测试通过
+### 交互式测试 (推荐)
+- [x] 所有测试用例可正常访问
+- [x] 配置复制功能正常
+- [x] 说明文档准确完整
+- [x] 与配置文件保持一致
 
 ## 📊 性能指标
 
@@ -652,24 +403,36 @@ node test_rules.js
 - **内存使用**：Service Worker空闲时自动休眠
 - **兼容性**：支持Chrome 88+版本
 - **稳定性**：连续使用无内存泄漏
-- **测试覆盖率**：100% (24/24个测试用例通过)
+- **配置一致性**：测试页面与配置文件100%同步
 
 ## 🎉 结论
 
-通过完整的测试用例验证，`example_config.txt` 中的所有重定向规则都能正确工作。测试覆盖了所有主要功能，特别是新增的**本地文件重定向功能**，确保了AutoRedirect扩展的可靠性和稳定性。
+通过完整的交互式测试验证，AutoRedirect扩展的所有功能都能正确工作。当前的测试系统具有以下特点：
 
-### 🔥 重点更新内容
-- **新增本地文件重定向测试**: 7个专项测试用例，覆盖所有本地文件重定向场景
-- **精简配置规则**: 从14个规则精简为7个核心规则，去除重复和无效规则
-- **修正占位符索引**: 确保 `{1}`, `{2}`, `{3}` 正确对应通配符匹配结果
-- **优化测试覆盖**: 总测试用例从24个增加到31个，成功率保持100%
+### 🔥 主要优势
+- **统一性**: `autoredirect_test.html` 与 `example_config.txt` 完全统一
+- **完整性**: 覆盖所有8种功能类型，包含详细说明
+- **易用性**: 一键复制配置，交互式测试界面
+- **安全性**: 明确标识风险规则，提供安全警告
+- **维护性**: 文件结构简洁，易于维护和更新
 
-测试系统提供了多种运行方式，适合不同的使用场景：
-- **开发调试**: 使用网页版测试界面，特别适合本地文件重定向测试
-- **自动化测试**: 使用命令行测试脚本
-- **快速验证**: 使用配置文件专用测试
-- **用户验收**: 使用扩展功能测试页面
+### 🎯 测试覆盖
+- **精确匹配**: 包含本地文件支持，最安全的匹配方式
+- **开头匹配**: 标准域名格式，推荐用于开发环境
+- **简单字符串**: 特殊场景使用，带有安全警告
+- **URL模板**: 复杂重写功能，支持占位符
+- **智能提取**: 自动解码跳转链接
+- **本地文件**: 完整的文件重定向支持
+- **多结果选择**: 灵活的选择机制
+- **结尾匹配**: 后缀匹配功能
+
+### 📋 推荐使用流程
+1. **新用户**: 直接使用 `autoredirect_test.html` 了解和测试功能
+2. **开发者**: 参考 `example_config.txt` 进行开发，使用测试页面验证
+3. **维护者**: 保持两个文件的同步，确保配置一致性
+
+测试系统现在更加简洁高效，为用户提供了完整的功能验证和配置指导。
 
 ---
 
-**注意**：建议使用 `autoredirect_test.html` 进行完整的功能测试，该文件包含了所有测试用例和详细说明。对于开发和调试，推荐使用 `test_all_rules.html` 和命令行测试脚本。 
+**注意**：推荐使用 `test/autoredirect_test.html` 进行完整的功能测试，该文件包含了与 `example_config.txt` 完全统一的配置规则和详细的使用说明。 

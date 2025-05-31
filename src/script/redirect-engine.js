@@ -177,13 +177,15 @@ function smartProcessUrlPattern(pattern) {
     return result;
   } else if (pattern.includes('.') || pattern.includes('localhost')) {
     // 普通域名或localhost - 使用正确的http/https匹配
-    const result = `https?://.*?${pattern}`;
+    // 支持直接匹配域名或作为子域名的一部分
+    const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+    const result = `https?://(?:.*\\.)?${escapedPattern}(?:[:/].*)?`;
     Logger.debug(`普通域名模式处理`, { originalPattern: pattern, result });
     return result;
   }
   
   // 对于看起来像域名的模式（如 dev, api 等），也添加协议匹配
-  if (pattern.match(/^[a-zA-Z][a-zA-Z0-9-]*\*?$/)) {
+  if (pattern.match(/^[a-zA-Z][a-zA-Z0-9_-]*\*?$/)) {
     // 简单的域名模式，添加协议匹配
     // 对于开头匹配，应该匹配域名部分以该模式开头
     const result = `https?://${pattern}`;
@@ -358,7 +360,7 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
   // 如果没有占位符，直接返回模板（保持向后兼容）
   if (placeholders.length === 0) {
     Logger.debug(`模板无占位符，直接返回`, { template });
-    return template;
+    return normalizeTargetUrl(template, url);
   }
   
   // 执行正则匹配以获取捕获组
@@ -371,7 +373,36 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     }
     
     const regex = new RegExp(processedPattern.regex, 'i');
-    const match = normalizedUrl.match(regex);
+    let match = normalizedUrl.match(regex);
+    
+    // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
+    if (!match && !normalizedUrl.match(/^[a-z]+:\/\//)) {
+      Logger.debug(`模板替换：URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
+      
+      // 尝试添加 http:// 协议
+      const httpUrl = 'http://' + normalizedUrl;
+      match = httpUrl.match(regex);
+      
+      if (match) {
+        Logger.debug(`模板替换：添加http://协议后匹配成功`, { 
+          originalUrl: normalizedUrl,
+          testUrl: httpUrl,
+          pattern: processedPattern.regex
+        });
+      } else {
+        // 尝试添加 https:// 协议
+        const httpsUrl = 'https://' + normalizedUrl;
+        match = httpsUrl.match(regex);
+        
+        if (match) {
+          Logger.debug(`模板替换：添加https://协议后匹配成功`, { 
+            originalUrl: normalizedUrl,
+            testUrl: httpsUrl,
+            pattern: processedPattern.regex
+          });
+        }
+      }
+    }
     
     if (!match) {
       Logger.warn(`URL不匹配模式，无法进行模板替换`, { url: normalizedUrl, pattern: processedPattern.regex });
@@ -408,12 +439,55 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     });
     
     Logger.info(`模板替换完成`, { originalTemplate: template, result });
-    return result;
+    
+    // 标准化目标URL，确保包含有效协议
+    return normalizeTargetUrl(result, url);
     
   } catch (error) {
     Logger.error(`模板替换过程中发生错误`, { pattern, template, error });
     return null;
   }
+}
+
+/**
+ * 标准化目标URL，确保包含有效的协议
+ * @param {string} targetUrl - 目标URL
+ * @param {string} originalUrl - 原始URL（用于推断协议）
+ * @returns {string} - 标准化后的URL
+ */
+function normalizeTargetUrl(targetUrl, originalUrl) {
+  if (!targetUrl || targetUrl.trim() === '') {
+    return targetUrl;
+  }
+  
+  const trimmedUrl = targetUrl.trim();
+  
+  // 如果已经包含协议，直接返回
+  if (trimmedUrl.match(/^[a-z]+:\/\//i)) {
+    Logger.debug(`目标URL已包含协议`, { targetUrl: trimmedUrl });
+    return trimmedUrl;
+  }
+  
+  // 如果是相对路径（以/开头），保持原样
+  if (trimmedUrl.startsWith('/')) {
+    Logger.debug(`目标URL是相对路径，保持原样`, { targetUrl: trimmedUrl });
+    return trimmedUrl;
+  }
+  
+  // 推断协议：优先使用https，除非原始URL是http
+  let protocol = 'https://';
+  if (originalUrl && originalUrl.startsWith('http://')) {
+    protocol = 'http://';
+  }
+  
+  const normalizedUrl = protocol + trimmedUrl;
+  Logger.info(`目标URL标准化`, { 
+    originalTarget: targetUrl, 
+    normalizedTarget: normalizedUrl,
+    inferredProtocol: protocol
+  });
+  
+  return normalizedUrl;
 }
 
 /**
@@ -436,7 +510,36 @@ function testUrlMatch(url, regexPattern, matchType) {
     }
     
     const regex = new RegExp(regexPattern, 'i');
-    const result = regex.test(normalizedUrl);
+    let result = regex.test(normalizedUrl);
+    
+    // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
+    if (!result && !normalizedUrl.match(/^[a-z]+:\/\//)) {
+      Logger.debug(`URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
+      
+      // 尝试添加 http:// 协议
+      const httpUrl = 'http://' + normalizedUrl;
+      result = regex.test(httpUrl);
+      
+      if (result) {
+        Logger.debug(`添加http://协议后匹配成功`, { 
+          originalUrl: normalizedUrl,
+          testUrl: httpUrl,
+          pattern: regexPattern
+        });
+      } else {
+        // 尝试添加 https:// 协议
+        const httpsUrl = 'https://' + normalizedUrl;
+        result = regex.test(httpsUrl);
+        
+        if (result) {
+          Logger.debug(`添加https://协议后匹配成功`, { 
+            originalUrl: normalizedUrl,
+            testUrl: httpsUrl,
+            pattern: regexPattern
+          });
+        }
+      }
+    }
     
     Logger.debug(`URL匹配测试`, {
       url: normalizedUrl,
@@ -601,8 +704,8 @@ function findRedirectMatches(url, rules, src_list) {
         const extractedUrl = extractUrlFromPattern(url, rule.originalPattern);
         
         if (extractedUrl && extractedUrl.trim() !== "") {
-          targetUrl = extractedUrl;
-          Logger.info(`URL提取成功`, { extractedUrl });
+          targetUrl = normalizeTargetUrl(extractedUrl, url);
+          Logger.info(`URL提取成功`, { extractedUrl, normalizedUrl: targetUrl });
         } else {
           // 如果没有提取到有效的URL，跳过这个规则
           Logger.warn(`未能提取到有效URL，跳过规则`, { pattern: rule.originalPattern });
@@ -625,7 +728,9 @@ function findRedirectMatches(url, rules, src_list) {
             captureCount: rule.captureCount
           });
         } else {
-          Logger.debug(`模板替换失败，使用原始目标URL`, { targetUrl });
+          // 模板替换失败，对原始目标URL进行标准化
+          targetUrl = normalizeTargetUrl(targetUrl, url);
+          Logger.debug(`模板替换失败，使用标准化的原始目标URL`, { targetUrl });
         }
       }
 
@@ -812,6 +917,7 @@ if (typeof module !== 'undefined' && module.exports) {
     processPatternWithCaptures,
     parseUrlTemplate,
     performTemplateReplacement,
+    normalizeTargetUrl,
     escapeRegExp,
     testUrlMatch,
     parseRedirectRules,
@@ -835,6 +941,7 @@ if (typeof module !== 'undefined' && module.exports) {
       processPatternWithCaptures,
       parseUrlTemplate,
       performTemplateReplacement,
+      normalizeTargetUrl,
       escapeRegExp,
       testUrlMatch,
       parseRedirectRules,

@@ -78,6 +78,6 @@ link.zhihu.com/?target=####
 
 ### 🔗 相关链接
 
-- **GitHub仓库**：https://github.com/ikamal/autoRedirect
+- **GitHub仓库**：https://github.com/PlayerYK/autoRedirect
 - **详细文档**：https://extcreator.com/autoredirect/autoredirect_test.html
 - **问题反馈**：通过GitHub Issues提交

@@ -9,99 +9,70 @@ const fs = require('fs');
 const path = require('path');
 
 // 导入重定向引擎
-const RedirectEngine = require('../script/redirect-engine.js');
+const RedirectEngine = require('../src/script/redirect-engine.js');
 
-// 基于 example_config.txt 的实际测试用例
+// 基于更新后的 example_config.txt 的实际测试用例
 const configTestCases = [
-    // ===== 本地文件重定向测试 =====
+    // ===== 精确匹配模式测试（推荐，最安全） =====
     {
-        category: "本地文件重定向",
-        tests: [
-            {
-                name: "结尾匹配 - autoredirect_test.html",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html",
-                expected: "https://www.example.com/autoRedirect/"
-            },
-            {
-                name: "完整file://协议路径匹配",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_test.html",
-                expected: "https://www.example.com/autoRedirect/"
-            },
-            {
-                name: "路径通配符匹配 - 提取文件名",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/options.html",
-                expected: "https://www.example.com/options/"
-            },
-            {
-                name: "file://协议通配符匹配",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/popup.html",
-                expected: "https://www.example.com/popup/"
-            },
-            {
-                name: "多通配符匹配 - 子目录支持",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/subfolder/test.html",
-                expected: "https://www.example.com/subfolder/test/"
-            },
-            {
-                name: "文件扩展名转换",
-                input: "file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/test.html",
-                expected: "https://www.example.com/test.php"
-            }
-        ]
-    },
-    
-    // ===== 精确匹配模式测试 =====
-    {
-        category: "精确匹配模式",
+        category: "精确匹配模式（推荐，最安全）",
         tests: [
             {
                 name: "精确匹配 localhost:3000",
                 input: "http://localhost:3000",
-                expected: "https://dev.example.com"
+                expected: "https://www.example.com"
             },
             {
-                name: "精确匹配 test.html",
-                input: "file:///test.html",
-                expected: "https://test.example.com"
-            },
-            {
-                name: "精确匹配失败 - localhost:3001",
+                name: "精确匹配失败 - localhost:3001（不应匹配）",
                 input: "http://localhost:3001",
-                expected: null // 现在不会匹配任何规则
+                expected: null
+            },
+            {
+                name: "精确匹配失败 - mylocalhost:3000（不应匹配）",
+                input: "http://mylocalhost:3000",
+                expected: null
             }
         ]
     },
     
-    // ===== 开头匹配模式测试 =====
+    // ===== 开头匹配模式测试（推荐格式） =====
     {
-        category: "开头匹配模式",
+        category: "开头匹配模式（推荐格式）",
         tests: [
             {
-                name: "开头匹配 ^dev",
-                input: "https://dev.example.com",
+                name: "开头匹配 ^dev.localhost",
+                input: "https://dev.localhost",
                 expected: "https://development.example.com"
             },
             {
-                name: "开头匹配 api*",
-                input: "https://api.test.com",
-                expected: "https://api.example.com"
-            }
-        ]
-    },
-    
-    // ===== 结尾匹配模式测试 =====
-    {
-        category: "结尾匹配模式",
-        tests: [
-            {
-                name: "结尾匹配 *.local",
-                input: "http://test.local",
-                expected: "https://production.example.com"
+                name: "开头匹配 ^dev.localhost 带路径",
+                input: "https://dev.localhost/path/to/page",
+                expected: "https://development.example.com"
             },
             {
-                name: "结尾匹配 *config.json$",
-                input: "https://cdn.example.com/app-config.json",
-                expected: "https://config.example.com"
+                name: "开头匹配 ^api.localhost",
+                input: "https://api.localhost",
+                expected: "https://api.example.com"
+            },
+            {
+                name: "开头匹配 ^localhost:8",
+                input: "http://localhost:8080",
+                expected: "https://development.example.com"
+            },
+            {
+                name: "开头匹配 ^localhost:8 - 端口8001",
+                input: "http://localhost:8001",
+                expected: "https://development.example.com"
+            },
+            {
+                name: "开头匹配 staging.internal*",
+                input: "https://staging.internal.example.com",
+                expected: "https://staging.example.com"
+            },
+            {
+                name: "开头匹配 staging.internal* 带子域名",
+                input: "https://staging.internal.test.com",
+                expected: "https://staging.example.com"
             }
         ]
     },
@@ -111,48 +82,171 @@ const configTestCases = [
         category: "URL模板替换功能",
         tests: [
             {
-                name: "基础域名替换",
+                name: "基础域名替换 - old-domain.com",
                 input: "https://old-domain.com/path/to/page",
                 expected: "https://new-domain.com/path/to/page"
             },
             {
-                name: "复杂路径重写",
+                name: "基础域名替换 - old-domain.com 根路径",
+                input: "https://old-domain.com/aaa",
+                expected: "https://new-domain.com/aaa"
+            },
+            {
+                name: "复杂路径重写 - example.com",
                 input: "http://example.com/user123/page/settings",
                 expected: "https://newsite.com/user123/newpage/settings"
             },
             {
-                name: "精确路径重组",
-                input: "https://old.com/electronics/category/phones/item/iphone",
-                expected: "new.com/electronics/cat/phones/product/iphone"
-            }
-        ]
-    },
-    
-    // ===== 包含匹配模式测试 =====
-    {
-        category: "包含匹配模式",
-        tests: [
-            {
-                name: "开头匹配 localhost:8",
-                input: "http://localhost:8080",
-                expected: "https://production.example.com"
+                name: "复杂路径重写 - example.com 多级路径",
+                input: "http://example.com/admin/page/config",
+                expected: "https://newsite.com/admin/newpage/config"
             },
             {
-                name: "包含匹配 demo",
-                input: "https://demo.test.com",
-                expected: "https://www.example.com"
+                name: "重复使用占位符 - user.com",
+                input: "https://user.com/profile/john",
+                expected: "https://newuser.com/john/dashboard/john"
+            },
+            {
+                name: "重复使用占位符 - user.com 不同用户",
+                input: "https://user.com/profile/alice",
+                expected: "https://newuser.com/alice/dashboard/alice"
             }
         ]
     },
     
-    // ===== 通用URL提取功能测试 =====
+    // ===== 智能URL提取功能测试 =====
     {
-        category: "通用URL提取功能",
+        category: "智能URL提取功能",
         tests: [
             {
-                name: "URL参数提取 - target参数",
-                input: "https://link.zhihu.com/?target=https%3A//example.com",
-                expected: "https://example.com"
+                name: "知乎链接URL提取",
+                input: "https://link.zhihu.com/?target=https%3A//www.github.com",
+                expected: "https://www.github.com"
+            },
+            {
+                name: "知乎链接URL提取 - 复杂URL",
+                input: "https://link.zhihu.com/?target=https%3A//stackoverflow.com/questions/123",
+                expected: "https://stackoverflow.com/questions/123"
+            },
+            {
+                name: "微信链接URL提取",
+                input: "https://weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=https%3A//www.example.com",
+                expected: "https://www.example.com"
+            },
+            {
+                name: "微信链接URL提取 - 带参数",
+                input: "https://weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=https%3A//www.example.com/page%3Fid%3D123",
+                expected: "https://www.example.com/page?id=123"
+            }
+        ]
+    },
+    
+    // ===== 精确本地文件重定向测试（最高优先级） =====
+    {
+        category: "精确本地文件重定向（最高优先级）",
+        tests: [
+            {
+                name: "完整file://协议路径匹配（最精确）",
+                input: "file:///Downloads/full/test_local.html",
+                expected: "https://www.example.com/full/"
+            }
+        ]
+    },
+    
+    // ===== 跨用户本地文件重定向测试 =====
+    {
+        category: "跨用户本地文件重定向",
+        tests: [
+            {
+                name: "跨用户通用映射 - 用户 John",
+                input: "file:///Users/John/dev/myproject/pickone/test.html",
+                expected: "https://production.example.com/test"
+            },
+            {
+                name: "跨用户通用映射 - 用户alice",
+                input: "file:///Users/alice/dev/webapp/pickone/index.html",
+                expected: "https://production.example.com/index"
+            },
+            {
+                name: "跨用户通用映射 - 占位符{3}测试",
+                input: "file:///Users/bob/dev/testproject/pickone/main.html",
+                expected: "https://production.example.com/main"
+            }
+        ]
+    },
+    
+    // ===== 特定项目本地文件重定向测试 =====
+    {
+        category: "特定项目本地文件重定向",
+        tests: [
+            {
+                name: "ChromeStore项目文件重定向 - options",
+                input: "file:///Users/ExtTeam/dev/ChromeStore/localfile/options.html",
+                expected: "https://www.example.com/options/"
+            },
+            {
+                name: "ChromeStore项目文件重定向 - popup",
+                input: "file:///Users/ExtTeam/dev/ChromeStore/localfile/popup.html",
+                expected: "https://www.example.com/popup/"
+            },
+            {
+                name: "ChromeStore项目文件重定向 - 占位符{2}测试",
+                input: "file:///Users/test/dev/ChromeStore/localfile/settings.html",
+                expected: "https://www.example.com/settings/"
+            }
+        ]
+    },
+    
+    // ===== 通用本地文件重定向测试 =====
+    {
+        category: "通用本地文件重定向",
+        tests: [
+            {
+                name: "通用demo_local.html重定向",
+                input: "file:///Users/other/dev/project/demo_local.html",
+                expected: "https://www.example.com/demo/"
+            },
+            {
+                name: "通用demo_local.html重定向 - 不同路径",
+                input: "file:///var/www/html/demo_local.html",
+                expected: "https://www.example.com/demo/"
+            }
+        ]
+    },
+    
+    // ===== 特殊场景配置测试（谨慎使用） =====
+    {
+        category: "特殊场景配置（谨慎使用）",
+        tests: [
+            {
+                name: "简单字符串匹配 ^danger_dev（程序化访问）",
+                input: "https://danger_dev.example.com",
+                expected: "https://development.example.com"
+            },
+            {
+                name: "简单字符串匹配 ^danger_dev 带路径",
+                input: "https://danger_dev.test.com/path",
+                expected: "https://development.example.com"
+            },
+            {
+                name: "简单字符串匹配 danger_api*（程序化访问）",
+                input: "https://danger_api.test.com",
+                expected: "https://api.example.com"
+            },
+            {
+                name: "简单字符串匹配 danger_api* 带子域名",
+                input: "https://danger_api.internal.company.com",
+                expected: "https://api.example.com"
+            },
+            {
+                name: "简单字符串匹配 ^danger_docs（程序化访问）",
+                input: "https://danger_docs.example.com",
+                expected: "https://documentation.example.com"
+            },
+            {
+                name: "简单字符串匹配 ^danger_docs 带路径",
+                input: "https://danger_docs.company.com/guide",
+                expected: "https://documentation.example.com"
             }
         ]
     },
@@ -162,9 +256,73 @@ const configTestCases = [
         category: "多结果选择测试",
         tests: [
             {
-                name: "多规则匹配",
+                name: "多规则匹配 - multi",
                 input: "https://multi-test.com",
                 expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            },
+            {
+                name: "多规则匹配 - multi 带路径",
+                input: "https://multi.example.com/search",
+                expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            }
+        ]
+    },
+    
+    // ===== 结尾匹配模式测试 =====
+    {
+        category: "结尾匹配模式",
+        tests: [
+            {
+                name: "结尾匹配 *.localprod",
+                input: "http://test.localprod",
+                expected: "https://production.example.com"
+            },
+            {
+                name: "结尾匹配 *.localprod - staging环境",
+                input: "http://staging.localprod",
+                expected: "https://production.example.com"
+            },
+            {
+                name: "结尾匹配 *config.json$",
+                input: "https://cdn.example.com/app-config.json",
+                expected: "https://config.example.com"
+            },
+            {
+                name: "结尾匹配 *config.json$ - 用户配置",
+                input: "https://static.test.com/user-config.json",
+                expected: "https://config.example.com"
+            },
+            {
+                name: "结尾匹配失败 - config.json不在结尾",
+                input: "https://static.test.com/config.json.backup",
+                expected: null
+            }
+        ]
+    },
+    
+    // ===== 边界情况和负面测试 =====
+    {
+        category: "边界情况和负面测试",
+        tests: [
+            {
+                name: "不匹配任何规则的URL",
+                input: "https://nomatch.example.com",
+                expected: null
+            },
+            {
+                name: "精确匹配失败 - 额外字符",
+                input: "http://localhost:3000/extra",
+                expected: null
+            },
+            {
+                name: "开头匹配失败 - 不是开头",
+                input: "https://production.example.com",
+                expected: null
+            },
+            {
+                name: "结尾匹配失败 - 不是结尾",
+                input: "https://config.json.example.com",
+                expected: null
             }
         ]
     }

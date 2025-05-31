@@ -1,106 +1,70 @@
 # AutoRedirect 配置示例
 # 支持井号注释功能 - 以#开头的行会被忽略
 
-# ===== 本地文件路径重定向规则汇总 =====
-# 支持多种本地文件路径格式和匹配模式
-
-# --- 基础本地文件重定向 ---
-# 1. 结尾匹配（推荐，安全且精确）
-*autoredirect_local.html$####https://www.example.com/autoRedirect/
-
-# 2. 完整file://协议路径匹配（最精确）
-=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html####https://www.example.com/autoRedirect/
-
-# --- 通配符本地文件重定向（URL模板替换） ---
-# 3. 路径通配符匹配（推荐用于批量重定向）
-*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
-
-# 4. file://协议的通配符匹配（最精确的批量匹配）
-=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html####https://www.example.com/{1}/
-
-# 5. 多通配符匹配（支持子目录结构）
-*ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
-
-# --- 高级本地文件重定向场景 ---
-# 6. 本地开发环境到生产环境映射（跨用户通用）
-=file:///Users/*/dev/*/autoRedirect/*.html####https://production.example.com/{3}/
-
-# 7. 本地文件扩展名转换
-*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}.php
-
-
-# ===== 精确匹配模式 =====
+# ===== 精确匹配模式（推荐，最安全） =====
 # 使用 = 前缀，只匹配完全相同的URL，避免误触发
-# 示例：=localhost:3000 只匹配 "localhost:3000"，不匹配 "localhost:3001" 或 "mylocalhost:3000"
-=localhost:3000####https://dev.example.com
+# 适用于特定域名或完整URL的重定向
+=localhost:3000####https://www.example.com
 
-# ===== 开头匹配模式 =====
-# 使用 ^ 前缀或 * 后缀，匹配以指定字符串开头的URL
-# 示例：^dev 匹配 "dev.example.com"、"development.com"
-^dev####https://development.example.com
-# 示例：api* 匹配 "api.test.com"、"api-v2.com"
-api*####https://api.example.com
-
-# ===== 结尾匹配模式 =====
-# 使用 * 前缀或 $ 后缀，匹配以指定字符串结尾的URL
-# 示例：*.local 匹配 "test.local"、"dev.local"
-*.local####https://production.example.com
-# 示例：*config.json$ 匹配 "app-config.json"、"user-config.json"
-*config.json$####https://config.example.com
+# ===== 开头匹配模式（推荐格式） =====
+# 使用标准域名格式，避免被浏览器当作搜索词
+# 推荐使用 .localhost、.local 或带端口的localhost
+^dev.localhost####https://development.example.com
+^api.localhost####https://api.example.com
+^localhost:8####https://development.example.com
+staging.internal*####https://staging.example.com
 
 # ===== URL模板替换功能 =====
 # 使用 * 通配符和 {1}, {2}, {3} 等占位符进行URL重写
 # 基础域名替换：将old-domain.com的所有路径转移到new-domain.com
-https://old-domain.com/*####https://new-domain.com/{1}
+old-domain.com/*####new-domain.com/{1}
 # 复杂路径重写：重新组织URL结构
-http://example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
-# 精确路径重组：将特定路径重新排列
-=old.com/electronics/category/phones/item/iphone####new.com/electronics/cat/phones/product/iphone
-# 参数重新排列：改变URL段的顺序
-site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}
+example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
 # 重复使用占位符：同一个捕获组可以多次使用
-old.com/user/*####new.com/{1}/profile/{1}/settings
+user.com/profile/*####newuser.com/{1}/dashboard/{1}
 
-# ===== 包含匹配模式（慎用，向后兼容） =====
-# 不使用任何前缀，URL中包含指定字符串即匹配
-# 注意：这些规则放在最后，避免与精确匹配冲突
-# 示例：localhost: 匹配 "localhost:8080"、"localhost:9000"
-# 但不匹配 "localhost:3000"（已被精确匹配规则处理）
-^localhost:8####https://production.example.com
-demo####https://www.example.com
-
-# ===== 通用URL提取功能 =====
+# ===== 智能URL提取功能 =====
 # 目标URL为空，用于自动提取和解码URL参数
-# 示例：link.zhihu.com/?target=https%3A//example.com 会自动解码并跳转到 https://example.com
+# 自动跳过中间跳转页面，直达目标网站
 link.zhihu.com/?target=####
+weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 
-# ===== 本地文件重定向测试用例 =====
-# 以下是具体的测试用例，展示不同规则的实际效果
+# ===== 精确本地文件重定向（最高优先级） =====
+# 完整file://协议路径匹配（最精确，优先级最高）
+=file:///Downloads/full/test_local.html####https://www.example.com/full/
 
-# 测试用例1：基础文件重定向（包含匹配）
-# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html
-# 输出: https://www.example.com/autoRedirect/
-# 规则: *autoredirect_local.html####https://www.example.com/autoRedirect/
-# 说明: 使用包含匹配，能正确匹配浏览器中本地文件的实际URL格式
+# ===== 跨用户本地文件重定向 =====
+# 跨用户通用的本地开发环境映射（精确匹配，避免与其他规则冲突）
+=file:///Users/*/dev/*/pickone/*.html####https://production.example.com/{3}
 
-# 测试用例2：通配符文件名提取
-# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/options.html
-# 输出: https://www.example.com/options/
-# 规则: *ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+# ===== 特定项目本地文件重定向 =====
+# ChromeStore项目的本地文件重定向（更具体的路径匹配）
+*ChromeStore/localfile/*.html$####https://www.example.com/{2}/
 
-# 测试用例3：多通配符子目录处理
-# 输入: file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/subfolder/test.html
-# 输出: https://www.example.com/subfolder/test/
-# 规则: *ChromeStore/autoRedirect/*/*.html####https://www.example.com/{2}/{3}/
+# ===== 通用本地文件重定向 =====
+# 基础文件重定向（结尾匹配，用于其他项目）
+*demo_local.html$####https://www.example.com/demo/
 
+# ===== 特殊场景配置（谨慎使用） =====
+# 以下规则仅适用于特殊场景，不推荐在地址栏直接输入
+# 适用于：书签、程序调用、企业内网等场景
 
+# 简单字符串匹配（仅用于程序化访问）
+# 注意：在地址栏直接输入会被当作搜索词
+^danger_dev####https://development.example.com
+danger_api*####https://api.example.com
+^danger_docs####https://documentation.example.com
 
 # ===== 多结果选择测试 =====
 # 当一个URL匹配多个规则时，会显示选择页面让用户选择
-# 示例：访问包含 "multi" 的URL时，会弹出选择页面让用户选择跳转到哪个目标
 multi####https://www.google.com
 multi####https://www.bing.com
 multi####https://www.yahoo.com
+
+# ===== 结尾匹配模式 =====
+# 使用 * 前缀或 $ 后缀，匹配以指定字符串结尾的URL
+*.localprod####https://production.example.com
+*config.json$####https://config.example.com
 
 # ===== 规则说明 =====
 # 1. 以#开头的行为注释行，会被忽略
@@ -108,34 +72,26 @@ multi####https://www.yahoo.com
 # 3. 规则格式：原始URL模式####目标URL模式
 # 4. 空目标URL（####后面为空）用于通用URL提取功能
 # 5. 匹配模式说明：
-#    - 精确匹配：=pattern（完全匹配，最安全）
-#    - 开头匹配：^pattern 或 pattern*（匹配开头）
+#    - 精确匹配：=pattern（完全匹配，最安全，推荐优先使用）
+#    - 开头匹配：^pattern 或 pattern*（匹配开头，推荐使用标准域名格式）
 #    - 结尾匹配：*pattern 或 pattern$（匹配结尾）
-#    - 包含匹配：pattern（默认模式，向后兼容）
+#    - 包含匹配：pattern（默认模式，谨慎使用）
 # 6. URL模板替换功能：
 #    - 使用 * 通配符匹配任意字符
 #    - 使用 {1}, {2}, {3} 等占位符引用匹配的内容
 #    - 支持占位符重复使用和重新排列
-#    - 示例：old.com/*/page/*####new.com/{1}/newpage/{2}
-# 7. 建议优先使用精确匹配，避免意外重定向
-# 8. 规则按从上到下的顺序匹配，精确匹配应放在前面
-# 9. 本地文件路径重定向详细说明：
-#    a) 基础匹配模式：
-#       - 包含匹配：*autoredirect_local.html（推荐，匹配任何包含该文件名的路径）
-#       - 路径包含匹配：*ChromeStore/autoRedirect/autoredirect_local.html（匹配包含指定路径的文件）
-#       - file://协议：file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/autoredirect_local.html（最精确）
-#       - 注意：精确匹配如=autoredirect_local.html或=/ChromeStore/...不适用于本地文件，因为浏览器URL包含完整的file://协议路径
-#    b) 通配符模式（URL模板替换）：
-#       - 单通配符：*ChromeStore/autoRedirect/*.html -> {1}前缀路径，{2}文件名
-#       - 多通配符：*ChromeStore/autoRedirect/*/*.html -> {1}前缀路径，{2}子目录，{3}文件名
-#       - 精确通配符：=file:///Users/ExtTeam/dev/ChromeStore/autoRedirect/*.html -> {1}文件名
-#    c) 高级应用场景：
-#       - 开发环境映射：本地文件 -> 生产环境URL
-#       - 扩展名转换：.html -> .php
-#       - 批量重定向：整个目录的文件统一重定向
-#       - 条件匹配：根据文件名模式（如test、config）重定向到不同服务
-#    d) 最佳实践：
-#       - 优先使用精确匹配（=前缀）避免误触发
-#       - 通配符规则放在精确规则之后
-#       - 测试时先用简单规则验证，再使用复杂通配符
-#       - 注意占位符索引{1},{2}对应通配符*的出现顺序 
+# 7. 最佳实践建议：
+#    - 优先使用精确匹配（=前缀），避免意外重定向
+#    - 开头匹配使用标准域名格式（如 .localhost、.local）
+#    - 简单字符串匹配仅用于特殊场景（书签、程序调用等）
+#    - 规则按从上到下的顺序匹配，精确匹配应放在前面
+#    - 使用更具体的路径匹配避免规则冲突
+# 8. 地址栏输入限制：
+#    - 简单字符串（如 dev、api）在地址栏直接输入会被当作搜索词
+#    - 推荐使用完整域名格式或通过书签、程序调用访问
+# 9. 本地文件重定向说明：
+#    - 支持 file:// 协议的本地文件
+#    - 可以使用通配符批量处理文件
+#    - 适用于本地开发到生产环境的映射
+#    - 支持保持目录结构的重定向
+#    - 规则按优先级排序：精确匹配 > 跨用户匹配 > 特定项目 > 通用匹配 
