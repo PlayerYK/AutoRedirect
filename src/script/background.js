@@ -1,7 +1,11 @@
-// 引入共享的重定向引擎
+// 引入共享的重定向引擎和配置管理器
 importScripts('redirect-engine.js');
+importScripts('config-manager.js');
 
-var regPatternUrl = "http://jslab.pro/autoredirect/regpattern.txt";
+// 调试：检查ConfigManager是否正确加载
+console.log("Background script loaded");
+console.log("ConfigManager type:", typeof ConfigManager);
+console.log("self.ConfigManager type:", typeof self.ConfigManager);
 
 // Initialize extension
 chrome.runtime.onInstalled.addListener(() => {
@@ -43,27 +47,25 @@ async function checkForValidUrl(tabId, changeInfo, tab) {
   // If the letter 'file:///' is found in the tab's URL...
   if (tab && tab.url && tab.url.indexOf("file:///") > -1) {
     // ...check options and start jump.
-    const result = await chrome.storage.local.get([
-      "jump_list",
-      "jump_list_auto",
-    ]);
-    let jump_list = result.jump_list;
+    const result = await chrome.storage.local.get(["jump_list_auto"]);
 
-    if (!jump_list) {
-      try {
-        const response = await fetch(regPatternUrl);
-        const text = await response.text();
-        await chrome.storage.local.set({ jump_list: text });
-        jump_list = text;
-      } catch (error) {
-        debugLog("Failed to fetch pattern list: " + error);
-        return;
+    try {
+      // 确保ConfigManager可用
+      const configManager = self.ConfigManager || ConfigManager;
+      if (!configManager) {
+        throw new Error('ConfigManager未加载');
       }
-    }
-
-    const isAuto = result.jump_list_auto || 0;
-    if (isAuto == 1) {
-      startProcess(tab);
+      
+      // 使用配置管理器获取配置
+      const jump_list = await configManager.getConfig();
+      
+      const isAuto = result.jump_list_auto || 0;
+      if (isAuto == 1) {
+        startProcess(tab, jump_list);
+      }
+    } catch (error) {
+      debugLog("Failed to get config: " + error.message);
+      return;
     }
   }
 }
@@ -71,7 +73,7 @@ async function checkForValidUrl(tabId, changeInfo, tab) {
 //Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
 
-async function startProcess(tab) {
+async function startProcess(tab, jump_list = null) {
   const tabs = await chrome.tabs.query({
     active: true,
     windowId: chrome.windows.WINDOW_ID_CURRENT,
@@ -81,12 +83,20 @@ async function startProcess(tab) {
   const url = currentTab.url;
   debugLog("local tab url " + url, 1);
 
-  const result = await chrome.storage.local.get(["jump_list"]);
-  const jump_list = result.jump_list;
-
+  // 如果没有传入配置，则获取配置
   if (!jump_list) {
-    debugLog("No jump list found");
-    return;
+    try {
+      // 确保ConfigManager可用
+      const configManager = self.ConfigManager || ConfigManager;
+      if (!configManager) {
+        throw new Error('ConfigManager未加载');
+      }
+      
+      jump_list = await configManager.getConfig();
+    } catch (error) {
+      debugLog("Failed to get config: " + error.message);
+      return;
+    }
   }
 
   // 使用共享的重定向引擎
@@ -127,10 +137,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     debugLog(details);
     debugLog("online tab url " + details.url, 2);
 
-    const result = await chrome.storage.local.get([
-      "jump_list_auto",
-      "jump_list",
-    ]);
+    const result = await chrome.storage.local.get(["jump_list_auto"]);
     const isAuto = result.jump_list_auto || 0;
 
     debugLog("auto redirect: isAuto " + isAuto);
@@ -139,48 +146,49 @@ chrome.webRequest.onBeforeRequest.addListener(
     }
 
     const url = details.url;
-    let jump_list = result.jump_list;
 
-    if (!jump_list) {
-      try {
-        const response = await fetch(regPatternUrl);
-        const text = await response.text();
-        await chrome.storage.local.set({ jump_list: text });
-        jump_list = text;
-      } catch (error) {
-        debugLog("Failed to fetch pattern list: " + error);
-        return;
+    try {
+      // 确保ConfigManager可用
+      const configManager = self.ConfigManager || ConfigManager;
+      if (!configManager) {
+        throw new Error('ConfigManager未加载');
       }
-    }
+      
+      // 使用配置管理器获取配置
+      const jump_list = await configManager.getConfig();
 
-    // 使用共享的重定向引擎
-    const rules = RedirectEngine.parseRedirectRules(jump_list);
-    const src_list = jump_list.split("\n");
-    const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
+      // 使用共享的重定向引擎
+      const rules = RedirectEngine.parseRedirectRules(jump_list);
+      const src_list = jump_list.split("\n");
+      const { result_list, rule_info } = RedirectEngine.findRedirectMatches(url, rules, src_list);
 
-    debugLog("result length " + result_list.length);
-    debugLog(result_list, 2);
+      debugLog("result length " + result_list.length);
+      debugLog(result_list, 2);
 
-    switch (result_list.length) {
-      case 0:
-        break;
-      case 1:
-        chrome.tabs.update(details.tabId, {
-          url: result_list[0],
-        });
-        break;
-      default:
-        chrome.tabs.update(details.tabId, {
-          url: chrome.runtime.getURL("chose.html"),
-        });
-        setTimeout(function () {
-          chrome.runtime.sendMessage({
-            type: "urls",
-            value: result_list,
-            rules: rule_info,
+      switch (result_list.length) {
+        case 0:
+          break;
+        case 1:
+          chrome.tabs.update(details.tabId, {
+            url: result_list[0],
           });
-        }, 100);
-        break;
+          break;
+        default:
+          chrome.tabs.update(details.tabId, {
+            url: chrome.runtime.getURL("chose.html"),
+          });
+          setTimeout(function () {
+            chrome.runtime.sendMessage({
+              type: "urls",
+              value: result_list,
+              rules: rule_info,
+            });
+          }, 100);
+          break;
+      }
+    } catch (error) {
+      debugLog("Failed to get config: " + error.message);
+      return;
     }
   },
   {

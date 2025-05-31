@@ -1,5 +1,3 @@
-var regPatternUrl = 'http://jslab.pro/autoredirect/regpattern.txt';
-
 // 渲染测试结果
 function renderTestResult(redirectChain) {
   const resultDiv = document.getElementById('test_result');
@@ -102,20 +100,19 @@ function getMatchTypeText(type) {
 }
 
 async function initValue() {
-  const result = await chrome.storage.local.get(["jump_list"]);
-  let list = result.jump_list;
-
-  if (!list) {
-    try {
-      const response = await fetch(regPatternUrl);
-      const text = await response.text();
-      document.getElementById("jump_list").value = text;
-      await chrome.storage.local.set({ jump_list: text });
-    } catch (error) {
-      console.error("Failed to fetch pattern list:", error);
+  try {
+    // 确保ConfigManager已加载
+    if (typeof window.ConfigManager === 'undefined') {
+      throw new Error('ConfigManager未加载');
     }
-  } else {
-    document.getElementById("jump_list").value = list;
+    
+    // 使用配置管理器获取配置
+    const config = await window.ConfigManager.getConfig();
+    document.getElementById("jump_list").value = config;
+  } catch (error) {
+    console.error("Failed to get config:", error);
+    // 如果获取失败，显示错误信息
+    document.getElementById("jump_list").value = "# 获取配置失败: " + error.message + "\n# 请手动输入配置或检查网络连接";
   }
 }
 
@@ -146,6 +143,21 @@ function checkCircleRedirect(src_list) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // 调试：检查ConfigManager是否正确加载
+  console.log("检查ConfigManager加载状态:");
+  console.log("window.ConfigManager:", typeof window.ConfigManager);
+  console.log("window.configManager:", typeof window.configManager);
+  
+  if (typeof window.ConfigManager === 'undefined') {
+    console.error("ConfigManager未正确加载！");
+    // 显示错误信息给用户
+    const jumpList = document.getElementById("jump_list");
+    if (jumpList) {
+      jumpList.value = "# 错误：配置管理器未加载\n# 请刷新页面重试";
+    }
+    return;
+  }
+  
   initValue();
 
   // 标签页切换功能
@@ -179,13 +191,25 @@ document.addEventListener("DOMContentLoaded", function () {
     var srcList = document.getElementById("jump_list").value;
     var errorArr = checkCircleRedirect(srcList);
     if (errorArr.length == 0) {
-      await chrome.storage.local.set({ jump_list: srcList });
-      const tips = document.getElementById("tips");
-      tips.style.display = "block";
-      tips.textContent = "保存成功！新规则已生效，扩展程序将立即使用更新后的规则。";
-      setTimeout(function () {
-        tips.style.display = "none";
-      }, 3000);
+      try {
+        // 确保ConfigManager已加载
+        if (typeof window.ConfigManager === 'undefined') {
+          throw new Error('ConfigManager未加载');
+        }
+        
+        // 使用配置管理器保存配置
+        await window.ConfigManager.saveConfig(srcList);
+        const tips = document.getElementById("tips");
+        tips.style.display = "block";
+        tips.textContent = "保存成功！新规则已生效，扩展程序将立即使用更新后的规则。";
+        setTimeout(function () {
+          tips.style.display = "none";
+        }, 3000);
+      } catch (error) {
+        console.error("保存配置失败:", error);
+        msgAlert.innerHTML = "<h3>保存失败!</h3><br>错误信息: " + error.message;
+        msgAlert.style.display = "block";
+      }
     } else {
       var errAlert = "<h3>Redirect loop found!</h3><br>";
       errorArr.forEach(function (v, i) {
