@@ -2,10 +2,14 @@
 importScripts('redirect-engine.js');
 importScripts('config-manager.js');
 
-// 调试：检查ConfigManager是否正确加载
-console.log("Background script loaded");
-console.log("ConfigManager type:", typeof ConfigManager);
-console.log("self.ConfigManager type:", typeof self.ConfigManager);
+// 调试函数定义
+var show_debug_level = 1;
+function debugLog(obj, level) {
+  level = level || 0;
+  if (level >= show_debug_level) {
+    console.log(obj);
+  }
+}
 
 // Initialize extension
 chrome.runtime.onInstalled.addListener(() => {
@@ -17,28 +21,49 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 async function initializeExtension() {
-  // Get auto redirect setting
-  const result = await chrome.storage.local.get(["jump_list_auto"]);
-  const isAuto = result.jump_list_auto || 0;
-
+  debugLog("initializeExtension called");
+  
   try {
+    const result = await chrome.storage.local.get(["jump_list_auto"]);
+    let isAuto = result.jump_list_auto;
+  
+    debugLog("Current jump_list_auto value: " + isAuto);
+  
+    if (isAuto === undefined) {
+      isAuto = 1;
+      await chrome.storage.local.set({ jump_list_auto: 1 });
+      debugLog("First install, set jump_list_auto to 1");
+    } else {
+      isAuto = isAuto || 0;
+    }
+
+    debugLog("Final isAuto value: " + isAuto);
+
     if (isAuto == 1) {
       await chrome.action.setIcon({
         path: {
-          19: "images/icon_19_bold.png",
-          38: "images/icon_19_bold.png",
+          19: chrome.runtime.getURL("images/icon_19_bold.png"),
+          38: chrome.runtime.getURL("images/icon_38.png"),
         },
       });
+      await chrome.action.setTitle({
+        title: "Auto Redirect - On"
+      });
+      debugLog("Set title to: Auto Redirect - On");
     } else {
       await chrome.action.setIcon({
         path: {
-          19: "images/icon_19.png",
-          38: "images/icon_19.png",
+          19: chrome.runtime.getURL("images/icon_19.png"),
+          38: chrome.runtime.getURL("images/icon_38.png"),
         },
       });
+      await chrome.action.setTitle({
+        title: "Auto Redirect - Off"
+      });
+      debugLog("Set title to: Auto Redirect - Off");
     }
   } catch (error) {
-    debugLog("Failed to set icon: " + error);
+    debugLog("Failed to set icon or title: " + error);
   }
 }
 
@@ -197,10 +222,13 @@ chrome.webRequest.onBeforeRequest.addListener(
   }
 );
 
-var show_debug_level = 1;
-function debugLog(obj, level) {
-  level = level || 0;
-  if (level >= show_debug_level) {
-    console.log(obj);
+// 立即执行初始化，确保service worker每次启动时都设置正确的状态
+(async () => {
+  try {
+    debugLog("Starting async initialization");
+    await initializeExtension();
+    debugLog("Async initialization completed");
+  } catch (error) {
+    debugLog("Error in immediate initialization: " + error);
   }
-}
+})();
