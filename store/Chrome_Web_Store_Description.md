@@ -138,7 +138,7 @@ multi####https://www.yahoo.com
 ## 🔗 相关资源
 
 ### 项目链接
-- **GitHub仓库**：https://github.com/PlayerYK/autoRedirect
+- **GitHub仓库**：https://github.com/PlayerYK/AutoRedirect
 - **Chrome Web Store**：https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf
 - **在线测试页面**：https://extcreator.com/autoredirect/autoredirect_test.html
 

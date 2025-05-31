@@ -8,7 +8,7 @@
 2. 访问 `chrome://extensions/`
 3. 启用右上角的"开发者模式"
 4. 点击"加载已解压的扩展程序"
-5. 选择项目根目录 `/Users/yukun/dev/ChromeStore/autoRedirect`
+5. 选择项目根目录 `/Users/yukun/dev/ChromeStore/AutoRedirect`
 
 ### 一键测试
 
@@ -94,7 +94,7 @@
   - `*ChromeStore/localfile/*.html$` → `https://www.example.com/{2}/`
   - `*demo_local.html$` → `https://www.example.com/demo/`
   - `*autoredirect_local.html$` → `https://www.example.com/demo/`
-  - `*ChromeStore/autoRedirect/*.html` → `https://www.example.com/{2}/`
+  - `*ChromeStore/AutoRedirect/*.html` → `https://www.example.com/{2}/`
 
 ### 7. 多结果选择功能
 - ✅ 多规则匹配检测
@@ -213,7 +213,7 @@ weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 *ChromeStore/localfile/*.html$####https://www.example.com/{2}/
 *demo_local.html$####https://www.example.com/demo/
 *autoredirect_local.html$####https://www.example.com/demo/
-*ChromeStore/autoRedirect/*.html####https://www.example.com/{2}/
+*ChromeStore/AutoRedirect/*.html####https://www.example.com/{2}/
 
 # 多结果选择测试
 multi####https://www.google.com

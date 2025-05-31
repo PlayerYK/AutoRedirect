@@ -181,7 +181,7 @@ multi####https://www.yahoo.com
 ## 📁 项目结构
 
 ```
-autoRedirect/
+AutoRedirect/
 ├── src/                          # 源代码目录
 │   ├── images/                   # 图标资源
 │   └── script/                   # 脚本文件
@@ -207,7 +207,7 @@ autoRedirect/
 - Node.js（用于构建脚本）
 
 ### 开发流程
-1. **克隆项目**：`git clone https://github.com/PlayerYK/autoRedirect.git`
+1. **克隆项目**：`git clone https://github.com/PlayerYK/AutoRedirect.git`
 2. **加载扩展**：在Chrome扩展管理页面加载项目目录
 3. **修改代码**：编辑源文件
 4. **测试功能**：使用 `test/autoredirect_test.html` 进行测试
@@ -238,7 +238,7 @@ autoRedirect/
 node build.js
 
 # 输出文件
-dist/autoRedirect-v[版本号].zip
+dist/AutoRedirect-v[版本号].zip
 ```
 
 构建脚本会自动：
@@ -267,9 +267,9 @@ dist/autoRedirect-v[版本号].zip
 ## 🔗 相关链接
 
 - **Chrome Web Store**：https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf
-- **GitHub 仓库**：https://github.com/PlayerYK/autoRedirect
+- **GitHub 仓库**：https://github.com/PlayerYK/AutoRedirect
 - **在线演示**：https://extcreator.com/autoredirect/autoredirect_test.html
-- **问题反馈**：[GitHub Issues](https://github.com/PlayerYK/autoRedirect/issues)
+- **问题反馈**：[GitHub Issues](https://github.com/PlayerYK/AutoRedirect/issues)
 
 ## 🤝 贡献指南
 
