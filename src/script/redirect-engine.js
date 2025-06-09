@@ -1,6 +1,10 @@
 /**
  * Auto Redirect Engine - 共享重定向逻辑模块
  * 用于background.js和options.js之间共享重定向逻辑
+ *
+ * NOTE: 本文件中的多语言支持依赖于 `chrome.i18n.getMessage` API.
+ * 由于本脚本在 Service Worker (background.js) 和选项页 (options.js) 中运行,
+ * `chrome.i18n` 对象是可用的。
  */
 
 // 日志系统
@@ -96,7 +100,7 @@ const Logger = {
   formatLogsAsHtml() {
     return this.logs.map(log => {
       const levelClass = log.level.toLowerCase();
-      const dataStr = log.data ? ` | 数据: ${JSON.stringify(log.data)}` : '';
+      const dataStr = log.data ? ` | ${chrome.i18n.getMessage('redEngLogData') || '数据: '}${JSON.stringify(log.data)}` : '';
       return `<div class="log-entry log-${levelClass}">
         <span class="log-time">${log.timestamp.split('T')[1].split('.')[0]}</span>
         <span class="log-level">[${log.level}]</span>
@@ -110,14 +114,14 @@ const Logger = {
    */
   formatLogsAsText() {
     if (this.logs.length === 0) {
-      return '暂无日志';
+      return chrome.i18n.getMessage('redEngLogNoLogs') || '暂无日志';
     }
     
-    const header = `=== Auto Redirect 测试日志 ===\n生成时间: ${new Date().toLocaleString()}\n日志条数: ${this.logs.length}\n\n`;
+    const header = `${chrome.i18n.getMessage('redEngLogHeader') || '=== Auto Redirect 测试日志 ==='}\n${chrome.i18n.getMessage('redEngLogTime') || '生成时间: '}${new Date().toLocaleString()}\n${chrome.i18n.getMessage('redEngLogCount') || '日志条数: '}${this.logs.length}\n\n`;
     
     const logText = this.logs.map(log => {
       const time = log.timestamp.split('T')[1].split('.')[0];
-      const dataStr = log.data ? `\n数据: ${JSON.stringify(log.data, null, 2)}` : '';
+      const dataStr = log.data ? `\n${chrome.i18n.getMessage('redEngLogData') || '数据: '}${JSON.stringify(log.data, null, 2)}` : '';
       return `${time} [${log.level}] ${log.message}${dataStr}`;
     }).join('\n\n');
     
@@ -140,11 +144,11 @@ function escapeRegExp(string) {
  * @returns {string} - 处理后的模式
  */
 function smartProcessUrlPattern(pattern) {
-  Logger.debug(`智能协议处理开始`, { originalPattern: pattern });
+  Logger.debug(chrome.i18n.getMessage('redEngLogSmartProtocolStart') || `智能协议处理开始`, { originalPattern: pattern });
   
   // 如果模式已经包含协议，直接返回
   if (pattern.match(/^https?:\/\//) || pattern.match(/^file:\/\//) || pattern.match(/^[a-z]+:\/\//)) {
-    Logger.debug(`模式已包含协议，直接返回`, { pattern });
+    Logger.debug(chrome.i18n.getMessage('redEngLogProtocolExists') || `模式已包含协议，直接返回`, { pattern });
     return pattern;
   }
   
@@ -153,13 +157,13 @@ function smartProcessUrlPattern(pattern) {
     // 明确的本地文件路径
     const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
     const result = `(?:file:///|file://)?.*?${escapedPattern}`;
-    Logger.debug(`明确本地文件模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogLocalFile') || `明确本地文件模式处理`, { originalPattern: pattern, result });
     return result;
   } else if (pattern.endsWith('.html') || pattern.endsWith('.htm')) {
     // 可能是网络文件，也添加http/https支持
     const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
     const result = `(?:https?://.*?${escapedPattern}|file:///.*?${escapedPattern}|${escapedPattern})`;
-    Logger.debug(`网络/本地文件模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogWebLocalFile') || `网络/本地文件模式处理`, { originalPattern: pattern, result });
     return result;
   }
   
@@ -168,19 +172,19 @@ function smartProcessUrlPattern(pattern) {
   if (pattern.includes(':') && pattern.match(/:\d+/)) {
     // 包含端口号的域名 - 使用正确的http/https匹配
     const result = `https?://${pattern}`;
-    Logger.debug(`端口号域名模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogDomainPort') || `端口号域名模式处理`, { originalPattern: pattern, result });
     return result;
   } else if (pattern.includes('.') && (pattern.includes('/') || pattern.includes('*'))) {
     // 包含域名和路径的模式（如 old-domain.com/* 或 example.com/path）
     const result = `https?://${pattern}`;
-    Logger.debug(`域名路径模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogDomainPath') || `域名路径模式处理`, { originalPattern: pattern, result });
     return result;
   } else if (pattern.includes('.') || pattern.includes('localhost')) {
     // 普通域名或localhost - 使用正确的http/https匹配
     // 支持直接匹配域名或作为子域名的一部分
     const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
     const result = `https?://(?:.*\\.)?${escapedPattern}(?:[:/].*)?`;
-    Logger.debug(`普通域名模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogNormalDomain') || `普通域名模式处理`, { originalPattern: pattern, result });
     return result;
   }
   
@@ -189,12 +193,12 @@ function smartProcessUrlPattern(pattern) {
     // 简单的域名模式，添加协议匹配
     // 对于开头匹配，应该匹配域名部分以该模式开头
     const result = `https?://${pattern}`;
-    Logger.debug(`简单域名模式处理`, { originalPattern: pattern, result });
+    Logger.debug(chrome.i18n.getMessage('redEngLogSimpleDomain') || `简单域名模式处理`, { originalPattern: pattern, result });
     return result;
   }
   
   // 其他情况，保持原样
-  Logger.debug(`其他情况，保持原样`, { pattern });
+  Logger.debug(chrome.i18n.getMessage('redEngLogOtherCase') || `其他情况，保持原样`, { pattern });
   return pattern;
 }
 
@@ -335,7 +339,7 @@ function parseUrlTemplate(template) {
   // 按索引从大到小排序，避免替换时的位置冲突
   placeholders.sort((a, b) => b.index - a.index);
   
-  Logger.debug(`解析URL模板`, { 
+  Logger.debug(chrome.i18n.getMessage('redEngLogParseTemplate') || `解析URL模板`, { 
     template, 
     placeholders: placeholders.map(p => ({ placeholder: p.placeholder, index: p.index }))
   });
@@ -352,14 +356,14 @@ function parseUrlTemplate(template) {
  * @returns {string|null} - 替换后的URL或null
  */
 function performTemplateReplacement(url, pattern, template, processedPattern) {
-  Logger.info(`开始模板替换`, { url, pattern, template });
+  Logger.info(chrome.i18n.getMessage('redEngLogTemplateReplaceStart') || `开始模板替换`, { url, pattern, template });
   
   // 检查模板是否包含占位符
   const placeholders = parseUrlTemplate(template);
   
   // 如果没有占位符，直接返回模板（保持向后兼容）
   if (placeholders.length === 0) {
-    Logger.debug(`模板无占位符，直接返回`, { template });
+    Logger.debug(chrome.i18n.getMessage('redEngLogNoPlaceholder') || `模板无占位符，直接返回`, { template });
     return normalizeTargetUrl(template, url);
   }
   
@@ -369,7 +373,7 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     let normalizedUrl = url;
     if (url.match(/^https?:\/\/[^\/]+\/$/) || url.match(/^https?:\/\/[^\/]+:\d+\/$/)) {
       normalizedUrl = url.slice(0, -1);
-      Logger.debug(`URL标准化: ${url} -> ${normalizedUrl}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogUrlNormalized', [url, normalizedUrl]) || `URL标准化: ${url} -> ${normalizedUrl}`);
     }
     
     const regex = new RegExp(processedPattern.regex, 'i');
@@ -377,14 +381,14 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     
     // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
     if (!match && !normalizedUrl.match(/^[a-z]+:\/\//)) {
-      Logger.debug(`模板替换：URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
+      Logger.debug(chrome.i18n.getMessage('redEngLogTemplateUrlNoProtocol') || `模板替换：URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
       
       // 尝试添加 http:// 协议
       const httpUrl = 'http://' + normalizedUrl;
       match = httpUrl.match(regex);
       
       if (match) {
-        Logger.debug(`模板替换：添加http://协议后匹配成功`, { 
+        Logger.debug(chrome.i18n.getMessage('redEngLogTemplateHttpSuccess') || `模板替换：添加http://协议后匹配成功`, { 
           originalUrl: normalizedUrl,
           testUrl: httpUrl,
           pattern: processedPattern.regex
@@ -395,7 +399,7 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
         match = httpsUrl.match(regex);
         
         if (match) {
-          Logger.debug(`模板替换：添加https://协议后匹配成功`, { 
+          Logger.debug(chrome.i18n.getMessage('redEngLogTemplateHttpsSuccess') || `模板替换：添加https://协议后匹配成功`, { 
             originalUrl: normalizedUrl,
             testUrl: httpsUrl,
             pattern: processedPattern.regex
@@ -405,11 +409,11 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     }
     
     if (!match) {
-      Logger.warn(`URL不匹配模式，无法进行模板替换`, { url: normalizedUrl, pattern: processedPattern.regex });
+      Logger.warn(chrome.i18n.getMessage('redEngLogUrlNoMatchTemplate') || `URL不匹配模式，无法进行模板替换`, { url: normalizedUrl, pattern: processedPattern.regex });
       return null;
     }
     
-    Logger.debug(`正则匹配成功`, { 
+    Logger.debug(chrome.i18n.getMessage('redEngLogRegexMatchSuccess') || `正则匹配成功`, { 
       url: normalizedUrl,
       matchGroups: match.slice(1),  // 排除完整匹配
       captureCount: processedPattern.captureCount
@@ -421,7 +425,7 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     placeholders.forEach(ph => {
       if (ph.index > 0 && ph.index <= processedPattern.captureCount) {
         const capturedValue = match[ph.index] || '';
-        Logger.debug(`替换占位符`, { 
+        Logger.debug(chrome.i18n.getMessage('redEngLogReplacingPlaceholder') || `替换占位符`, { 
           placeholder: ph.placeholder, 
           index: ph.index, 
           value: capturedValue 
@@ -430,7 +434,7 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
         // 使用全局替换，支持同一占位符多次使用
         result = result.replace(new RegExp(escapeRegExp(ph.placeholder), 'g'), capturedValue);
       } else {
-        Logger.warn(`占位符索引超出范围`, { 
+        Logger.warn(chrome.i18n.getMessage('redEngLogPlaceholderIndexOOB') || `占位符索引超出范围`, { 
           placeholder: ph.placeholder, 
           index: ph.index, 
           maxIndex: processedPattern.captureCount 
@@ -438,13 +442,13 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
       }
     });
     
-    Logger.info(`模板替换完成`, { originalTemplate: template, result });
+    Logger.info(chrome.i18n.getMessage('redEngLogTemplateReplaceDone') || `模板替换完成`, { originalTemplate: template, result });
     
     // 标准化目标URL，确保包含有效协议
     return normalizeTargetUrl(result, url);
     
   } catch (error) {
-    Logger.error(`模板替换过程中发生错误`, { pattern, template, error });
+    Logger.error(chrome.i18n.getMessage('redEngLogTemplateReplaceError') || `模板替换过程中发生错误`, { pattern, template, error: error.message });
     return null;
   }
 }
@@ -464,13 +468,13 @@ function normalizeTargetUrl(targetUrl, originalUrl) {
   
   // 如果已经包含协议，直接返回
   if (trimmedUrl.match(/^[a-z]+:\/\//i)) {
-    Logger.debug(`目标URL已包含协议`, { targetUrl: trimmedUrl });
+    Logger.debug(chrome.i18n.getMessage('redEngLogTargetUrlHasProtocol') || `目标URL已包含协议`, { targetUrl: trimmedUrl });
     return trimmedUrl;
   }
   
   // 如果是相对路径（以/开头），保持原样
   if (trimmedUrl.startsWith('/')) {
-    Logger.debug(`目标URL是相对路径，保持原样`, { targetUrl: trimmedUrl });
+    Logger.debug(chrome.i18n.getMessage('redEngLogTargetUrlRelative') || `目标URL是相对路径，保持原样`, { targetUrl: trimmedUrl });
     return trimmedUrl;
   }
   
@@ -481,7 +485,7 @@ function normalizeTargetUrl(targetUrl, originalUrl) {
   }
   
   const normalizedUrl = protocol + trimmedUrl;
-  Logger.info(`目标URL标准化`, { 
+  Logger.info(chrome.i18n.getMessage('redEngLogTargetUrlNormalized') || `目标URL标准化`, { 
     originalTarget: targetUrl, 
     normalizedTarget: normalizedUrl,
     inferredProtocol: protocol
@@ -506,7 +510,7 @@ function testUrlMatch(url, regexPattern, matchType) {
     // 但保留: http://example.com/path/ 不变
     if (url.match(/^https?:\/\/[^\/]+\/$/) || url.match(/^https?:\/\/[^\/]+:\d+\/$/)) {
       normalizedUrl = url.slice(0, -1);
-      Logger.debug(`URL标准化: ${url} -> ${normalizedUrl}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogUrlNormalized', [url, normalizedUrl]) || `URL标准化: ${url} -> ${normalizedUrl}`);
     }
     
     const regex = new RegExp(regexPattern, 'i');
@@ -514,14 +518,14 @@ function testUrlMatch(url, regexPattern, matchType) {
     
     // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
     if (!result && !normalizedUrl.match(/^[a-z]+:\/\//)) {
-      Logger.debug(`URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
+      Logger.debug(chrome.i18n.getMessage('redEngLogUrlNoProtocol') || `URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
       
       // 尝试添加 http:// 协议
       const httpUrl = 'http://' + normalizedUrl;
       result = regex.test(httpUrl);
       
       if (result) {
-        Logger.debug(`添加http://协议后匹配成功`, { 
+        Logger.debug(chrome.i18n.getMessage('redEngLogHttpMatchSuccess') || `添加http://协议后匹配成功`, { 
           originalUrl: normalizedUrl,
           testUrl: httpUrl,
           pattern: regexPattern
@@ -532,7 +536,7 @@ function testUrlMatch(url, regexPattern, matchType) {
         result = regex.test(httpsUrl);
         
         if (result) {
-          Logger.debug(`添加https://协议后匹配成功`, { 
+          Logger.debug(chrome.i18n.getMessage('redEngLogHttpsMatchSuccess') || `添加https://协议后匹配成功`, { 
             originalUrl: normalizedUrl,
             testUrl: httpsUrl,
             pattern: regexPattern
@@ -541,7 +545,7 @@ function testUrlMatch(url, regexPattern, matchType) {
       }
     }
     
-    Logger.debug(`URL匹配测试`, {
+    Logger.debug(chrome.i18n.getMessage('redEngLogUrlMatchTest') || `URL匹配测试`, {
       url: normalizedUrl,
       pattern: regexPattern,
       matchType: matchType,
@@ -550,7 +554,7 @@ function testUrlMatch(url, regexPattern, matchType) {
     
     return result;
   } catch (error) {
-    Logger.error(`正则表达式错误: ${regexPattern}`, error);
+    Logger.error(chrome.i18n.getMessage('redEngLogRegexError', [regexPattern]) || `正则表达式错误: ${regexPattern}`, { error: error.message });
     return false;
   }
 }
@@ -598,7 +602,7 @@ function parseRedirectRules(jumpList) {
  * @returns {string|null} - 提取的URL或null
  */
 function extractUrlFromPattern(url, originalPattern) {
-  Logger.info(`开始URL提取`, { url, originalPattern });
+  Logger.info(chrome.i18n.getMessage('redEngLogUrlExtractStart') || `开始URL提取`, { url, originalPattern });
   
   try {
     // 构建用于提取的正则表达式
@@ -607,54 +611,54 @@ function extractUrlFromPattern(url, originalPattern) {
     // 处理不同的匹配模式前缀
     if (extractPattern.startsWith('=')) {
       extractPattern = extractPattern.substring(1);
-      Logger.debug(`移除精确匹配前缀: ${extractPattern}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRemoveExactPrefix') || `移除精确匹配前缀: ${extractPattern}`);
     } else if (extractPattern.startsWith('^')) {
       extractPattern = extractPattern.substring(1);
-      Logger.debug(`移除开头匹配前缀: ${extractPattern}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRemoveStartPrefix') || `移除开头匹配前缀: ${extractPattern}`);
     } else if (extractPattern.startsWith('*')) {
       extractPattern = extractPattern.substring(1);
-      Logger.debug(`移除通配符前缀: ${extractPattern}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRemoveWildcardPrefix') || `移除通配符前缀: ${extractPattern}`);
     }
     
     // 移除结尾的匹配符号
     if (extractPattern.endsWith('*')) {
       extractPattern = extractPattern.slice(0, -1);
-      Logger.debug(`移除通配符后缀: ${extractPattern}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRemoveWildcardSuffix') || `移除通配符后缀: ${extractPattern}`);
     } else if (extractPattern.endsWith('$')) {
       extractPattern = extractPattern.slice(0, -1);
-      Logger.debug(`移除结尾匹配后缀: ${extractPattern}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRemoveEndSuffix') || `移除结尾匹配后缀: ${extractPattern}`);
     }
     
     // 转义正则特殊字符，但保留*作为通配符
     const escapedPattern = escapeRegExp(extractPattern).replace(/\\\*/g, '.*?');
-    Logger.debug(`转义后的模式: ${escapedPattern}`);
+    Logger.debug(chrome.i18n.getMessage('redEngLogEscapedPattern') || `转义后的模式: ${escapedPattern}`);
     
     // 在模式后添加捕获组来提取剩余部分
     const extractRegex = new RegExp(escapedPattern + '(.*)$', 'i');
-    Logger.debug(`提取正则表达式: ${extractRegex.source}`);
+    Logger.debug(chrome.i18n.getMessage('redEngLogExtractRegex') || `提取正则表达式: ${extractRegex.source}`);
     
     const match = url.match(extractRegex);
     
     if (match && match[1]) {
       // 提取到的部分可能需要URL解码
       const rawExtracted = match[1];
-      Logger.debug(`原始提取结果: ${rawExtracted}`);
+      Logger.debug(chrome.i18n.getMessage('redEngLogRawExtractResult') || `原始提取结果: ${rawExtracted}`);
       
       // 尝试URL解码
       try {
         const extractedUrl = decodeURIComponent(rawExtracted);
-        Logger.info(`成功提取并解码URL: ${extractedUrl}`);
+        Logger.info(chrome.i18n.getMessage('redEngLogExtractDecodeSuccess') || `成功提取并解码URL: ${extractedUrl}`);
         return extractedUrl;
       } catch (decodeError) {
         // 如果解码失败，使用原始字符串
-        Logger.warn(`URL解码失败，使用原始字符串: ${rawExtracted}`, decodeError);
+        Logger.warn(chrome.i18n.getMessage('redEngLogUrlDecodeFail') || `URL解码失败，使用原始字符串: ${rawExtracted}`, { error: decodeError.message });
         return rawExtracted;
       }
     } else {
-      Logger.warn(`未能从URL中提取内容`, { url, pattern: extractRegex.source });
+      Logger.warn(chrome.i18n.getMessage('redEngLogUrlExtractFail') || `未能从URL中提取内容`, { url, pattern: extractRegex.source });
     }
   } catch (error) {
-    Logger.error(`URL提取过程中发生错误`, { originalPattern, error });
+    Logger.error(chrome.i18n.getMessage('redEngLogUrlExtractError') || `URL提取过程中发生错误`, { originalPattern, error: error.message });
   }
   
   return null;
@@ -668,13 +672,13 @@ function extractUrlFromPattern(url, originalPattern) {
  * @returns {Array} - 匹配的重定向目标数组
  */
 function findRedirectMatches(url, rules, src_list) {
-  Logger.info(`开始查找重定向匹配`, { url, rulesCount: rules.length });
+  Logger.info(chrome.i18n.getMessage('redEngLogFindRedirectStart') || `开始查找重定向匹配`, { url, rulesCount: rules.length });
   
   const result_list = [];
   const rule_info = [];
 
   rules.forEach((rule, index) => {
-    Logger.debug(`测试规则 ${index + 1}/${rules.length}`, {
+    Logger.debug(chrome.i18n.getMessage('redEngLogTestRule', [(index + 1).toString(), rules.length.toString()]) || `测试规则 ${index + 1}/${rules.length}`, {
       pattern: rule.originalPattern,
       matchType: rule.matchType,
       targetUrl: rule.urlStr,
@@ -682,7 +686,7 @@ function findRedirectMatches(url, rules, src_list) {
     });
     
     if (testUrlMatch(url, rule.regStr, rule.matchType)) {
-      Logger.info(`规则匹配成功`, { 
+      Logger.info(chrome.i18n.getMessage('redEngLogRuleMatchSuccess') || `规则匹配成功`, { 
         pattern: rule.originalPattern, 
         matchType: rule.matchType,
         captureCount: rule.captureCount
@@ -700,15 +704,15 @@ function findRedirectMatches(url, rules, src_list) {
       // 处理目标URL
       if (!targetUrl || targetUrl.trim() === "") {
         // 通用URL提取功能：当目标URL为空时，基于匹配的规则模式提取URL
-        Logger.info(`目标URL为空，尝试URL提取`, { pattern: rule.originalPattern });
+        Logger.info(chrome.i18n.getMessage('redEngLogTargetUrlEmpty') || `目标URL为空，尝试URL提取`, { pattern: rule.originalPattern });
         const extractedUrl = extractUrlFromPattern(url, rule.originalPattern);
         
         if (extractedUrl && extractedUrl.trim() !== "") {
           targetUrl = normalizeTargetUrl(extractedUrl, url);
-          Logger.info(`URL提取成功`, { extractedUrl, normalizedUrl: targetUrl });
+          Logger.info(chrome.i18n.getMessage('redEngLogUrlExtractSuccess') || `URL提取成功`, { extractedUrl, normalizedUrl: targetUrl });
         } else {
           // 如果没有提取到有效的URL，跳过这个规则
-          Logger.warn(`未能提取到有效URL，跳过规则`, { pattern: rule.originalPattern });
+          Logger.warn(chrome.i18n.getMessage('redEngLogUrlExtractInvalid') || `未能提取到有效URL，跳过规则`, { pattern: rule.originalPattern });
           return;
         }
       } else {
@@ -722,7 +726,7 @@ function findRedirectMatches(url, rules, src_list) {
         
         if (templateResult !== null) {
           targetUrl = templateResult;
-          Logger.info(`模板替换成功`, { 
+          Logger.info(chrome.i18n.getMessage('redEngLogTemplateReplaceSuccess') || `模板替换成功`, { 
             originalTemplate: rule.urlStr, 
             result: targetUrl,
             captureCount: rule.captureCount
@@ -730,7 +734,7 @@ function findRedirectMatches(url, rules, src_list) {
         } else {
           // 模板替换失败，对原始目标URL进行标准化
           targetUrl = normalizeTargetUrl(targetUrl, url);
-          Logger.debug(`模板替换失败，使用标准化的原始目标URL`, { targetUrl });
+          Logger.debug(chrome.i18n.getMessage('redEngLogTemplateReplaceFail') || `模板替换失败，使用标准化的原始目标URL`, { targetUrl });
         }
       }
 
@@ -749,20 +753,20 @@ function findRedirectMatches(url, rules, src_list) {
           captureCount: rule.captureCount,
           originalTemplate: rule.urlStr
         });
-        Logger.info(`添加重定向目标`, { 
+        Logger.info(chrome.i18n.getMessage('redEngLogAddRedirectTarget') || `添加重定向目标`, { 
           targetUrl, 
           pattern: rule.originalPattern,
           wasTemplateReplaced: targetUrl !== rule.urlStr
         });
       } else if (result_list.includes(targetUrl)) {
-        Logger.debug(`重复的重定向目标，跳过`, { targetUrl });
+        Logger.debug(chrome.i18n.getMessage('redEngLogDuplicateTarget') || `重复的重定向目标，跳过`, { targetUrl });
       }
     } else {
-      Logger.debug(`规则不匹配`, { pattern: rule.originalPattern });
+      Logger.debug(chrome.i18n.getMessage('redEngLogRuleNoMatch') || `规则不匹配`, { pattern: rule.originalPattern });
     }
   });
 
-  Logger.info(`重定向匹配完成`, { 
+  Logger.info(chrome.i18n.getMessage('redEngLogFindRedirectDone') || `重定向匹配完成`, { 
     matchCount: result_list.length,
     targets: result_list 
   });
@@ -779,7 +783,7 @@ function findRedirectMatches(url, rules, src_list) {
  */
 function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
   Logger.clearLogs(); // 清空之前的日志
-  Logger.info(`开始测试重定向链`, { 
+  Logger.info(chrome.i18n.getMessage('redEngLogChainTestStart') || `开始测试重定向链`, { 
     inputUrl, 
     maxSteps,
     rulesLength: jumpList.split('\n').length 
@@ -788,7 +792,7 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
   const rules = parseRedirectRules(jumpList);
   const src_list = jumpList.split("\n");
   
-  Logger.info(`解析规则完成`, { 
+  Logger.info(chrome.i18n.getMessage('redEngLogParseRulesDone') || `解析规则完成`, { 
     totalLines: src_list.length,
     validRules: rules.length 
   });
@@ -799,15 +803,15 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
   let currentUrl = inputUrl;
   let stepCount = 0;
   
-  Logger.info(`开始重定向链追踪`, { startUrl: currentUrl });
+  Logger.info(chrome.i18n.getMessage('redEngLogChainTrackStart') || `开始重定向链追踪`, { startUrl: currentUrl });
   
   while (stepCount < maxSteps) {
     stepCount++;
-    Logger.info(`重定向步骤 ${stepCount}`, { currentUrl });
+    Logger.info(chrome.i18n.getMessage('redEngLogRedirectStep', [stepCount.toString()]) || `重定向步骤 ${stepCount}`, { currentUrl });
     
     // 检查是否已访问过此URL（循环检测）
     if (visitedUrls.has(currentUrl)) {
-      Logger.error(`检测到循环重定向`, { 
+      Logger.error(chrome.i18n.getMessage('redEngLogCycleDetected') || `检测到循环重定向`, { 
         currentUrl, 
         visitedUrls: Array.from(visitedUrls),
         step: stepCount 
@@ -817,21 +821,21 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
         step: stepCount,
         url: currentUrl,
         type: 'cycle',
-        message: '检测到循环重定向！'
+        message: chrome.i18n.getMessage('redEngCycleDetected') || '检测到循环重定向！'
       });
       break;
     }
     
     visitedUrls.add(currentUrl);
-    Logger.debug(`添加URL到访问记录`, { url: currentUrl, visitedCount: visitedUrls.size });
+    Logger.debug(chrome.i18n.getMessage('redEngLogUrlVisited') || `添加URL到访问记录`, { url: currentUrl, visitedCount: visitedUrls.size });
     
     // 查找匹配的规则
     const { result_list, rule_info } = findRedirectMatches(currentUrl, rules, src_list);
     
     if (result_list.length === 0) {
       // 没有匹配的规则
-      const message = stepCount === 1 ? '没有匹配的重定向规则' : '重定向链结束';
-      Logger.info(`重定向链结束`, { 
+      const message = stepCount === 1 ? (chrome.i18n.getMessage('redEngNoRuleMatched') || '没有匹配的重定向规则') : (chrome.i18n.getMessage('redEngChainEnd') || '重定向链结束');
+      Logger.info(chrome.i18n.getMessage('redEngLogChainEnded') || `重定向链结束`, { 
         reason: 'no_match',
         step: stepCount,
         finalUrl: currentUrl 
@@ -847,7 +851,7 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
     } else if (result_list.length === 1) {
       // 单个匹配
       const ruleInfo = rule_info[0];
-      Logger.info(`单个规则匹配`, {
+      Logger.info(chrome.i18n.getMessage('redEngLogSingleRuleMatch') || `单个规则匹配`, {
         step: stepCount,
         fromUrl: currentUrl,
         toUrl: ruleInfo.url,
@@ -867,7 +871,7 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
       currentUrl = ruleInfo.url;
     } else {
       // 多个匹配
-      Logger.info(`多个规则匹配`, {
+      Logger.info(chrome.i18n.getMessage('redEngLogMultiRuleMatch') || `多个规则匹配`, {
         step: stepCount,
         url: currentUrl,
         matchCount: result_list.length,
@@ -879,14 +883,14 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
         url: currentUrl,
         matches: rule_info,
         type: 'multiple',
-        message: `找到 ${result_list.length} 个匹配的规则`
+        message: chrome.i18n.getMessage('redEngMultipleMatches', [result_list.length.toString()]) || `找到 ${result_list.length} 个匹配的规则`
       });
       break;
     }
   }
   
   if (stepCount >= maxSteps && redirectChain[redirectChain.length - 1].type !== 'cycle') {
-    Logger.warn(`达到最大重定向次数限制`, { 
+    Logger.warn(chrome.i18n.getMessage('redEngLogMaxRedirectsReached') || `达到最大重定向次数限制`, { 
       maxSteps, 
       currentStep: stepCount,
       currentUrl 
@@ -895,11 +899,11 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
     redirectChain.push({
       step: stepCount + 1,
       type: 'limit',
-      message: `达到最大重定向次数限制（${maxSteps}次），停止测试`
+      message: chrome.i18n.getMessage('redEngMaxRedirects', [maxSteps.toString()]) || `达到最大重定向次数限制（${maxSteps}次），停止测试`
     });
   }
   
-  Logger.info(`重定向链测试完成`, {
+  Logger.info(chrome.i18n.getMessage('redEngLogChainTestDone') || `重定向链测试完成`, {
     totalSteps: redirectChain.length,
     finalType: redirectChain[redirectChain.length - 1]?.type,
     visitedUrls: Array.from(visitedUrls)

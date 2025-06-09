@@ -1,8 +1,9 @@
 {
-  "version": "0.1.2",
+  "version": "0.2.0",
   "manifest_version": 3,
-  "name": "Auto Redirect",
-  "description": "智能URL重定向工具 - 支持多种匹配模式和URL模板替换",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "zh_CN",
   "permissions": ["tabs", "storage", "webRequest"],
   "host_permissions": ["http://*/*", "https://*/*", "file://*/*"],
   "options_page": "options.html",
@@ -10,7 +11,7 @@
     "service_worker": "script/background.js"
   },
   "action": {
-    "default_title": "Auto Redirect",
+    "default_title": "__MSG_extensionDefaultTitle__",
     "default_icon": {
       "19": "images/icon_19_off.png",
       "38": "images/icon_38_off.png"

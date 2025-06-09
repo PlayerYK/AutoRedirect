@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Auto Redirect Options</title>
+    <title data-i18n="optionsTitle"></title>
     <style type="text/css">
         * {
             margin: 0;
@@ -333,7 +333,6 @@
         }
 
         .slideThree:after {
-            content: 'OFF';
             font: 12px/26px Arial, sans-serif;
             color: #000;
             position: absolute;
@@ -344,7 +343,6 @@
         }
 
         .slideThree:before {
-            content: 'ON';
             font: 12px/26px Arial, sans-serif;
             color: #00bf00;
             position: absolute;
@@ -928,6 +926,7 @@
             display: block;
         }
     </style>
+    <script type="text/javascript" src="script/i18n.js"></script>
     <script type="text/javascript" src="script/redirect-engine.js"></script>
     <script type="text/javascript" src="script/config-manager.js"></script>
     <script type="text/javascript" src="script/options.js"></script>
@@ -935,41 +934,41 @@
 <body>
     <div class="container">
         <div id="header">
-            <div id="title">Auto Redirect Options</div>
+            <div id="title" data-i18n="optionsTitle"></div>
             
             <!-- 扩展总开关 -->
             <div class="extension-switch-container">
                 <div class="switch-wrapper">
-                    <span class="switch-label">扩展状态：</span>
+                    <span class="switch-label" data-i18n="optionsSwitchLabel"></span>
                     <div class="slideThree">
                         <input type="checkbox" value="None" id="extension_enabled_switch" name="extension_enabled_switch" />
                         <label for="extension_enabled_switch"></label>
                     </div>
-                    <span class="switch-status" id="switch_status">关闭</span>
+                    <span class="switch-status" id="switch_status" data-i18n="optionsSwitchStatusOff"></span>
                 </div>
             </div>
             
-            <div class="subtitle">配置您的自动重定向规则</div>
+            <div class="subtitle" data-i18n="optionsSubtitle"></div>
         </div>
         <div class="main-content">
             <!-- 左侧配置面板 -->
             <div class="config-panel">
-                <div class="section-header">重定向规则配置</div>
+                <div class="section-header" data-i18n="optionsRulesConfigHeader"></div>
                 <div class="section-content">
                     <div class="option">
                         <div class="option-name">
                             <a href="https://playeryk.github.io/AutoRedirect/" target="_blank"
-                                style="color: #007acc; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                                🧪 在线文档与测试
+                                style="color: #007acc; text-decoration: none; display: flex; align-items: center; gap: 10px;"
+                                data-i18n="optionsOnlineDocsLink">
                             </a>
                         </div>
                         <div class="line">
                             <textarea name="jump_list" id="jump_list" class="jump-list"
-                                placeholder="请在此输入您的重定向规则，每行一条规则，格式：原始URL####目标URL"></textarea>
+                                data-i18n-placeholder="optionsRulesPlaceholder"></textarea>
                         </div>
                     </div>
                     <div class="button-container">
-                        <button type="button" id="save">💾 保存配置</button>
+                        <button type="button" id="save" data-i18n="optionsSaveButton"></button>
                     </div>
                     <div id="msg-alert"></div>
                 </div>
@@ -978,114 +977,20 @@
             <div class="right-panel">
                 <!-- 标签页导航 -->
                 <div class="tab-navigation">
-                    <button class="tab-button active" data-tab="guide">📚 使用指南</button>
-                    <button class="tab-button" data-tab="test">🧪 测试工具</button>
+                    <button class="tab-button active" data-tab="guide" data-i18n="optionsGuideTab"></button>
+                    <button class="tab-button" data-tab="test" data-i18n="optionsTestToolTab"></button>
                 </div>
             
                 <!-- 使用指南标签页 -->
                 <div class="tab-content active" id="guide-tab">
                     <!-- 帮助面板 -->
                     <div class="help-panel">
-                        <div class="section-header">使用指南</div>
+                        <div class="section-header" data-i18n="guideHeader"></div>
                         <div class="help-content">
-                            <div class="help-section">
-                                <h3>匹配模式说明</h3>
-                                <ul>
-                                    <li>精确匹配： <span class="match-symbol exact">=</span>example.com####target （完全匹配）</li>
-                                    <li>开头匹配： <span class="match-symbol prefix">^</span>test####target 或 <span
-                                            class="match-symbol prefix">*</span>test####target
-                                        （以指定内容开头）</li>
-                                    <li>结尾匹配： test<span class="match-symbol suffix">*</span>####target 或 test<span
-                                            class="match-symbol suffix">$</span>####target （以指定内容结尾）</li>
-                                    <li>包含匹配： test####target （默认模式，⚠️ 慎用！全局匹配易出错）</li>
-                                    <li><strong>通配符：</strong> 在任意匹配模式中使用 <span class="match-symbol contains">*</span> 匹配任意字符
-                                    </li>
-                                    <li><strong>模板替换：</strong> 使用 <span class="match-symbol prefix">{1}</span>, <span
-                                            class="match-symbol prefix">{2}</span> 等占位符引用通配符匹配的内容</li>
-                                </ul>
-                            </div>
-                            <div class="help-section">
-                                <h3>URL模板替换功能</h3>
-                                <ul>
-                                    <li><strong>基础语法：</strong> 使用 <span class="match-example">*</span> 匹配任意字符，用 <span
-                                            class="match-example">{1}, {2}, {3}</span> 引用匹配内容</li>
-                                    <li><strong>域名替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span></li>
-                                    <li><strong>路径重写：</strong> <span
-                                            class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span></li>
-                                    <li><strong>多段重组：</strong> <span
-                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
-                                    </li>
-                                    <li><strong>参数重排：</strong> <span
-                                            class="match-example">site.com/*/page/*/section/*####newsite.com/{3}/{1}/{2}</span></li>
-                                    <li><strong>重复使用：</strong> <span
-                                            class="match-example">old.com/user/*####new.com/{1}/profile/{1}/settings</span></li>
-                                    <li><strong>选择性使用：</strong> <span
-                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/products/{3}</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="help-section">
-                                <h3>高级功能</h3>
-                                <ul>
-                                    <li>支持注释： 以 <span class="match-symbol comment">#</span> 开头的行为注释行</li>
-                                    <li>空行会被忽略</li>
-                                    <li>规则按顺序匹配，第一个匹配的规则生效</li>
-                                    <li><strong>注意：</strong>避免循环重定向</li>
-                                </ul>
-                            </div>
-                            <div class="help-section">
-                                <h3>配置示例与用法</h3>
-                                <ul>
-                                    <li><strong>基础格式：</strong> <span class="match-example">原始URL####目标URL</span> （每行一条规则）</li>
-                                    <li><strong>精确匹配：</strong> <span
-                                            class="match-example">=example.com####https://new-example.com</span></li>
-                                    <li><strong>开头匹配：</strong> <span
-                                            class="match-example">^old-site.com####https://new-site.com</span> 或
-                                        <span class="match-example">https://old-site.com*####https://new.com</span>
-                                    </li>
-                                    <li><strong>结尾匹配：</strong> <span class="match-example">old.com*####https://new.com</span> 或
-                                        <span class="match-example">old.com$####https://new.com</span>
-                                    </li>
-                                    <li><strong>包含匹配：</strong> <span class="match-example">demo####https://example.com</span>
-                                        （默认模式，慎用）</li>
-                                    <li><strong>模板替换：</strong> <span class="match-example">old.com/*####new.com/{1}</span>
-                                        （域名迁移，保持路径）</li>
-                                    <li><strong>路径重写：</strong> <span
-                                            class="match-example">site.com/*/page/*####newsite.com/{1}/newpage/{2}</span>
-                                        （重新组织URL结构）</li>
-                                    <li><strong>多段重组：</strong> <span
-                                            class="match-example">old.com/*/category/*/item/*####new.com/{1}/cat/{2}/product/{3}</span>
-                                        （三段路径重新排列）</li>
-                                    <li><strong>智能提取：</strong> <span class="match-example">link.zhihu.com/?target=####</span>
-                                        （空目标URL，自动提取参数）</li>
-                                    <li><strong>本地开发：</strong> <span
-                                            class="match-example">localhost:3000####https://myapp.com</span></li>
-                                    <li><strong>开发环境：</strong> <span
-                                            class="match-example">dev.mysite.com####https://prod.mysite.com</span></li>
-                                    <li><strong>协议升级：</strong> <span
-                                            class="match-example">^http://site.com####https://site.com</span></li>
-                                    <li><strong>通配符使用：</strong> <span class="match-example">*.old.com####https://new.com</span>
-                                        （匹配所有子域名）</li>
-                                    <li><strong>注意：</strong>规则按顺序匹配，第一个匹配的规则生效</li>
-                                </ul>
-                            </div>
-                            <div class="help-section">
-                                <h3>测试工具使用</h3>
-                                <ul>
-                                    <li>在测试工具中输入URL，查看重定向路径</li>
-                                    <li>支持多步重定向链路追踪</li>
-                                    <li>自动检测循环重定向</li>
-                                    <li>显示匹配的规则和类型</li>
-                                    <li>最多追踪5步重定向，防止无限循环</li>
-                                    <li><strong>建议：</strong>配置规则后先测试，确保符合预期</li>
-                                </ul>
-                            </div>
-                            <div class="help-section">
-                                <h3>其他</h3>
-                                <ul>
-                                    <li><a href="https://github.com/PlayerYK/AutoRedirect/issues" target="_blank">问题反馈</a></li>
-                                    <li><a href="https://playeryk.github.io/AutoRedirect/" target="_blank">在线文档与测试</a></li>
-                                </ul>
+                            <div class="help-section" style="text-align: center; padding: 40px;">
+                                <p data-i18n="guideRedirectMessage" style="margin-bottom: 20px; font-size: 1rem;"></p>
+                                <a href="https://playeryk.github.io/AutoRedirect/" target="_blank" data-i18n="guideRedirectLink"
+                                    style="font-weight: bold; font-size: 1.1rem; color: #007acc; text-decoration: none;"></a>
                             </div>
                         </div>
                     </div>
@@ -1095,16 +1000,16 @@
                 <div class="tab-content" id="test-tab">
                     <!-- 测试工具区域 -->
                     <div class="config-panel">
-                        <div class="section-header">🧪 重定向测试工具</div>
+                        <div class="section-header" data-i18n="testToolHeader"></div>
                         <div class="section-content">
                             <div class="option">
-                                <div class="option-name">测试URL</div>
+                                <div class="option-name" data-i18n="testToolUrlLabel"></div>
                                 <div class="line">
-                                    <input type="text" id="test_url" class="test-input" placeholder="请输入要测试的URL，例如：https://example.com/path" />
+                                    <input type="text" id="test_url" class="test-input" data-i18n-placeholder="testToolUrlPlaceholder" />
                                 </div>
                             </div>
                             <div class="button-container">
-                                <button type="button" id="test_redirect">🔍 测试重定向</button>
+                                <button type="button" id="test_redirect" data-i18n="testToolTestButton"></button>
                             </div>
                             <div id="test_result" class="test-result"></div>
                         </div>
@@ -1112,25 +1017,25 @@
                     
                     <!-- 日志显示区域 -->
                     <div class="config-panel" style="margin-top: 20px;">
-                        <div class="section-header">📋 测试日志</div>
+                        <div class="section-header" data-i18n="logsHeader"></div>
                         <div class="section-content">
                             <div class="log-controls">
                                 <div class="log-control-group">
-                                    <label for="log_level">日志级别：</label>
+                                    <label for="log_level" data-i18n="logsLevelLabel"></label>
                                     <select id="log_level" class="log-level-select">
-                                        <option value="0">DEBUG (详细)</option>
-                                        <option value="1" selected>INFO (一般)</option>
-                                        <option value="2">WARN (警告)</option>
-                                        <option value="3">ERROR (错误)</option>
+                                        <option value="0" data-i18n="logsLevelDebug"></option>
+                                        <option value="1" selected data-i18n="logsLevelInfo"></option>
+                                        <option value="2" data-i18n="logsLevelWarn"></option>
+                                        <option value="3" data-i18n="logsLevelError"></option>
                                     </select>
                                 </div>
                                 <div class="log-control-group">
-                                    <button type="button" id="copy_logs" class="copy-logs-btn">📋 复制日志</button>
-                                    <button type="button" id="clear_logs" class="clear-logs-btn">🗑️ 清空日志</button>
+                                    <button type="button" id="copy_logs" class="copy-logs-btn" data-i18n="logsCopyButton"></button>
+                                    <button type="button" id="clear_logs" class="clear-logs-btn" data-i18n="logsClearButton"></button>
                                 </div>
                             </div>
                             <div id="test_logs" class="test-logs">
-                                <div class="no-logs">暂无日志，请先进行重定向测试</div>
+                                <div class="no-logs" data-i18n="logsNoLogs"></div>
                             </div>
                         </div>
                     </div>

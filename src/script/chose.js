@@ -19,8 +19,8 @@ function showEmptyState() {
   list.innerHTML = `
     <div class="empty-state">
       <div class="icon">🔍</div>
-      <h3>没有找到匹配的链接</h3>
-      <p>当前页面没有匹配到任何重定向规则</p>
+      <h3>${chrome.i18n.getMessage("choseEmptyStateHeader")}</h3>
+      <p>${chrome.i18n.getMessage("choseEmptyStateMessage")}</p>
     </div>
   `;
 }
@@ -36,20 +36,18 @@ function genUrlSelect(name, value, rules) {
   var liStr = "";
   value.forEach(function (v, i) {
     const ruleInfo = rules && rules[i] ? rules[i] : null;
-    const ruleText = ruleInfo ? ruleInfo.rule : "未知规则";
+    const ruleText = ruleInfo ? ruleInfo.rule : "Unknown Rule";
     const pattern = ruleInfo ? ruleInfo.pattern : "";
     const matchType = ruleInfo ? ruleInfo.matchType : "contains";
 
-    // 匹配类型的中文显示和样式类
     const matchTypeMap = {
-      'exact': { text: '精确匹配', class: 'exact' },
-      'prefix': { text: '开头匹配', class: 'prefix' },
-      'suffix': { text: '结尾匹配', class: 'suffix' },
-      'contains': { text: '包含匹配', class: 'contains' }
+      'exact': { text: chrome.i18n.getMessage("choseMatchTypeExact"), class: 'exact' },
+      'prefix': { text: chrome.i18n.getMessage("choseMatchTypePrefix"), class: 'prefix' },
+      'suffix': { text: chrome.i18n.getMessage("choseMatchTypeSuffix"), class: 'suffix' },
+      'contains': { text: chrome.i18n.getMessage("choseMatchTypeContains"), class: 'contains' }
     };
-    const matchTypeInfo = matchTypeMap[matchType] || { text: '包含匹配', class: 'contains' };
+    const matchTypeInfo = matchTypeMap[matchType] || { text: chrome.i18n.getMessage("choseMatchTypeContains"), class: 'contains' };
 
-    // 美化URL显示
     const displayUrl = v.length > 80 ? v.substring(0, 77) + "..." : v;
 
     liStr += `
@@ -57,9 +55,9 @@ function genUrlSelect(name, value, rules) {
         <div class="url-container">
           <a href="${v}" class="url-link" title="${v}">${displayUrl}</a>
           <div class="rule-info">
-            <span class="rule-label">触发规则</span>
+            <span class="rule-label">${chrome.i18n.getMessage("choseRuleTriggerLabel")}</span>
             <span class="rule-text">${ruleText}</span>
-            <span class="match-type-label">匹配类型</span>
+            <span class="match-type-label">${chrome.i18n.getMessage("choseMatchTypeLabel")}</span>
             <span class="match-type-badge ${matchTypeInfo.class}">${matchTypeInfo.text}</span>
           </div>
         </div>
@@ -85,8 +83,8 @@ setTimeout(function () {
     list.innerHTML = `
       <div class="empty-state">
         <div class="icon">⚠️</div>
-        <h3>加载超时</h3>
-        <p>无法获取重定向选项，请刷新页面重试</p>
+        <h3>${chrome.i18n.getMessage("choseTimeoutHeader")}</h3>
+        <p>${chrome.i18n.getMessage("choseTimeoutMessage")}</p>
       </div>
     `;
   }

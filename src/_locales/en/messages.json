@@ -1,0 +1,526 @@
+{
+  "extensionName": {
+    "message": "Auto Redirect",
+    "description": "The name of the extension."
+  },
+  "extensionDescription": {
+    "message": "An intelligent URL redirection tool - supports multiple matching modes and URL template replacement.",
+    "description": "The description of the extension."
+  },
+  "extensionDefaultTitle": {
+    "message": "Auto Redirect",
+    "description": "The default title for the browser action."
+  },
+  "popupTitle": {
+    "message": "Enable/Disable Extension",
+    "description": "The title of the popup window."
+  },
+  "popupStatusOn": {
+    "message": "ON",
+    "description": "The ON status on the switch."
+  },
+  "popupStatusOff": {
+    "message": "OFF",
+    "description": "The OFF status on the switch."
+  },
+  "optionsTitle": {
+    "message": "Auto Redirect Options",
+    "description": "The title of the options page."
+  },
+  "optionsSwitchLabel": {
+    "message": "Extension Status:",
+    "description": "Label for the main extension enable/disable switch."
+  },
+  "optionsSwitchStatusOn": {
+    "message": "On",
+    "description": "Text indicating the switch is on."
+  },
+  "optionsSwitchStatusOff": {
+    "message": "Off",
+    "description": "Text indicating the switch is off."
+  },
+  "optionsSubtitle": {
+    "message": "Configure your auto-redirect rules",
+    "description": "Subtitle on the options page."
+  },
+  "textOn": {
+    "message": "ON",
+    "description": "Generic 'ON' text, used in CSS switches."
+  },
+  "textOff": {
+    "message": "OFF",
+    "description": "Generic 'OFF' text, used in CSS switches."
+  },
+  "optionsRulesConfigHeader": {
+    "message": "Redirection Rule Configuration",
+    "description": "Header for the rule configuration panel."
+  },
+  "optionsOnlineDocsLink": {
+    "message": "🧪 Online Docs & Testing",
+    "description": "Link text for online documentation and testing."
+  },
+  "optionsRulesPlaceholder": {
+    "message": "Please enter your redirection rules here, one rule per line. Format: sourceURL####targetURL",
+    "description": "Placeholder text for the redirection rules textarea."
+  },
+  "optionsSaveButton": {
+    "message": "💾 Save Configuration",
+    "description": "Text for the save button."
+  },
+  "optionsGuideTab": {
+    "message": "📚 User Guide",
+    "description": "Tab title for the user guide."
+  },
+  "optionsTestToolTab": {
+    "message": "🧪 Test Tool",
+    "description": "Tab title for the test tool."
+  },
+  "guideRedirectMessage": {
+    "message": "The complete user guide, advanced feature descriptions, and all test cases have been moved to the online documentation to provide more timely updates and a better reading experience.",
+    "description": "Message to inform users that the guide has moved online."
+  },
+  "guideRedirectLink": {
+    "message": "Click here to visit the online documentation",
+    "description": "Link text to the online documentation."
+  },
+  "guideHeader": {
+    "message": "User Guide",
+    "description": "Header for the user guide section."
+  },
+  "testToolHeader": {
+    "message": "🧪 Redirect Test Tool",
+    "description": "Header for the redirect test tool section."
+  },
+  "testToolUrlLabel": {
+    "message": "Test URL",
+    "description": "Label for the test URL input."
+  },
+  "testToolUrlPlaceholder": {
+    "message": "Enter a URL to test, e.g., https://example.com/path",
+    "description": "Placeholder for the test URL input."
+  },
+  "testToolTestButton": {
+    "message": "🔍 Test Redirect",
+    "description": "Text for the test redirect button."
+  },
+  "logsHeader": {
+    "message": "📋 Test Logs",
+    "description": "Header for the test logs section."
+  },
+  "logsLevelLabel": {
+    "message": "Log Level:",
+    "description": "Label for the log level selector."
+  },
+  "logsLevelDebug": {
+    "message": "DEBUG (Verbose)",
+    "description": "Log level option: DEBUG."
+  },
+  "logsLevelInfo": {
+    "message": "INFO (General)",
+    "description": "Log level option: INFO."
+  },
+  "logsLevelWarn": {
+    "message": "WARN (Warnings)",
+    "description": "Log level option: WARN."
+  },
+  "logsLevelError": {
+    "message": "ERROR (Errors)",
+    "description": "Log level option: ERROR."
+  },
+  "logsCopyButton": {
+    "message": "📋 Copy Logs",
+    "description": "Text for the copy logs button."
+  },
+  "logsClearButton": {
+    "message": "🗑️ Clear Logs",
+    "description": "Text for the clear logs button."
+  },
+  "logsNoLogs": {
+    "message": "No logs yet. Please run a redirect test first.",
+    "description": "Message shown when there are no logs to display."
+  },
+  "choseTitle": {
+    "message": "Choose a redirection link",
+    "description": "Title of the multiple matches choice page."
+  },
+  "choseHeader": {
+    "message": "🔗 Select a link to open",
+    "description": "Header text on the choice page."
+  },
+  "choseSubheader": {
+    "message": "The following redirection options were matched. Click any link to proceed.",
+    "description": "Subheader text on the choice page."
+  },
+  "choseLoading": {
+    "message": "Loading link options...",
+    "description": "Loading message on the choice page."
+  },
+  "choseRuleLabel": {
+    "message": "Matching Rule",
+    "description": "Label for the matched rule."
+  },
+  "choseMatchTypeLabel": {
+    "message": "Match Type",
+    "description": "Label for the match type."
+  },
+  "choseRuleTriggerLabel": {
+    "message": "Triggering Rule",
+    "description": "Label for the triggering rule."
+  },
+  "choseMatchTypeExact": {
+    "message": "Exact Match",
+    "description": "Match type: Exact."
+  },
+  "choseMatchTypePrefix": {
+    "message": "Prefix Match",
+    "description": "Match type: Prefix."
+  },
+  "choseMatchTypeSuffix": {
+    "message": "Suffix Match",
+    "description": "Match type: Suffix."
+  },
+  "choseMatchTypeContains": {
+    "message": "Contains Match",
+    "description": "Match type: Contains."
+  },
+  "choseEmptyStateHeader": {
+    "message": "No matching links found",
+    "description": "Header for the empty state on the choice page."
+  },
+  "choseEmptyStateMessage": {
+    "message": "No redirection rules were matched for the current page.",
+    "description": "Message for the empty state on the choice page."
+  },
+  "choseTimeoutHeader": {
+    "message": "Loading Timeout",
+    "description": "Header for the timeout state on the choice page."
+  },
+  "choseTimeoutMessage": {
+    "message": "Could not retrieve redirection options. Please refresh the page and try again.",
+    "description": "Message for the timeout state on the choice page."
+  },
+  "testResult_noMatch": {
+    "message": "No matching rule found.",
+    "description": "Test result: No match found."
+  },
+  "testResult_redirect": {
+    "message": "Redirect",
+    "description": "Test result: Redirecting."
+  },
+  "testResult_from": {
+    "message": "From",
+    "description": "Test result: From."
+  },
+  "testResult_to": {
+    "message": "To",
+    "description": "Test result: To."
+  },
+  "testResult_matchingRule": {
+    "message": "Matching Rule",
+    "description": "Test result: Matching rule."
+  },
+  "testResult_matchingType": {
+    "message": "Matching Type",
+    "description": "Test result: Matching type."
+  },
+  "testResult_multipleMatches": {
+    "message": "Multiple Matches",
+    "description": "Test result: Multiple matches."
+  },
+  "testResult_currentURL": {
+    "message": "Current URL",
+    "description": "Test result: Current URL."
+  },
+  "testResult_foundNMatches": {
+    "message": "Found $COUNT$ matching rules:",
+    "description": "Test result: Found N matches.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "testResult_rule": {
+    "message": "Rule",
+    "description": "Test result: Rule."
+  },
+  "testResult_type": {
+    "message": "Type",
+    "description": "Test result: Type."
+  },
+  "testResult_cycleRedirect": {
+    "message": "Cyclic Redirection",
+    "description": "Test result: Cycle redirect."
+  },
+  "testResult_url": {
+    "message": "URL",
+    "description": "Test result: URL."
+  },
+  "testResult_limitReached": {
+    "message": "Limit Reached",
+    "description": "Test result: Limit reached."
+  },
+  "testResult_finalResult": {
+    "message": "Final Result",
+    "description": "Test result: Final result."
+  },
+  "testResult_finalURL": {
+    "message": "Final URL",
+    "description": "Test result: Final URL."
+  },
+  "options_getConfigError": {
+    "message": "# Failed to get config: $ERROR$\n# Please enter the configuration manually or check your network connection",
+    "description": "Error message when failing to get config.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_extEnabled": {
+    "message": "Extension enabled",
+    "description": "Notification when extension is enabled."
+  },
+  "options_extDisabled": {
+    "message": "Extension disabled",
+    "description": "Notification when extension is disabled."
+  },
+  "options_statusUpdateFailed": {
+    "message": "Failed to update status: $ERROR$",
+    "description": "Error message when failing to update extension status.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_switchInitFailed": {
+    "message": "Failed to initialize switch: $ERROR$",
+    "description": "Error message when failing to initialize the switch.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_statusOn": {
+    "message": "ON",
+    "description": "Switch status text: ON."
+  },
+  "options_statusOff": {
+    "message": "OFF",
+    "description": "Switch status text: OFF."
+  },
+  "options_error_cycle": {
+    "message": "Cyclic redirection: $LINE$",
+    "description": "Error for cyclic redirection.",
+    "placeholders": { "line": { "content": "$1" } }
+  },
+  "options_error_format": {
+    "message": "Format error: $LINE$",
+    "description": "Error for wrong format.",
+    "placeholders": { "line": { "content": "$1" } }
+  },
+  "options_save_success": {
+    "message": "Saved successfully! The new rules are now in effect.",
+    "description": "Message on successful save."
+  },
+  "options_save_failed_header": {
+    "message": "Save Failed!",
+    "description": "Header for save failure message."
+  },
+  "options_error_info": {
+    "message": "Error details: $ERROR$",
+    "description": "Error info label.",
+    "placeholders": { "error": { "content": "$1" } }
+  },
+  "options_cycle_found_header": {
+    "message": "Redirect loop found!",
+    "description": "Header for redirection loop found message."
+  },
+  "options_enter_test_url": {
+    "message": "Please enter a URL to test.",
+    "description": "Alert message to enter a test URL."
+  },
+  "options_config_rules_first": {
+    "message": "Please configure redirection rules first.",
+    "description": "Alert message to configure rules first."
+  },
+  "options_test_error_header": {
+    "message": "Test Error",
+    "description": "Header for test error."
+  },
+  "options_test_error_message": {
+    "message": "An error occurred during the test. Please check if the rule format is correct.",
+    "description": "Message for test error."
+  },
+  "options_logs_cleared": {
+    "message": "Logs cleared.",
+    "description": "Message when logs are cleared."
+  },
+  "options_no_logs_yet": {
+    "message": "No logs yet.",
+    "description": "Message when there are no logs."
+  },
+  "options_no_logs_to_copy": {
+    "message": "No logs to copy.",
+    "description": "Message when there are no logs to copy."
+  },
+  "options_logs_copied": {
+    "message": "Logs copied to clipboard.",
+    "description": "Message when logs are copied successfully."
+  },
+  "options_copy_failed": {
+    "message": "Copy failed. Please select and copy manually.",
+    "description": "Message when copy fails."
+  },
+  "options_copy_failed_error": {
+    "message": "Copy failed: $ERROR$",
+    "description": "Message when copy fails with an error.",
+    "placeholders": { "error": { "content": "$1" } }
+  },
+  "options_error_configManagerNotLoaded": {
+    "message": "ConfigManager not loaded",
+    "description": "Error message when ConfigManager is not loaded."
+  },
+  "options_error_configManagerNotLoaded_instructions": {
+    "message": "# Error: Configuration Manager not loaded\n# Please refresh the page and try again",
+    "description": "Error message and instructions when ConfigManager fails to load."
+  },
+  "redEngLogNoLogs": {
+    "message": "No logs",
+    "description": "Message in log export when there are no logs."
+  },
+  "redEngLogHeader": {
+    "message": "=== Auto Redirect Test Log ===",
+    "description": "Header for exported log file."
+  },
+  "redEngLogTime": {
+    "message": "Generated at: ",
+    "description": "Label for generation time in log export."
+  },
+  "redEngLogCount": {
+    "message": "Log entries: ",
+    "description": "Label for log count in log export."
+  },
+  "redEngLogData": {
+    "message": "Data: ",
+    "description": "Label for data in log export."
+  },
+  "redEngCycleDetected": {
+    "message": "Cyclic redirection detected!",
+    "description": "Error message for cyclic redirection in test tool."
+  },
+  "redEngNoRuleMatched": {
+    "message": "No matching redirection rule",
+    "description": "Message when no rule is matched in test tool."
+  },
+  "redEngChainEnd": {
+    "message": "Redirection chain ended",
+    "description": "Message when redirect chain ends in test tool."
+  },
+  "redEngMultipleMatches": {
+    "message": "Found $1 matching rules",
+    "description": "Message for multiple matches in test tool.",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "redEngMaxRedirects": {
+    "message": "Reached max redirection limit ($1 steps), stopping test",
+    "description": "Message when max redirection steps are reached in test tool.",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "redEngLogSmartProtocolStart": { "message": "Smart protocol processing started" },
+  "redEngLogProtocolExists": { "message": "Pattern already contains protocol, returning directly" },
+  "redEngLogLocalFile": { "message": "Explicit local file pattern processing" },
+  "redEngLogWebLocalFile": { "message": "Web/local file pattern processing" },
+  "redEngLogDomainPort": { "message": "Domain with port pattern processing" },
+  "redEngLogDomainPath": { "message": "Domain with path pattern processing" },
+  "redEngLogNormalDomain": { "message": "Normal domain pattern processing" },
+  "redEngLogSimpleDomain": { "message": "Simple domain-like pattern processing" },
+  "redEngLogOtherCase": { "message": "Other case, keeping original pattern" },
+  "redEngLogParseTemplate": { "message": "Parsing URL template" },
+  "redEngLogTemplateReplaceStart": { "message": "Starting template replacement" },
+  "redEngLogNoPlaceholder": { "message": "Template has no placeholders, returning directly" },
+  "redEngLogUrlNormalized": {
+    "message": "URL normalized: $1 -> $2",
+    "placeholders": {
+      "1": { "content": "$1" },
+      "2": { "content": "$2" }
+    }
+  },
+  "redEngLogTemplateUrlNoProtocol": { "message": "Template replacement: URL has no protocol, trying to match with added protocol" },
+  "redEngLogTemplateHttpSuccess": { "message": "Template replacement: Matched successfully after adding http:// protocol" },
+  "redEngLogTemplateHttpsSuccess": { "message": "Template replacement: Matched successfully after adding https:// protocol" },
+  "redEngLogUrlNoMatchTemplate": { "message": "URL does not match pattern, cannot perform template replacement" },
+  "redEngLogRegexMatchSuccess": { "message": "Regex matched successfully" },
+  "redEngLogReplacingPlaceholder": { "message": "Replacing placeholder" },
+  "redEngLogPlaceholderIndexOOB": { "message": "Placeholder index out of bounds" },
+  "redEngLogTemplateReplaceDone": { "message": "Template replacement finished" },
+  "redEngLogTemplateReplaceError": { "message": "Error during template replacement" },
+  "redEngLogTargetUrlHasProtocol": { "message": "Target URL already has a protocol" },
+  "redEngLogTargetUrlRelative": { "message": "Target URL is a relative path, keeping as is" },
+  "redEngLogTargetUrlNormalized": { "message": "Target URL normalized" },
+  "redEngLogUrlNoProtocol": { "message": "URL has no protocol, trying to match with added protocol" },
+  "redEngLogHttpMatchSuccess": { "message": "Matched successfully after adding http:// protocol" },
+  "redEngLogHttpsMatchSuccess": { "message": "Matched successfully after adding https:// protocol" },
+  "redEngLogUrlMatchTest": { "message": "URL match test" },
+  "redEngLogRegexError": {
+    "message": "Regular expression error: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "redEngLogUrlExtractStart": { "message": "Starting URL extraction" },
+  "redEngLogRemoveExactPrefix": { "message": "Removing exact match prefix: $1" },
+  "redEngLogRemoveStartPrefix": { "message": "Removing start match prefix: $1" },
+  "redEngLogRemoveWildcardPrefix": { "message": "Removing wildcard prefix: $1" },
+  "redEngLogRemoveWildcardSuffix": { "message": "Removing wildcard suffix: $1" },
+  "redEngLogRemoveEndSuffix": { "message": "Removing end match suffix: $1" },
+  "redEngLogEscapedPattern": { "message": "Escaped pattern: $1" },
+  "redEngLogExtractRegex": { "message": "Extraction regex: $1" },
+  "redEngLogRawExtractResult": { "message": "Raw extracted result: $1" },
+  "redEngLogExtractDecodeSuccess": { "message": "Successfully extracted and decoded URL: $1" },
+  "redEngLogUrlDecodeFail": { "message": "URL decoding failed, using raw string: $1" },
+  "redEngLogUrlExtractFail": { "message": "Failed to extract content from URL" },
+  "redEngLogUrlExtractError": { "message": "Error during URL extraction" },
+  "redEngLogFindRedirectStart": { "message": "Starting to find redirect matches" },
+  "redEngLogTestRule": {
+    "message": "Testing rule $1/$2",
+    "placeholders": {
+      "1": { "content": "$1" },
+      "2": { "content": "$2" }
+    }
+  },
+  "redEngLogRuleMatchSuccess": { "message": "Rule matched successfully" },
+  "redEngLogTargetUrlEmpty": { "message": "Target URL is empty, trying to extract from URL" },
+  "redEngLogUrlExtractSuccess": { "message": "URL extraction successful" },
+  "redEngLogUrlExtractInvalid": { "message": "Failed to extract a valid URL, skipping rule" },
+  "redEngLogTemplateReplaceSuccess": { "message": "Template replacement successful" },
+  "redEngLogTemplateReplaceFail": { "message": "Template replacement failed, using normalized original target URL" },
+  "redEngLogAddRedirectTarget": { "message": "Adding redirect target" },
+  "redEngLogDuplicateTarget": { "message": "Duplicate redirect target, skipping" },
+  "redEngLogRuleNoMatch": { "message": "Rule did not match" },
+  "redEngLogFindRedirectDone": { "message": "Redirect match finding complete" },
+  "redEngLogChainTestStart": { "message": "Starting redirect chain test" },
+  "redEngLogParseRulesDone": { "message": "Rule parsing complete" },
+  "redEngLogChainTrackStart": { "message": "Starting redirect chain tracking" },
+  "redEngLogRedirectStep": {
+    "message": "Redirect step $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "redEngLogCycleDetected": { "message": "Cyclic redirection detected" },
+  "redEngLogUrlVisited": { "message": "Added URL to visited list" },
+  "redEngLogChainEnded": { "message": "Redirect chain ended" },
+  "redEngLogSingleRuleMatch": { "message": "Single rule matched" },
+  "redEngLogMultiRuleMatch": { "message": "Multiple rules matched" },
+  "redEngLogMaxRedirectsReached": { "message": "Maximum redirection limit reached" },
+  "redEngLogChainTestDone": { "message": "Redirect chain test complete" }
+} 

@@ -3,7 +3,7 @@ function renderTestResult(redirectChain) {
   const resultDiv = document.getElementById('test_result');
   
   if (redirectChain.length === 0) {
-    resultDiv.innerHTML = '<div class="no-match">没有找到匹配的规则</div>';
+    resultDiv.innerHTML = `<div class="no-match">${chrome.i18n.getMessage("testResult_noMatch")}</div>`;
     return;
   }
   
@@ -18,12 +18,12 @@ function renderTestResult(redirectChain) {
         stepContent = `
           <div class="step-header">
             <div class="step-number">${step.step}</div>
-            <span>重定向</span>
+            <span>${chrome.i18n.getMessage("testResult_redirect")}</span>
           </div>
-          <div class="step-url">从: ${step.url}</div>
-          <div class="step-url">到: ${step.targetUrl}</div>
-          <div class="step-rule">匹配规则: ${step.rule}</div>
-          <div class="step-rule">匹配类型: <span class="match-type-badge ${step.matchType}">${getMatchTypeText(step.matchType)}</span></div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_from")}: ${step.url}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_to")}: ${step.targetUrl}</div>
+          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingRule")}: ${step.rule}</div>
+          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingType")}: <span class="match-type-badge ${step.matchType}">${getMatchTypeText(step.matchType)}</span></div>
         `;
         break;
         
@@ -32,17 +32,17 @@ function renderTestResult(redirectChain) {
         stepContent = `
           <div class="step-header">
             <div class="step-number">${step.step}</div>
-            <span>多个匹配</span>
+            <span>${chrome.i18n.getMessage("testResult_multipleMatches")}</span>
           </div>
-          <div class="step-url">当前URL: ${step.url}</div>
-          <div style="margin-top: 10px; font-weight: 600;">找到 ${step.matches.length} 个匹配的规则:</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_currentURL")}: ${step.url}</div>
+          <div style="margin-top: 10px; font-weight: 600;">${chrome.i18n.getMessage("testResult_foundNMatches", [step.matches.length])}</div>
         `;
         step.matches.forEach((match, i) => {
           stepContent += `
             <div class="match-item">
               <div class="match-url">${i + 1}. ${match.url}</div>
-              <div class="match-rule">规则: ${match.rule}</div>
-              <div class="match-rule">类型: <span class="match-type-badge ${match.matchType}">${getMatchTypeText(match.matchType)}</span></div>
+              <div class="match-rule">${chrome.i18n.getMessage("testResult_rule")}: ${match.rule}</div>
+              <div class="match-rule">${chrome.i18n.getMessage("testResult_type")}: <span class="match-type-badge ${match.matchType}">${getMatchTypeText(match.matchType)}</span></div>
             </div>
           `;
         });
@@ -53,9 +53,9 @@ function renderTestResult(redirectChain) {
         stepContent = `
           <div class="step-header">
             <div class="step-number">⚠️</div>
-            <span>循环重定向</span>
+            <span>${chrome.i18n.getMessage("testResult_cycleRedirect")}</span>
           </div>
-          <div class="step-url">URL: ${step.url}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_url")}: ${step.url}</div>
           <div style="color: #dc3545; font-weight: 600; margin-top: 8px;">${step.message}</div>
         `;
         break;
@@ -65,7 +65,7 @@ function renderTestResult(redirectChain) {
         stepContent = `
           <div class="step-header">
             <div class="step-number">⚠️</div>
-            <span>达到限制</span>
+            <span>${chrome.i18n.getMessage("testResult_limitReached")}</span>
           </div>
           <div style="color: #dc3545; font-weight: 600;">${step.message}</div>
         `;
@@ -75,9 +75,9 @@ function renderTestResult(redirectChain) {
         stepContent = `
           <div class="step-header">
             <div class="step-number">✓</div>
-            <span>最终结果</span>
+            <span>${chrome.i18n.getMessage("testResult_finalResult")}</span>
           </div>
-          <div class="step-url">最终URL: ${step.url}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_finalURL")}: ${step.url}</div>
           <div style="color: #28a745; font-weight: 600; margin-top: 8px;">${step.message}</div>
         `;
         break;
@@ -91,10 +91,10 @@ function renderTestResult(redirectChain) {
 
 function getMatchTypeText(type) {
   const typeMap = {
-    'exact': '精确匹配',
-    'prefix': '开头匹配', 
-    'suffix': '结尾匹配',
-    'contains': '包含匹配'
+    'exact': chrome.i18n.getMessage("choseMatchTypeExact"),
+    'prefix': chrome.i18n.getMessage("choseMatchTypePrefix"), 
+    'suffix': chrome.i18n.getMessage("choseMatchTypeSuffix"),
+    'contains': chrome.i18n.getMessage("choseMatchTypeContains")
   };
   return typeMap[type] || type;
 }
@@ -103,7 +103,7 @@ async function initValue() {
   try {
     // 确保ConfigManager已加载
     if (typeof window.ConfigManager === 'undefined') {
-      throw new Error('ConfigManager未加载');
+      throw new Error(chrome.i18n.getMessage("options_error_configManagerNotLoaded"));
     }
     
     // 使用配置管理器获取配置
@@ -112,7 +112,7 @@ async function initValue() {
   } catch (error) {
     console.error("Failed to get config:", error);
     // 如果获取失败，显示错误信息
-    document.getElementById("jump_list").value = "# 获取配置失败: " + error.message + "\n# 请手动输入配置或检查网络连接";
+    document.getElementById("jump_list").value = chrome.i18n.getMessage("options_getConfigError", [error.message]);
   }
 }
 
@@ -141,10 +141,11 @@ async function initExtensionSwitch() {
           updateSwitchStatus(this.checked);
           
           // 显示状态更新消息
-          showMessage(this.checked ? "扩展已启用" : "扩展已禁用", "success");
+          const messageKey = this.checked ? "options_extEnabled" : "options_extDisabled";
+          showMessage(chrome.i18n.getMessage(messageKey), "success");
         } catch (error) {
           console.error("Failed to update extension state:", error);
-          showMessage("状态更新失败: " + error.message, "error");
+          showMessage(chrome.i18n.getMessage("options_statusUpdateFailed", [error.message]), "error");
           // 恢复开关状态
           this.checked = !this.checked;
           updateSwitchStatus(this.checked);
@@ -153,7 +154,7 @@ async function initExtensionSwitch() {
     }
   } catch (error) {
     console.error("Failed to initialize extension switch:", error);
-    showMessage("开关初始化失败: " + error.message, "error");
+    showMessage(chrome.i18n.getMessage("options_switchInitFailed", [error.message]), "error");
   }
 }
 
@@ -161,24 +162,63 @@ async function initExtensionSwitch() {
 function updateSwitchStatus(isEnabled) {
   const statusElement = document.getElementById("switch_status");
   if (statusElement) {
-    statusElement.textContent = isEnabled ? "开启" : "关闭";
+    const statusKey = isEnabled ? "options_statusOn" : "options_statusOff";
+    statusElement.textContent = chrome.i18n.getMessage(statusKey);
     statusElement.className = isEnabled ? "switch-status enabled" : "switch-status disabled";
   }
 }
 
 // 显示消息提示
 function showMessage(message, type = "info") {
-  const msgAlert = document.getElementById("msg-alert");
-  if (msgAlert) {
-    msgAlert.innerHTML = message;
-    msgAlert.className = type === "error" ? "msg-error" : "msg-success";
-    msgAlert.style.display = "block";
-    
-    // 3秒后自动隐藏
-    setTimeout(() => {
-      msgAlert.style.display = "none";
-    }, 3000);
+  const messageEl = document.createElement('div');
+  messageEl.textContent = message;
+
+  messageEl.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(100%);
+  `;
+
+  switch (type) {
+    case 'success':
+      messageEl.style.backgroundColor = '#28a745';
+      break;
+    case 'error':
+      messageEl.style.backgroundColor = '#dc3545';
+      break;
+    default:
+      messageEl.style.backgroundColor = '#007bff';
+      break;
   }
+
+  document.body.appendChild(messageEl);
+
+  setTimeout(() => {
+    messageEl.style.opacity = '1';
+    messageEl.style.transform = 'translateX(0)';
+  }, 10);
+
+  setTimeout(() => {
+    if (messageEl.parentNode) {
+      messageEl.style.opacity = '0';
+      messageEl.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (messageEl.parentNode) {
+          document.body.removeChild(messageEl);
+        }
+      }, 300);
+    }
+  }, 3000);
 }
 
 function checkCircleRedirect(src_list) {
@@ -186,21 +226,16 @@ function checkCircleRedirect(src_list) {
   var errorList = [];
   src_list.forEach(function (v, i) {
     var line = v.trim();
-    // 跳过空行和注释行（以#开头的行）
     if (line != "" && !line.startsWith("#")) {
       var parts = line.split("####");
       if (parts.length >= 2) {
         var regStr = parts[0];
         var urlStr = parts[1];
-
-        // 空目标URL是允许的（用于通用URL提取功能，如知乎链接解码）
-        // 只检查循环重定向
         if (urlStr && urlStr.trim() !== "" && urlStr.indexOf(regStr) != -1) {
-          errorList.push("循环重定向: " + line);
+          errorList.push(chrome.i18n.getMessage("options_error_cycle", [line]));
         }
       } else if (parts.length === 1 && line.indexOf("####") !== -1) {
-        // 检查格式错误（只有分隔符但没有目标URL）
-        errorList.push("格式错误: " + line);
+        errorList.push(chrome.i18n.getMessage("options_error_format", [line]));
       }
     }
   });
@@ -218,10 +253,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // 显示错误信息给用户
     const jumpList = document.getElementById("jump_list");
     if (jumpList) {
-      jumpList.value = "# 错误：配置管理器未加载\n# 请刷新页面重试";
+      jumpList.value = chrome.i18n.getMessage("options_error_configManagerNotLoaded_instructions");
     }
     return;
   }
+  
+  // Set switch labels dynamically to avoid inline script CSP violation
+  const style = document.createElement('style');
+  document.head.appendChild(style);
+  const onText = chrome.i18n.getMessage('textOn');
+  const offText = chrome.i18n.getMessage('textOff');
+  if (onText) style.sheet.insertRule(`.slideThree:before { content: '${onText}'; }`, 0);
+  if (offText) style.sheet.insertRule(`.slideThree:after { content: '${offText}'; }`, 1);
   
   initValue();
 
@@ -262,24 +305,24 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         // 确保ConfigManager已加载
         if (typeof window.ConfigManager === 'undefined') {
-          throw new Error('ConfigManager未加载');
+          throw new Error(chrome.i18n.getMessage("options_error_configManagerNotLoaded"));
         }
         
         // 使用配置管理器保存配置
         await window.ConfigManager.saveConfig(srcList);
         const tips = document.getElementById("tips");
         tips.style.display = "block";
-        tips.textContent = "保存成功！新规则已生效，扩展程序将立即使用更新后的规则。";
+        tips.textContent = chrome.i18n.getMessage("options_save_success");
         setTimeout(function () {
           tips.style.display = "none";
         }, 3000);
       } catch (error) {
         console.error("保存配置失败:", error);
-        msgAlert.innerHTML = "<h3>保存失败!</h3><br>错误信息: " + error.message;
+        msgAlert.innerHTML = `<h3>${chrome.i18n.getMessage("options_save_failed_header")}</h3><br>${chrome.i18n.getMessage("options_error_info", [error.message])}`;
         msgAlert.style.display = "block";
       }
     } else {
-      var errAlert = "<h3>Redirect loop found!</h3><br>";
+      var errAlert = `<h3>${chrome.i18n.getMessage("options_cycle_found_header")}</h3><br>`;
       errorArr.forEach(function (v, i) {
         errAlert += v;
       });
@@ -294,12 +337,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const jumpList = document.getElementById("jump_list").value;
     
     if (!testUrl) {
-      alert("请输入要测试的URL");
+      alert(chrome.i18n.getMessage("options_enter_test_url"));
       return;
     }
     
     if (!jumpList.trim()) {
-      alert("请先配置重定向规则");
+      alert(chrome.i18n.getMessage("options_config_rules_first"));
       return;
     }
     
@@ -307,8 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // 每次测试前先清空之前的日志
       RedirectEngine.Logger.clearLogs();
       
-      // 设置日志级别为DEBUG以获取详细信息
-      RedirectEngine.Logger.setLevel(RedirectEngine.Logger.LEVELS.DEBUG);
+      // 设置日志级别为DEBUG以捕获所有日志
+      RedirectEngine.Logger.setLevel(0); // 0 = DEBUG
       
       // 使用共享的重定向引擎
       const redirectChain = RedirectEngine.testRedirectChain(testUrl, jumpList);
@@ -324,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
       RedirectEngine.Logger.error("测试重定向时出错", error);
       
       document.getElementById('test_result').innerHTML = 
-        '<div class="error-step"><div class="step-header"><div class="step-number">❌</div><span>测试出错</span></div><div style="color: #dc3545;">测试过程中发生错误，请检查规则格式是否正确</div></div>';
+        `<div class="error-step"><div class="step-header"><div class="step-number">❌</div><span>${chrome.i18n.getMessage("options_test_error_header")}</span></div><div style="color: #dc3545;">${chrome.i18n.getMessage("options_test_error_message")}</div></div>`;
       
       // 即使出错也显示日志
       renderTestLogs();
@@ -335,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const logLevelSelect = document.getElementById("log_level");
   if (logLevelSelect) {
     logLevelSelect.addEventListener("change", function() {
-      const level = parseInt(this.value);
-      RedirectEngine.Logger.setLevel(level);
+      // 日志级别更改时，仅重新渲染日志
+      renderTestLogs();
     });
   }
 
@@ -347,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function () {
       RedirectEngine.Logger.clearLogs();
       const logsContainer = document.getElementById('test_logs');
       if (logsContainer) {
-        logsContainer.innerHTML = '<div class="no-logs">日志已清空</div>';
+        logsContainer.innerHTML = `<div class="no-logs">${chrome.i18n.getMessage("options_logs_cleared")}</div>`;
       }
     });
   }
@@ -391,10 +434,28 @@ function renderTestLogs() {
   const logsContainer = document.getElementById('test_logs');
   if (!logsContainer) return;
   
-  const logs = RedirectEngine.Logger.getLogs();
+  const allLogs = RedirectEngine.Logger.getLogs();
+  
+  const logLevelSelect = document.getElementById("log_level");
+  const selectedLevel = logLevelSelect ? parseInt(logLevelSelect.value, 10) : 1; // 默认为 INFO
+
+  const LOG_LEVEL_MAP = {
+    'DEBUG': 0,
+    'INFO': 1,
+    'WARN': 2,
+    'ERROR': 3
+  };
+
+  const logs = allLogs.filter(log => {
+    const logNumericLevel = LOG_LEVEL_MAP[log.level.toUpperCase()];
+    return typeof logNumericLevel !== 'undefined' && logNumericLevel >= selectedLevel;
+  });
   
   if (logs.length === 0) {
-    logsContainer.innerHTML = '<div class="no-logs">暂无日志</div>';
+    const logsContainer = document.getElementById('test_logs');
+    if (logsContainer) {
+      logsContainer.innerHTML = `<div class="no-logs">${chrome.i18n.getMessage("options_no_logs_yet")}</div>`;
+    }
     return;
   }
   
@@ -424,7 +485,7 @@ async function copyLogsToClipboard() {
   const logs = RedirectEngine.Logger.getLogs();
   
   if (logs.length === 0) {
-    showCopyMessage('暂无日志可复制', 'warning');
+    showCopyMessage(chrome.i18n.getMessage("options_no_logs_to_copy"), 'warning');
     return;
   }
   
@@ -435,7 +496,7 @@ async function copyLogsToClipboard() {
     // 使用现代剪贴板API
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(fullText);
-      showCopyMessage('日志已复制到剪贴板', 'success');
+      showCopyMessage(chrome.i18n.getMessage("options_logs_copied"), 'success');
     } else {
       // 降级方案：使用传统方法
       const textArea = document.createElement('textarea');
@@ -450,12 +511,12 @@ async function copyLogsToClipboard() {
       try {
         const successful = document.execCommand('copy');
         if (successful) {
-          showCopyMessage('日志已复制到剪贴板', 'success');
+          showCopyMessage(chrome.i18n.getMessage("options_logs_copied"), 'success');
         } else {
-          showCopyMessage('复制失败，请手动选择复制', 'error');
+          showCopyMessage(chrome.i18n.getMessage("options_copy_failed"), 'error');
         }
       } catch (err) {
-        showCopyMessage('复制失败: ' + err.message, 'error');
+        showCopyMessage(chrome.i18n.getMessage("options_copy_failed_error", [err.message]), 'error');
       } finally {
         document.body.removeChild(textArea);
       }
@@ -463,7 +524,7 @@ async function copyLogsToClipboard() {
     
   } catch (error) {
     console.error('复制日志失败:', error);
-    showCopyMessage('复制失败: ' + error.message, 'error');
+    showCopyMessage(chrome.i18n.getMessage("options_copy_failed_error", [error.message]), 'error');
   }
 }
 

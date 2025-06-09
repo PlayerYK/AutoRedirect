@@ -1,0 +1,526 @@
+{
+  "extensionName": {
+    "message": "自动重定向",
+    "description": "The name of the extension."
+  },
+  "extensionDescription": {
+    "message": "智能URL重定向工具 - 支持多种匹配模式和URL模板替换",
+    "description": "The description of the extension."
+  },
+  "extensionDefaultTitle": {
+    "message": "自动重定向",
+    "description": "The default title for the browser action."
+  },
+  "popupTitle": {
+    "message": "启用/禁用扩展",
+    "description": "The title of the popup window."
+  },
+  "popupStatusOn": {
+    "message": "开启",
+    "description": "The ON status on the switch."
+  },
+  "popupStatusOff": {
+    "message": "关闭",
+    "description": "The OFF status on the switch."
+  },
+  "optionsTitle": {
+    "message": "Auto Redirect 设置",
+    "description": "The title of the options page."
+  },
+  "optionsSwitchLabel": {
+    "message": "扩展状态：",
+    "description": "Label for the main extension enable/disable switch."
+  },
+  "optionsSwitchStatusOn": {
+    "message": "开启",
+    "description": "Text indicating the switch is on."
+  },
+  "optionsSwitchStatusOff": {
+    "message": "关闭",
+    "description": "Text indicating the switch is off."
+  },
+  "optionsSubtitle": {
+    "message": "配置您的自动重定向规则",
+    "description": "Subtitle on the options page."
+  },
+  "textOn": {
+    "message": "开",
+    "description": "Generic 'ON' text, used in CSS switches."
+  },
+  "textOff": {
+    "message": "关",
+    "description": "Generic 'OFF' text, used in CSS switches."
+  },
+  "optionsRulesConfigHeader": {
+    "message": "重定向规则配置",
+    "description": "Header for the rule configuration panel."
+  },
+  "optionsOnlineDocsLink": {
+    "message": "🧪 在线文档与测试",
+    "description": "Link text for online documentation and testing."
+  },
+  "optionsRulesPlaceholder": {
+    "message": "请在此输入您的重定向规则，每行一条规则，格式：原始URL####目标URL",
+    "description": "Placeholder text for the redirection rules textarea."
+  },
+  "optionsSaveButton": {
+    "message": "💾 保存配置",
+    "description": "Text for the save button."
+  },
+  "optionsGuideTab": {
+    "message": "📚 使用指南",
+    "description": "Tab title for the user guide."
+  },
+  "optionsTestToolTab": {
+    "message": "🧪 测试工具",
+    "description": "Tab title for the test tool."
+  },
+  "guideRedirectMessage": {
+    "message": "完整的用户指南、高级功能说明和所有测试用例都已迁移至在线文档，以提供更及时的更新和更好的阅读体验。",
+    "description": "Message to inform users that the guide has moved online."
+  },
+  "guideRedirectLink": {
+    "message": "点击此处访问在线文档",
+    "description": "Link text to the online documentation."
+  },
+  "guideHeader": {
+    "message": "使用指南",
+    "description": "Header for the user guide section."
+  },
+  "testToolHeader": {
+    "message": "🧪 重定向测试工具",
+    "description": "Header for the redirect test tool section."
+  },
+  "testToolUrlLabel": {
+    "message": "测试URL",
+    "description": "Label for the test URL input."
+  },
+  "testToolUrlPlaceholder": {
+    "message": "请输入要测试的URL，例如：https://example.com/path",
+    "description": "Placeholder for the test URL input."
+  },
+  "testToolTestButton": {
+    "message": "🔍 测试重定向",
+    "description": "Text for the test redirect button."
+  },
+  "logsHeader": {
+    "message": "📋 测试日志",
+    "description": "Header for the test logs section."
+  },
+  "logsLevelLabel": {
+    "message": "日志级别：",
+    "description": "Label for the log level selector."
+  },
+  "logsLevelDebug": {
+    "message": "DEBUG (详细)",
+    "description": "Log level option: DEBUG."
+  },
+  "logsLevelInfo": {
+    "message": "INFO (一般)",
+    "description": "Log level option: INFO."
+  },
+  "logsLevelWarn": {
+    "message": "WARN (警告)",
+    "description": "Log level option: WARN."
+  },
+  "logsLevelError": {
+    "message": "ERROR (错误)",
+    "description": "Log level option: ERROR."
+  },
+  "logsCopyButton": {
+    "message": "📋 复制日志",
+    "description": "Text for the copy logs button."
+  },
+  "logsClearButton": {
+    "message": "🗑️ 清空日志",
+    "description": "Text for the clear logs button."
+  },
+  "logsNoLogs": {
+    "message": "暂无日志，请先进行重定向测试",
+    "description": "Message shown when there are no logs to display."
+  },
+  "choseTitle": {
+    "message": "选择重定向链接",
+    "description": "Title of the multiple matches choice page."
+  },
+  "choseHeader": {
+    "message": "🔗 选择要打开的链接",
+    "description": "Header text on the choice page."
+  },
+  "choseSubheader": {
+    "message": "以下是匹配到的重定向选项，点击任意链接即可跳转",
+    "description": "Subheader text on the choice page."
+  },
+  "choseLoading": {
+    "message": "正在加载链接选项...",
+    "description": "Loading message on the choice page."
+  },
+  "choseRuleLabel": {
+    "message": "匹配规则",
+    "description": "Label for the matched rule."
+  },
+  "choseMatchTypeLabel": {
+    "message": "匹配类型",
+    "description": "Label for the match type."
+  },
+  "choseRuleTriggerLabel": {
+    "message": "触发规则",
+    "description": "Label for the triggering rule."
+  },
+  "choseMatchTypeExact": {
+    "message": "精确匹配",
+    "description": "Match type: Exact."
+  },
+  "choseMatchTypePrefix": {
+    "message": "开头匹配",
+    "description": "Match type: Prefix."
+  },
+  "choseMatchTypeSuffix": {
+    "message": "结尾匹配",
+    "description": "Match type: Suffix."
+  },
+  "choseMatchTypeContains": {
+    "message": "包含匹配",
+    "description": "Match type: Contains."
+  },
+  "choseEmptyStateHeader": {
+    "message": "没有找到匹配的链接",
+    "description": "Header for the empty state on the choice page."
+  },
+  "choseEmptyStateMessage": {
+    "message": "当前页面没有匹配到任何重定向规则",
+    "description": "Message for the empty state on the choice page."
+  },
+  "choseTimeoutHeader": {
+    "message": "加载超时",
+    "description": "Header for the timeout state on the choice page."
+  },
+  "choseTimeoutMessage": {
+    "message": "无法获取重定向选项，请刷新页面重试",
+    "description": "Message for the timeout state on the choice page."
+  },
+  "testResult_noMatch": {
+    "message": "没有找到匹配的规则",
+    "description": "Test result: No match found."
+  },
+  "testResult_redirect": {
+    "message": "重定向",
+    "description": "Test result: Redirecting."
+  },
+  "testResult_from": {
+    "message": "从",
+    "description": "Test result: From."
+  },
+  "testResult_to": {
+    "message": "到",
+    "description": "Test result: To."
+  },
+  "testResult_matchingRule": {
+    "message": "匹配规则",
+    "description": "Test result: Matching rule."
+  },
+  "testResult_matchingType": {
+    "message": "匹配类型",
+    "description": "Test result: Matching type."
+  },
+  "testResult_multipleMatches": {
+    "message": "多个匹配",
+    "description": "Test result: Multiple matches."
+  },
+  "testResult_currentURL": {
+    "message": "当前URL",
+    "description": "Test result: Current URL."
+  },
+  "testResult_foundNMatches": {
+    "message": "找到 $COUNT$ 个匹配的规则:",
+    "description": "Test result: Found N matches.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "testResult_rule": {
+    "message": "规则",
+    "description": "Test result: Rule."
+  },
+  "testResult_type": {
+    "message": "类型",
+    "description": "Test result: Type."
+  },
+  "testResult_cycleRedirect": {
+    "message": "循环重定向",
+    "description": "Test result: Cycle redirect."
+  },
+  "testResult_url": {
+    "message": "URL",
+    "description": "Test result: URL."
+  },
+  "testResult_limitReached": {
+    "message": "达到限制",
+    "description": "Test result: Limit reached."
+  },
+  "testResult_finalResult": {
+    "message": "最终结果",
+    "description": "Test result: Final result."
+  },
+  "testResult_finalURL": {
+    "message": "最终URL",
+    "description": "Test result: Final URL."
+  },
+  "options_getConfigError": {
+    "message": "# 获取配置失败: $ERROR$\n# 请手动输入配置或检查网络连接",
+    "description": "Error message when failing to get config.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_extEnabled": {
+    "message": "扩展已启用",
+    "description": "Notification when extension is enabled."
+  },
+  "options_extDisabled": {
+    "message": "扩展已禁用",
+    "description": "Notification when extension is disabled."
+  },
+  "options_statusUpdateFailed": {
+    "message": "状态更新失败: $ERROR$",
+    "description": "Error message when failing to update extension status.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_switchInitFailed": {
+    "message": "开关初始化失败: $ERROR$",
+    "description": "Error message when failing to initialize the switch.",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "options_statusOn": {
+    "message": "开启",
+    "description": "Switch status text: ON."
+  },
+  "options_statusOff": {
+    "message": "关闭",
+    "description": "Switch status text: OFF."
+  },
+  "options_error_cycle": {
+    "message": "循环重定向: $LINE$",
+    "description": "Error for cyclic redirection.",
+    "placeholders": { "line": { "content": "$1" } }
+  },
+  "options_error_format": {
+    "message": "格式错误: $LINE$",
+    "description": "Error for wrong format.",
+    "placeholders": { "line": { "content": "$1" } }
+  },
+  "options_save_success": {
+    "message": "保存成功！新规则已生效，扩展程序将立即使用更新后的规则。",
+    "description": "Message on successful save."
+  },
+  "options_save_failed_header": {
+    "message": "保存失败!",
+    "description": "Header for save failure message."
+  },
+  "options_error_info": {
+    "message": "错误信息: $ERROR$",
+    "description": "Error info label.",
+    "placeholders": { "error": { "content": "$1" } }
+  },
+  "options_cycle_found_header": {
+    "message": "发现循环重定向!",
+    "description": "Header for redirection loop found message."
+  },
+  "options_enter_test_url": {
+    "message": "请输入要测试的URL",
+    "description": "Alert message to enter a test URL."
+  },
+  "options_config_rules_first": {
+    "message": "请先配置重定向规则",
+    "description": "Alert message to configure rules first."
+  },
+  "options_test_error_header": {
+    "message": "测试出错",
+    "description": "Header for test error."
+  },
+  "options_test_error_message": {
+    "message": "测试过程中发生错误，请检查规则格式是否正确",
+    "description": "Message for test error."
+  },
+  "options_logs_cleared": {
+    "message": "日志已清空",
+    "description": "Message when logs are cleared."
+  },
+  "options_no_logs_yet": {
+    "message": "暂无日志",
+    "description": "Message when there are no logs."
+  },
+  "options_no_logs_to_copy": {
+    "message": "暂无日志可复制",
+    "description": "Message when there are no logs to copy."
+  },
+  "options_logs_copied": {
+    "message": "日志已复制到剪贴板",
+    "description": "Message when logs are copied successfully."
+  },
+  "options_copy_failed": {
+    "message": "复制失败，请手动选择复制",
+    "description": "Message when copy fails."
+  },
+  "options_copy_failed_error": {
+    "message": "复制失败: $ERROR$",
+    "description": "Message when copy fails with an error.",
+    "placeholders": { "error": { "content": "$1" } }
+  },
+  "options_error_configManagerNotLoaded": {
+    "message": "ConfigManager未加载",
+    "description": "Error message when ConfigManager is not loaded."
+  },
+  "options_error_configManagerNotLoaded_instructions": {
+    "message": "# 错误：配置管理器未加载\n# 请刷新页面重试",
+    "description": "Error message and instructions when ConfigManager fails to load."
+  },
+  "redEngLogNoLogs": {
+    "message": "暂无日志",
+    "description": "Message in log export when there are no logs."
+  },
+  "redEngLogHeader": {
+    "message": "=== Auto Redirect 测试日志 ===",
+    "description": "Header for exported log file."
+  },
+  "redEngLogTime": {
+    "message": "生成时间: ",
+    "description": "Label for generation time in log export."
+  },
+  "redEngLogCount": {
+    "message": "日志条数: ",
+    "description": "Label for log count in log export."
+  },
+  "redEngLogData": {
+    "message": "数据: ",
+    "description": "Label for data in log export."
+  },
+  "redEngCycleDetected": {
+    "message": "检测到循环重定向！",
+    "description": "Error message for cyclic redirection in test tool."
+  },
+  "redEngNoRuleMatched": {
+    "message": "没有匹配的重定向规则",
+    "description": "Message when no rule is matched in test tool."
+  },
+  "redEngChainEnd": {
+    "message": "重定向链结束",
+    "description": "Message when redirect chain ends in test tool."
+  },
+  "redEngMultipleMatches": {
+    "message": "找到 $1 个匹配的规则",
+    "description": "Message for multiple matches in test tool.",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "redEngMaxRedirects": {
+    "message": "达到最大重定向次数限制（$1次），停止测试",
+    "description": "Message when max redirection steps are reached in test tool.",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "redEngLogSmartProtocolStart": { "message": "智能协议处理开始" },
+  "redEngLogProtocolExists": { "message": "模式已包含协议，直接返回" },
+  "redEngLogLocalFile": { "message": "明确本地文件模式处理" },
+  "redEngLogWebLocalFile": { "message": "网络/本地文件模式处理" },
+  "redEngLogDomainPort": { "message": "端口号域名模式处理" },
+  "redEngLogDomainPath": { "message": "域名路径模式处理" },
+  "redEngLogNormalDomain": { "message": "普通域名模式处理" },
+  "redEngLogSimpleDomain": { "message": "简单域名模式处理" },
+  "redEngLogOtherCase": { "message": "其他情况，保持原样" },
+  "redEngLogParseTemplate": { "message": "解析URL模板" },
+  "redEngLogTemplateReplaceStart": { "message": "开始模板替换" },
+  "redEngLogNoPlaceholder": { "message": "模板无占位符，直接返回" },
+  "redEngLogUrlNormalized": {
+    "message": "URL标准化: $1 -> $2",
+    "placeholders": {
+      "1": { "content": "$1" },
+      "2": { "content": "$2" }
+    }
+  },
+  "redEngLogTemplateUrlNoProtocol": { "message": "模板替换：URL无协议，尝试添加协议进行匹配" },
+  "redEngLogTemplateHttpSuccess": { "message": "模板替换：添加http://协议后匹配成功" },
+  "redEngLogTemplateHttpsSuccess": { "message": "模板替换：添加https://协议后匹配成功" },
+  "redEngLogUrlNoMatchTemplate": { "message": "URL不匹配模式，无法进行模板替换" },
+  "redEngLogRegexMatchSuccess": { "message": "正则匹配成功" },
+  "redEngLogReplacingPlaceholder": { "message": "替换占位符" },
+  "redEngLogPlaceholderIndexOOB": { "message": "占位符索引超出范围" },
+  "redEngLogTemplateReplaceDone": { "message": "模板替换完成" },
+  "redEngLogTemplateReplaceError": { "message": "模板替换过程中发生错误" },
+  "redEngLogTargetUrlHasProtocol": { "message": "目标URL已包含协议" },
+  "redEngLogTargetUrlRelative": { "message": "目标URL是相对路径，保持原样" },
+  "redEngLogTargetUrlNormalized": { "message": "目标URL标准化" },
+  "redEngLogUrlNoProtocol": { "message": "URL无协议，尝试添加协议进行匹配" },
+  "redEngLogHttpMatchSuccess": { "message": "添加http://协议后匹配成功" },
+  "redEngLogHttpsMatchSuccess": { "message": "添加https://协议后匹配成功" },
+  "redEngLogUrlMatchTest": { "message": "URL匹配测试" },
+  "redEngLogRegexError": {
+    "message": "正则表达式错误: $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "redEngLogUrlExtractStart": { "message": "开始URL提取" },
+  "redEngLogRemoveExactPrefix": { "message": "移除精确匹配前缀: $1" },
+  "redEngLogRemoveStartPrefix": { "message": "移除开头匹配前缀: $1" },
+  "redEngLogRemoveWildcardPrefix": { "message": "移除通配符前缀: $1" },
+  "redEngLogRemoveWildcardSuffix": { "message": "移除通配符后缀: $1" },
+  "redEngLogRemoveEndSuffix": { "message": "移除结尾匹配后缀: $1" },
+  "redEngLogEscapedPattern": { "message": "转义后的模式: $1" },
+  "redEngLogExtractRegex": { "message": "提取正则表达式: $1" },
+  "redEngLogRawExtractResult": { "message": "原始提取结果: $1" },
+  "redEngLogExtractDecodeSuccess": { "message": "成功提取并解码URL: $1" },
+  "redEngLogUrlDecodeFail": { "message": "URL解码失败，使用原始字符串: $1" },
+  "redEngLogUrlExtractFail": { "message": "未能从URL中提取内容" },
+  "redEngLogUrlExtractError": { "message": "URL提取过程中发生错误" },
+  "redEngLogFindRedirectStart": { "message": "开始查找重定向匹配" },
+  "redEngLogTestRule": {
+    "message": "测试规则 $1/$2",
+    "placeholders": {
+      "1": { "content": "$1" },
+      "2": { "content": "$2" }
+    }
+  },
+  "redEngLogRuleMatchSuccess": { "message": "规则匹配成功" },
+  "redEngLogTargetUrlEmpty": { "message": "目标URL为空，尝试URL提取" },
+  "redEngLogUrlExtractSuccess": { "message": "URL提取成功" },
+  "redEngLogUrlExtractInvalid": { "message": "未能提取到有效URL，跳过规则" },
+  "redEngLogTemplateReplaceSuccess": { "message": "模板替换成功" },
+  "redEngLogTemplateReplaceFail": { "message": "模板替换失败，使用标准化的原始目标URL" },
+  "redEngLogAddRedirectTarget": { "message": "添加重定向目标" },
+  "redEngLogDuplicateTarget": { "message": "重复的重定向目标，跳过" },
+  "redEngLogRuleNoMatch": { "message": "规则不匹配" },
+  "redEngLogFindRedirectDone": { "message": "重定向匹配完成" },
+  "redEngLogChainTestStart": { "message": "开始测试重定向链" },
+  "redEngLogParseRulesDone": { "message": "解析规则完成" },
+  "redEngLogChainTrackStart": { "message": "开始重定向链追踪" },
+  "redEngLogRedirectStep": {
+    "message": "重定向步骤 $1",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "redEngLogCycleDetected": { "message": "检测到循环重定向" },
+  "redEngLogUrlVisited": { "message": "添加URL到访问记录" },
+  "redEngLogChainEnded": { "message": "重定向链结束" },
+  "redEngLogSingleRuleMatch": { "message": "单个规则匹配" },
+  "redEngLogMultiRuleMatch": { "message": "多个规则匹配" },
+  "redEngLogMaxRedirectsReached": { "message": "达到最大重定向次数限制" },
+  "redEngLogChainTestDone": { "message": "重定向链测试完成" }
+} 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>选择重定向链接</title>
+    <title data-i18n="choseTitle"></title>
     <style>
         * {
             margin: 0;
@@ -245,22 +245,23 @@
             background: #dc3545;
         }
     </style>
+    <script src="script/i18n.js"></script>
     <script src="script/chose.js"></script>
 </head>
 <body>
     <div id="wrapper">
         <div class="header">
-            <h2>🔗 选择要打开的链接</h2>
-            <p>以下是匹配到的重定向选项，点击任意链接即可跳转</p>
+            <h2 data-i18n="choseHeader"></h2>
+            <p data-i18n="choseSubheader"></p>
         </div>
         <div class="content">
             <div class="loading show">
                 <div class="spinner"></div>
-                <p>正在加载链接选项...</p>
+                <p data-i18n="choseLoading"></p>
             </div>
             <ul id="list">
                 <!-- 链接列表将在这里动态生成 -->
-                </ul>
+            </ul>
         </div>
     </div>
 </body>
