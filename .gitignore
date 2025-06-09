@@ -14,3 +14,6 @@ Thumbs.db
 
 .rbenv-version
 .rvmrc
+
+docs/.vitepress/cache/
+docs/.vitepress/dist/
