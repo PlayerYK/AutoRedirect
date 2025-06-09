@@ -2,7 +2,7 @@
 
 /**
  * AutoRedirect 配置文件规则测试脚本
- * 专门用于验证 example_config.txt 中的实际规则
+ * 专门用于验证 example_config.zh-CN.txt 中的实际规则
  */
 
 const fs = require('fs');
@@ -11,7 +11,7 @@ const path = require('path');
 // 导入重定向引擎
 const RedirectEngine = require('../src/script/redirect-engine.js');
 
-// 基于更新后的 example_config.txt 的实际测试用例
+// 基于更新后的 example_config.zh-CN.txt 的实际测试用例
 const configTestCases = [
     // ===== 精确匹配模式测试（推荐，最安全） =====
     {
@@ -418,7 +418,7 @@ function runAllTests() {
     // 加载配置文件
     let configContent = '';
     try {
-        configContent = fs.readFileSync(path.join(__dirname, 'example_config.txt'), 'utf8');
+        configContent = fs.readFileSync(path.join(__dirname, 'example_config.zh-CN.txt'), 'utf8');
         console.log(colorize('✅ 配置文件加载成功', 'green'));
         
         // 显示配置文件统计信息
@@ -433,7 +433,7 @@ function runAllTests() {
         console.log(`   规则行数: ${ruleLines}`);
         
     } catch (error) {
-        console.log(colorize('❌ 无法加载配置文件 example_config.txt', 'red'));
+        console.log(colorize('❌ 无法加载配置文件 example_config.zh-CN.txt', 'red'));
         console.log(colorize(`错误: ${error.message}`, 'red'));
         return;
     }

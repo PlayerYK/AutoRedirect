@@ -17,14 +17,22 @@
 - **`TESTING_GUIDE.md` (本文档)**
   - 您正在阅读的文件。提供了本地测试的全部流程和维护规范。
 
-- **`example_config.txt` (权威规则来源)**
-  - **最重要**的测试文件，是所有规则的"唯一真实来源 (Source of Truth)"。
-  - 包含了所有功能最完整、带有详细注释的规则示例。
-  - **在线文档中的示例均源于此文件**。
+- **`example_config.zh-CN.txt` (中文配置示例)**
+  - **最重要**的中文测试文件，是所有规则的"唯一真实来源 (Source of Truth)"。
+  - 包含了所有功能最完整、带有详细中文注释的规则示例。
+  - **中文在线文档中的示例均源于此文件**。
 
-- **`test_config_rules.js` (规则的JS版本)**
-  - `example_config.txt` 中所有规则的 JavaScript 对象表示形式。
-  - 用于程序化访问规则，或为未来的自动化测试框架（如 Jest, Playwright）提供数据支持。
+- **`example_config.en.txt` (英文配置示例)**
+  - 英文版本的配置示例，包含相同的规则但使用英文注释。
+  - 适用于英语开发者和贡献者。
+
+- **`test_config_rules.zh-CN.js` (中文测试脚本)**
+  - 用于验证 `example_config.zh-CN.txt` 中规则的 JavaScript 测试脚本。
+  - 用于自动化测试和验证中文配置示例。
+
+- **`test_config_rules.en.js` (英文测试脚本)**
+  - 用于验证 `example_config.en.txt` 中规则的 JavaScript 测试脚本。
+  - 用于自动化测试和验证英文配置示例。
 
 ## 🧪 本地测试流程
 
@@ -35,7 +43,7 @@
 4. 选择本项目的根目录。
 
 ### 2. 使用测试规则
-1. 打开 `test/example_config.txt`。
+1. 打开 `test/example_config.zh-CN.txt`（中文版）或 `test/example_config.en.txt`（英文版）。
 2. 根据您需要测试的功能，从中复制相应的规则。
 3. 打开扩展的"选项"页面，清空现有规则，然后粘贴您复制的规则并保存。
 
@@ -46,16 +54,23 @@
 
 ## 🤖 自动化规则验证
 
-在手动测试之外，我们提供了一个自动化脚本来验证 `example_config.txt` 中所有规则的正确性。这对于保证核心引擎的逻辑和规则的兼容性至关重要。
+在手动测试之外，我们提供了自动化脚本来验证配置文件中所有规则的正确性。这对于保证核心引擎的逻辑和规则的兼容性至关重要。
 
 ### 运行测试脚本
-在项目根目录打开终端，运行以下命令：
+在项目根目录打开终端，运行以下命令之一：
+
+**中文配置测试：**
 ```bash
-node test/test_config_rules.js
+node test/test_config_rules.zh-CN.js
+```
+
+**英文配置测试：**
+```bash
+node test/test_config_rules.en.js
 ```
 
 ### 验证输出
-脚本会逐一测试 `example_config.txt` 中的规则，并报告成功或失败。如果所有测试都通过，您会看到成功的摘要。若有失败，脚本会打印出详细的错误信息。
+脚本会逐一测试相应配置文件中的规则，并报告成功或失败。如果所有测试都通过，您会看到成功的摘要。若有失败，脚本会打印出详细的错误信息。
 
 **在提交任何代码（尤其是修改过规则的）之前，请务必运行此脚本，确保所有测试通过。**
 
@@ -64,8 +79,8 @@ node test/test_config_rules.js
 为确保项目代码、测试用例和外部文档的一致性，当您添加或修改功能时，**必须**同步更新以下文件：
 
 1.  **`src/`**: 实现您的功能代码。
-2.  **`test/example_config.txt`**: 添加或修改对应的规则，并附上清晰的注释。**这是第一步**。
-3.  **`test/test_config_rules.js`**: 同步更新 JS 对象，使其与 `example_config.txt` 保持一致。
+2.  **`test/example_config.zh-CN.txt`** 和 **`test/example_config.en.txt`**: 添加或修改对应的规则，并在两种语言中都附上清晰的注释。**这是第一步**。
+3.  **`test/test_config_rules.zh-CN.js`** 和 **`test/test_config_rules.en.js`**: 同步更新测试脚本，使其与配置文件保持一致。
 4.  **`docs/`**: 更新 VitePress 在线文档中的相关页面，确保用户能了解到新的功能或变更。
 
 遵循此流程可以保证项目的健康和可维护性。 
