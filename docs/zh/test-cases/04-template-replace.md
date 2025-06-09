@@ -1,32 +1,32 @@
-# 🔧 URL Template Replace
-<p class="description">Perform complex URL rewriting using wildcards and placeholders.</p>
+# 🔧 URL模板替换
+<p class="description">使用通配符和占位符进行复杂的URL重写</p>
 
-## Configuration Rule
+## 配置规则
 
 ```ini
-# URL Template Replace Test Configuration
+# URL模板替换测试配置
 old-domain.com/*####new-domain.com/{1}
 example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
 user.com/profile/*####newuser.com/{1}/dashboard/{1}
 ```
 
-## 💡 Rule Description
-Use the `*` wildcard to capture URL segments and reference them with `{1}, {2}, {3}` placeholders.
+## 💡 规则说明
+使用 `*` 通配符捕获URL片段，用 `{1}, {2}, {3}` 占位符引用。
 
-- Supports domain migration while preserving path structure.
-- Allows for reorganizing URL structures.
-- Placeholders can be reused or selectively used.
-- Ideal for complex URL rewriting needs.
+- 支持域名迁移并保持路径结构
+- 可以重新组织URL结构
+- 占位符可以重复使用或选择性使用
+- 适用于复杂的URL重写需求
 
-## How to Test
+## 测试方法
 
 <div class="test-links">
   <div class="test-link">
-    <strong>Test Link:</strong>
+    <strong>测试链接：</strong>
     <a href="https://old-domain.com/path/to/page" target="_blank">old-domain.com/path/to/page</a>
   </div>
   <div class="test-link">
-    <strong>Test Link:</strong>
+    <strong>测试链接：</strong>
     <a href="https://example.com/user/page/settings" target="_blank">example.com/user/page/settings</a>
   </div>
 </div>

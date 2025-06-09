@@ -1,42 +1,42 @@
-# 🎯 精确匹配重定向
-<p class="description">完全匹配指定URL，最安全的重定向方式</p>
+# 🎯 Exact Match Redirect
+<p class="description">Redirects only when the URL is an exact match. This is the safest redirection method.</p>
 
-## 配置规则
+## Configuration Rule
 
 ```ini
-# 精确匹配测试配置
+# Exact Match Test Configuration
 =localhost:3000####https://www.example.com
 =file:///Downloads/full/test_local.html####https://www.example.com/full/
 =file:///Users/*/dev/*/pickone/*.html####https://production.example.com/{3}
 ```
 
-## 💡 规则说明
-使用 `=` 前缀进行精确匹配，只有完全相同的URL才会触发重定向。
+## 💡 Rule Description
+Use the `=` prefix for an exact match. The redirect is triggered only if the URL is identical.
 
-- 最安全的匹配方式，避免误触发
-- 适用于特定域名或完整URL的重定向
-- 支持本地文件的精确路径匹配
-- 支持跨用户的通用路径匹配（使用`*`通配符）
-- 推荐用于生产环境的关键重定向规则
+- The safest matching method, avoiding unintended triggers.
+- Suitable for redirecting specific domains or full URLs.
+- Supports exact path matching for local files.
+- Supports generic paths across different users (using the `*` wildcard).
+- Recommended for critical redirection rules in a production environment.
 
-## 测试方法
+## How to Test
 
 <div class="test-links">
   <div class="test-link">
-    <strong>测试方法：</strong>
-    <span>在地址栏输入 <code>localhost:3000</code></span>
+    <strong>Test Method:</strong>
+    <span>Enter <code>localhost:3000</code> in the address bar.</span>
   </div>
   <div class="test-link">
-    <strong>本地文件测试：</strong>
-    <span>打开 <code>file:///Downloads/full/test_local.html</code></span>
+    <strong>Local File Test:</strong>
+    <span>Open <code>file:///Downloads/full/test_local.html</code>.</span>
   </div>
   <div class="test-link">
-    <strong>跨用户路径测试：</strong>
-    <span>打开 <code>file:///Users/[用户名]/dev/[项目]/pickone/test.html</code></span>
+    <strong>Cross-User Path Test:</strong>
+    <span>Open <code>file:///Users/[YourUsername]/dev/[YourProject]/pickone/test.html</code>.</span>
   </div>
   <div class="test-link">
-    <strong>预期结果：</strong>
-    <span>自动跳转到对应的目标URL</span>
+    <strong>Expected Result:</strong>
+    <span>Automatically redirects to the corresponding target URL.</span>
   </div>
 </div>
 

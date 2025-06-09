@@ -1,44 +1,44 @@
-# 📁 本地文件重定向
-<p class="description">将本地文件路径重定向到远程服务器</p>
+# 📁 Local File Redirect
+<p class="description">Redirect local file paths to a remote server.</p>
 
-## 配置规则
+## Configuration Rule
 
 ```ini
-# 本地文件重定向测试配置
+# Local File Redirect Test Configuration
 *ChromeStore/localfile/*.html$####https://www.example.com/{2}/
 *demo_local.html$####https://www.example.com/demo/
 *autoredirect_local.html$####https://www.example.com/demo/
 *ChromeStore/AutoRedirect/*.html####https://www.example.com/{2}/
 ```
 
-## 💡 规则说明
-支持本地文件路径到远程URL的映射，适用于开发环境。
+## 💡 Rule Description
+Supports mapping local file paths to remote URLs, ideal for development environments.
 
-- 支持 `file://` 协议的本地文件
-- 可以使用通配符批量处理文件
-- 适用于本地开发到生产环境的映射
-- 支持保持目录结构的重定向
-- 规则按优先级排序：特定项目 > 通用匹配
-- 支持占位符 `{1}, {2}` 等引用匹配的路径片段
+- Supports local files via the `file://` protocol.
+- Wildcards can be used for batch processing files.
+- Suitable for mapping local development environments to production.
+- Supports redirection while maintaining directory structure.
+- Rules are prioritized: specific projects > generic matches.
+- Supports placeholders like `{1}, {2}` to reference matched path segments.
 
-## 测试方法
+## How to Test
 
 <div class="test-links">
   <div class="test-link">
-    <strong>ChromeStore项目测试：</strong>
-    <span>打开 <code>file:///path/to/ChromeStore/localfile/test.html</code></span>
+    <strong>ChromeStore Project Test:</strong>
+    <span>Open <code>file:///path/to/ChromeStore/localfile/test.html</code>.</span>
   </div>
   <div class="test-link">
-    <strong>通用demo文件测试：</strong>
-    <span>打开 <code>file:///path/to/demo_local.html</code></span>
+    <strong>Generic Demo File Test:</strong>
+    <span>Open <code>file:///path/to/demo_local.html</code>.</span>
   </div>
   <div class="test-link">
-    <strong>AutoRedirect项目测试：</strong>
-    <span>打开 <code>file:///path/to/ChromeStore/AutoRedirect/test.html</code></span>
+    <strong>AutoRedirect Project Test:</strong>
+    <span>Open <code>file:///path/to/ChromeStore/AutoRedirect/test.html</code>.</span>
   </div>
   <div class="test-link">
-    <strong>预期结果：</strong>
-    <span>自动跳转到对应的远程服务器地址，保持路径结构</span>
+    <strong>Expected Result:</strong>
+    <span>Automatically redirects to the corresponding remote server address, preserving the path structure.</span>
   </div>
 </div>
 

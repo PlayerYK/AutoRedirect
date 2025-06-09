@@ -1,36 +1,36 @@
-# 🎯 Suffix Match Redirect
-<p class="description">Matches URLs that end with a specified string, suitable for specific file types or suffixes.</p>
+# 🎯 结尾匹配重定向
+<p class="description">匹配以指定字符串结尾的URL，适用于特定文件类型或后缀</p>
 
-## Configuration Rule
+## 配置规则
 
 ```ini
-# Suffix Match Test Configuration
+# 结尾匹配测试配置
 *.localprod####https://production.example.com
 *config.json$####https://config.example.com
 ```
 
-## 💡 Rule Description
-Use the `*` prefix or `$` suffix to match URLs that end with a specified string.
+## 💡 规则说明
+使用 `*` 前缀或 `$` 后缀匹配以指定字符串结尾的URL。
 
-- Suitable for redirecting specific file extensions.
-- Can match domains or paths with a specific suffix.
-- Supports special cases like configuration files and API endpoints.
-- Can be combined with prefix matching for precise control.
+- 适用于特定文件扩展名的重定向
+- 可以匹配特定后缀的域名或路径
+- 支持配置文件、API端点等特殊场景
+- 与开头匹配配合使用，实现精确控制
 
-## How to Test
+## 测试方法
 
 <div class="test-links">
   <div class="test-link">
-    <strong>Test Link:</strong>
+    <strong>测试链接：</strong>
     <a href="https://test.localprod" target="_blank">test.localprod</a>
   </div>
   <div class="test-link">
-    <strong>Test Link:</strong>
+    <strong>测试链接：</strong>
     <a href="https://app.config.json" target="_blank">app.config.json</a>
   </div>
   <div class="test-link">
-    <strong>Expected Result:</strong>
-    <span>Redirects to the production environment and the configuration management page, respectively.</span>
+    <strong>预期结果：</strong>
+    <span>分别跳转到生产环境和配置管理页面</span>
   </div>
 </div>
 

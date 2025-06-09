@@ -1,42 +1,42 @@
-# ⚠️ 简单字符串匹配（特殊场景 - 谨慎使用）
-<p class="description">了解简单字符串匹配的限制和适用场景，使用danger_前缀标识风险</p>
+# ⚠️ Simple String Match (Special Cases - Use with Caution)
+<p class="description">Understand the limitations and use cases for simple string matching, marked with a `danger_` prefix to indicate risk.</p>
 
-## 配置规则
+## Configuration Rule
 
 ```ini
-# 简单字符串匹配配置（特殊场景 - 谨慎使用）
+# Simple String Match Configuration (Special Cases - Use with Caution)
 ^danger_dev####https://development.example.com
 danger_api*####https://api.example.com
 ^danger_docs####https://documentation.example.com
 ```
 
-## ⚠️ 重要安全说明
-这类简单字符串匹配规则使用 `danger_` 前缀标识风险，需要了解其限制：
+## ⚠️ Important Safety Notice
+These simple string matching rules use the `danger_` prefix to highlight risks and limitations:
 
-- **地址栏限制：** 在Chrome地址栏直接输入 "danger_dev" 会被当作搜索词，跳转到搜索引擎
-- **安全标识：** `danger_` 前缀提醒用户这些规则有使用限制
-- **适用场景：**
-    - 其他应用程序调用浏览器打开URL时
-    - 点击书签或网页链接时
-    - 通过脚本或程序化方式访问时
-    - 企业内网环境的特殊配置
-- **推荐替代：** 使用 `.localhost`、`.local` 或完整域名格式
-- **测试方法：** 创建书签或通过程序调用，而非直接在地址栏输入
+- **Address Bar Limitation:** Typing "danger_dev" directly into the Chrome address bar will be treated as a search query, leading to a search engine.
+- **Safety Identifier:** The `danger_` prefix reminds users that these rules have usage restrictions.
+- **Applicable Scenarios:**
+  - When another application opens a URL in the browser.
+  - When clicking bookmarks or web links.
+  - When accessed via scripts or programmatic methods.
+  - For special configurations in an enterprise intranet environment.
+- **Recommended Alternative:** Use standard formats like `.localhost`, `.local`, or full domain names.
+- **Testing Method:** Create a bookmark or use programmatic calls instead of typing directly into the address bar.
 
-## 测试方法
+## How to Test
 
 <div class="test-links">
   <div class="test-link">
-    <strong>❌ 不推荐：</strong>
-    <span>在地址栏直接输入 <code>danger_dev</code>（会跳转到搜索）</span>
+    <strong>❌ Not Recommended:</strong>
+    <span>Typing <code>danger_dev</code> directly in the address bar (will trigger a search).</span>
   </div>
   <div class="test-link">
-    <strong>✅ 推荐：</strong>
-    <span>创建书签指向 <code>http://danger_dev</code> 或通过程序调用</span>
+    <strong>✅ Recommended:</strong>
+    <span>Create a bookmark pointing to <code>http://danger_dev</code> or use a programmatic call.</span>
   </div>
   <div class="test-link">
-    <strong>💡 提示：</strong>
-    <span>如需地址栏直接输入，请使用上面的标准域名格式</span>
+    <strong>💡 Tip:</strong>
+    <span>If you need to type directly in the address bar, please use the standard domain formats mentioned above.</span>
   </div>
 </div>
 

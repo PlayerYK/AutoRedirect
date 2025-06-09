@@ -1,85 +1,79 @@
-# 使用指南
+# Usage Guide
 
-只需4步，即可开始使用AutoRedirect的强大功能：
+This page will provide you with a detailed guide on how to use the AutoRedirect extension, from basic setup to advanced features.
 
-<div class="guide-steps">
+## Installation
 
-<div class="guide-step">
-  <div class="step-number">1</div>
-  <div class="guide-step-content">
-    <h3>安装扩展</h3>
-    <p>从Chrome Web Store安装AutoRedirect扩展，确保扩展已启用。</p>
-  </div>
-</div>
+You can install this extension in the following ways:
 
-<div class="guide-step">
-  <div class="step-number">2</div>
-  <div class="guide-step-content">
-    <h3>复制配置</h3>
-    <p>选择下方测试用例，点击代码块右上角的 "复制" 按钮将规则复制到剪贴板。</p>
-  </div>
-</div>
+1.  **Install from Chrome Web Store**: (Recommended)
+    - Open Chrome Web Store, search for "AutoRedirect" and click "Add to Chrome".
+2.  **Install from local source code**:
+    - Download the source code from [GitHub](https://github.com/PlayerYK/AutoRedirect).
+    - Open Chrome, go to `chrome://extensions/`.
+    - Enable "Developer mode".
+    - Click "Load unpacked" and select the `src` directory in the project's root folder.
 
-<div class="guide-step">
-  <div class="step-number">3</div>
-  <div class="guide-step-content">
-    <h3>设置规则</h3>
-    <p>右键扩展图标选择"选项"，粘贴配置并保存设置。</p>
-  </div>
-</div>
+## Basic Features
 
-<div class="guide-step">
-  <div class="step-number">4</div>
-  <div class="guide-step-content">
-    <h3>开始测试</h3>
-    <p>点击测试链接或访问指定URL，体验智能重定向功能。</p>
-  </div>
-</div>
+### Adding Redirection Rules
 
-</div>
+- Open the extension's popup page by clicking the extension icon.
+- In the "Add Rule" section, enter the URL or keyword you want to match in the "Match Rule" input box.
+- Enter the target URL you want to redirect to in the "Target URL" input box.
+- Click the "Add" button to save the rule.
 
-<style>
-.guide-steps {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.guide-step {
-  background: var(--vp-c-bg-soft);
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 4px solid var(--vp-c-brand-1);
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-}
-.guide-step .step-number {
-  background: var(--vp-c-brand-1);
-  color: var(--vp-c-bg);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-.guide-step-content {
-  flex: 1;
-}
-.guide-step h3 {
-  color: var(--vp-c-text-1);
-  margin-bottom: 8px;
-  font-size: 1.1em;
-  margin-top: 0;
-  padding-top: 5px;
-  border: none;
-}
-.guide-step p {
-  color: var(--vp-c-text-2);
-  font-size: 0.95em;
-  margin: 0;
-}
-</style> 
+### Rule Management
+
+- All added rules will be displayed in the "Rule List".
+- You can enable or disable a rule by toggling the switch next to it.
+- Click the "Delete" button to permanently remove a rule.
+
+## Matching Modes
+
+AutoRedirect supports multiple matching modes to handle different scenarios.
+
+### 1. Exact Match
+
+- This is the default mode. It only redirects when the URL in the address bar exactly matches the "Match Rule".
+
+### 2. Prefix Match
+
+- When the URL starts with the content of the "Match Rule", it will be redirected.
+- **Example**: If the rule is `https://example.com/page`, then `https://example.com/page/123` will also be matched.
+
+### 3. Simple String Match
+
+- As long as the URL contains the content of the "Match Rule", it will be redirected.
+- **Note**: This mode may have a wider impact, please use it with caution.
+
+## Advanced Features
+
+### URL Template Replacement
+
+- In the "Target URL", you can use placeholders like `{1}`, `{2}` to capture parts of the original URL.
+- **Example**:
+    - Match Rule: `https://example.com/users/(\w+)/posts/(\d+)`
+    - Target URL: `https://new-site.com/u/{1}/p/{2}`
+    - Accessing `https://example.com/users/john/posts/42` will redirect to `https://new-site.com/u/john/p/42`.
+
+### Smart URL Extraction
+
+- For URLs that are encoded or embedded in other parameters, AutoRedirect can automatically recognize and extract the real target URL for redirection.
+- **Example**: `https://login.example.com?redirect_uri=https%3A%2F%2Fexample.com` will be recognized and you can choose to jump to `https://example.com`.
+
+## Options Page
+
+On the options page, you can:
+
+- View and manage all redirection rules.
+- Export or import rule configurations.
+- Set global options for the extension.
+
+## Feedback
+
+If you encounter any problems or have any suggestions during use, please feel free to provide feedback through the following channels:
+
+- **GitHub Issues**: [Submit an Issue](https://github.com/PlayerYK/AutoRedirect/issues)
+
+Thank you for using AutoRedirect! 

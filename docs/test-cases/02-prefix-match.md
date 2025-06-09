@@ -1,38 +1,38 @@
-# 🚀 开头匹配重定向
-<p class="description">匹配以指定字符串开头的URL，适用于域名和路径重定向</p>
+# 🚀 Prefix Match Redirect
+<p class="description">Matches URLs that start with a specified string, ideal for domain and path redirection.</p>
 
-## 配置规则
+## Configuration Rule
 
 ```ini
-# 开头匹配测试配置
+# Prefix Match Test Configuration
 ^dev.localhost####https://development.example.com
 ^api.localhost####https://api.example.com
 ^localhost:8####https://development.example.com
 staging.internal*####https://staging.example.com
 ```
 
-## 💡 规则说明
-使用 `^` 前缀或 `*` 后缀进行开头匹配，推荐使用标准域名格式。
+## 💡 Rule Description
+Use the `^` prefix or `*` suffix for a prefix match. It's recommended to use standard domain formats.
 
-- **推荐格式：** 使用 `.localhost`、`.local` 或带端口的 `localhost`
-- **适用场景：** 开发环境、内网域名、特定端口服务
-- **注意：** 简单字符串（如 `dev`、`api`）在浏览器地址栏直接输入时可能被当作搜索词
-- **最佳实践：** 配合书签、链接点击或程序化访问使用
+- **Recommended Formats:** Use `.localhost`, `.local`, or `localhost` with a port.
+- **Use Cases:** Development environments, internal network domains, services on specific ports.
+- **Note:** Simple strings (like `dev`, `api`) might be treated as search queries when typed directly into the address bar.
+- **Best Practice:** Use with bookmarks, link clicks, or programmatic access for best results.
 
-## 测试方法
+## How to Test
 
 <div class="test-links">
   <div class="test-link">
-    <strong>推荐测试：</strong>
-    <span>在地址栏输入 <code>dev.localhost</code> 或 <code>localhost:8000</code></span>
+    <strong>Recommended Test:</strong>
+    <span>Enter <code>dev.localhost</code> or <code>localhost:8000</code> in the address bar.</span>
   </div>
   <div class="test-link">
-    <strong>程序化测试：</strong>
+    <strong>Programmatic Test:</strong>
     <a href="https://staging.internal.example.com" target="_blank">staging.internal.example.com</a>
   </div>
   <div class="test-link">
-    <strong>预期结果：</strong>
-    <span>自动跳转到对应的开发或测试环境</span>
+    <strong>Expected Result:</strong>
+    <span>Automatically redirects to the corresponding development or staging environment.</span>
   </div>
 </div>
 

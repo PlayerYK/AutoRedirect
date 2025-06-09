@@ -3,26 +3,24 @@ layout: home
 
 hero:
   name: "AutoRedirect"
-  text: "智能重定向扩展"
-  tagline: 让URL跳转更简单高效，提升您的浏览体验
+  text: "Make URL jumps simpler and more efficient"
+  tagline: My awesome project tagline
   image:
     src: /images/logo.png
-    alt: AutoRedirect Logo
+    alt: AutoRedirect
   actions:
     - theme: brand
-      text: 快速上手
+      text: Get Started
       link: /guide
     - theme: alt
-      text: 立即下载
-      link: https://chromewebstore.google.com/detail/edgiaaakbcjloebnmehbnfiajbhcpbcf
+      text: View on GitHub
+      link: https://github.com/PlayerYK/AutoRedirect
 
 features:
-  - title: 强大的匹配引擎
-    details: 支持精确、前缀、后缀、通配符等多种匹配方式，满足各种复杂重定向需求。
-  - title: 智能URL提取
-    details: 自动从跳转链接中提取并解码目标URL，跳过中间页，一键直达。
-  - title: 本地文件映射
-    details: 轻松将本地开发文件路径映射到远程服务器，极大提升前端开发效率。
-  - title: 灵活的规则配置
-    details: 纯文本配置，易于读写和分享。支持注释和多目标选择，管理规则更轻松。
+  - title: Smart Identification
+    details: Automatically recognizes and extracts URLs from various complex query strings, supporting jump and copy operations.
+  - title: Multiple Matching Modes
+    details: Supports exact match, prefix match, and simple string match to meet different redirection needs.
+  - title: Flexible Configuration
+    details: Users can customize redirection rules, including using templates for URL replacement to handle dynamic links.
 --- 
