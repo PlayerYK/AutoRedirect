@@ -668,10 +668,9 @@ function extractUrlFromPattern(url, originalPattern) {
  * 查找URL的重定向匹配
  * @param {string} url - 要匹配的URL
  * @param {Array} rules - 解析后的规则数组
- * @param {Array} src_list - 原始规则行数组（用于查找完整规则）
  * @returns {Array} - 匹配的重定向目标数组
  */
-function findRedirectMatches(url, rules, src_list) {
+function findRedirectMatches(url, rules) {
   Logger.info(chrome.i18n.getMessage('redEngLogFindRedirectStart') || `开始查找重定向匹配`, { url, rulesCount: rules.length });
   
   const result_list = [];
@@ -693,13 +692,6 @@ function findRedirectMatches(url, rules, src_list) {
       });
       
       let targetUrl = rule.urlStr;
-      let originalRule = src_list.find((line) => {
-        const parts = line.split("####");
-        return (
-          parts.length >= 2 &&
-          parts[0].trim() === rule.originalPattern
-        );
-      });
 
       // 处理目标URL
       if (!targetUrl || targetUrl.trim() === "") {
@@ -747,7 +739,7 @@ function findRedirectMatches(url, rules, src_list) {
         result_list.push(targetUrl);
         rule_info.push({
           url: targetUrl,
-          rule: originalRule || (rule.originalPattern + "####" + rule.urlStr),
+          rule: rule.originalRule || (rule.originalPattern + "####" + rule.urlStr),
           pattern: rule.originalPattern,
           matchType: rule.matchType,
           captureCount: rule.captureCount,
@@ -790,10 +782,9 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
   });
   
   const rules = parseRedirectRules(jumpList);
-  const src_list = jumpList.split("\n");
   
   Logger.info(chrome.i18n.getMessage('redEngLogParseRulesDone') || `解析规则完成`, { 
-    totalLines: src_list.length,
+    totalLines: jumpList.split("\n").length,
     validRules: rules.length 
   });
   
@@ -830,7 +821,7 @@ function testRedirectChain(inputUrl, jumpList, maxSteps = 5) {
     Logger.debug(chrome.i18n.getMessage('redEngLogUrlVisited') || `添加URL到访问记录`, { url: currentUrl, visitedCount: visitedUrls.size });
     
     // 查找匹配的规则
-    const { result_list, rule_info } = findRedirectMatches(currentUrl, rules, src_list);
+    const { result_list, rule_info } = findRedirectMatches(currentUrl, rules);
     
     if (result_list.length === 0) {
       // 没有匹配的规则
