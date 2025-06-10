@@ -38,6 +38,14 @@ Get started with AutoRedirect's powerful features in just 4 steps:
 
 </div>
 
+## Next Steps
+
+After completing the basic setup, you can:
+
+- 📖 [View Configuration Reference](./configuration.md) - Learn detailed rule syntax and matching patterns
+- 🧪 [Browse Test Cases](./test-cases/) - Explore more practical scenarios and configuration examples
+- 🔧 Customize additional redirect rules based on your needs
+
 <style>
 .guide-steps {
   margin-top: 25px;
