@@ -4,7 +4,7 @@
     "description": "The name of the extension."
   },
   "extensionDescription": {
-    "message": "智能URL重定向工具 - 支持多种匹配模式和URL模板替换",
+    "message": "强大的URL重定向工具 - 支持多种匹配模式和URL模板替换",
     "description": "The description of the extension."
   },
   "extensionDefaultTitle": {
