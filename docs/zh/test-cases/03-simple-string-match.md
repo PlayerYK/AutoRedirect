@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 简单字符串匹配配置（特殊场景 - 谨慎使用）
 ^danger_dev####https://development.example.com
 danger_api*####https://api.example.com

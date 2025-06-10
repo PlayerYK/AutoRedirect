@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Exact Match Test Configuration
 =localhost:3000####https://www.example.com
 =file:///Downloads/full/test_local.html####https://www.example.com/full/

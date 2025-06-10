@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Simple String Match Configuration (Special Cases - Use with Caution)
 ^danger_dev####https://development.example.com
 danger_api*####https://api.example.com

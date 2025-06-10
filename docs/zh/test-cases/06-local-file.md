@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 本地文件重定向测试配置
 *ChromeStore/localfile/*.html$####https://www.example.com/{2}/
 *demo_local.html$####https://www.example.com/demo/

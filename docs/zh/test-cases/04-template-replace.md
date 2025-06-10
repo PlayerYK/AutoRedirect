@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # URL模板替换测试配置
 old-domain.com/*####new-domain.com/{1}
 example.com/*/page/*####https://newsite.com/{1}/newpage/{2}

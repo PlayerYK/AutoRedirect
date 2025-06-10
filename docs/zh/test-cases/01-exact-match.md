@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 精确匹配测试配置
 =localhost:3000####https://www.example.com
 =file:///Downloads/full/test_local.html####https://www.example.com/full/

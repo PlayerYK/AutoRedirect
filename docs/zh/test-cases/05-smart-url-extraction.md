@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 智能URL提取测试配置
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####

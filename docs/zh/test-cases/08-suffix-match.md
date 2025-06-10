@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 结尾匹配测试配置
 *.localprod####https://production.example.com
 *config.json$####https://config.example.com

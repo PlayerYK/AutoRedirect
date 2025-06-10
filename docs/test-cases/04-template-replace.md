@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # URL Template Replace Test Configuration
 old-domain.com/*####new-domain.com/{1}
 example.com/*/page/*####https://newsite.com/{1}/newpage/{2}

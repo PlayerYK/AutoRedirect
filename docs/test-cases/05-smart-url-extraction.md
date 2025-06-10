@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Smart URL Extraction Test Configuration
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####

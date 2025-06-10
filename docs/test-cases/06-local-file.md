@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Local File Redirect Test Configuration
 *ChromeStore/localfile/*.html$####https://www.example.com/{2}/
 *demo_local.html$####https://www.example.com/demo/

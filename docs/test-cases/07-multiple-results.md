@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Multiple Results Test Configuration
 multi####https://www.google.com
 multi####https://www.bing.com

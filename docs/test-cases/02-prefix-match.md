@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Prefix Match Test Configuration
 ^dev.localhost####https://development.example.com
 ^api.localhost####https://api.example.com

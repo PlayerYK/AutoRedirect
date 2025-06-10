@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 多结果选择测试配置
 multi####https://www.google.com
 multi####https://www.bing.com

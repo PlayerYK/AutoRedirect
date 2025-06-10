@@ -3,7 +3,7 @@
 
 ## 配置规则
 
-```ini
+```
 # 开头匹配测试配置
 ^dev.localhost####https://development.example.com
 ^api.localhost####https://api.example.com

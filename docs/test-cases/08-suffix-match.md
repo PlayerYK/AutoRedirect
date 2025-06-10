@@ -3,7 +3,7 @@
 
 ## Configuration Rule
 
-```ini
+```
 # Suffix Match Test Configuration
 *.localprod####https://production.example.com
 *config.json$####https://config.example.com
