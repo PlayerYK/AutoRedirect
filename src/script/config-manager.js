@@ -3,11 +3,49 @@
  */
 class ConfigManager {
   constructor() {
-    this.defaultConfigUrl = "https://extcreator.com/autoredirect/example_config.txt";
+    this.baseConfigUrl = "https://extcreator.com/autoredirect/example_config";
     this.storageKey = "jump_list";
     this.cache = null;
     this.isLoading = false;
     this.loadPromise = null;
+  }
+
+  /**
+   * 获取当前语言对应的配置文件URL
+   * @returns {string} 配置文件URL
+   */
+  getConfigUrl() {
+    // 获取浏览器语言
+    const language = this.getBrowserLanguage();
+    
+    // 根据语言选择配置文件
+    if (language.startsWith('zh')) {
+      return `${this.baseConfigUrl}.zh-CN.txt`;
+    } else {
+      return `${this.baseConfigUrl}.en.txt`;
+    }
+  }
+
+  /**
+   * 获取浏览器语言
+   * @returns {string} 语言代码
+   */
+  getBrowserLanguage() {
+    // 优先使用Chrome扩展API获取语言
+    if (typeof chrome !== 'undefined' && chrome.i18n && chrome.i18n.getUILanguage) {
+      return chrome.i18n.getUILanguage();
+    }
+    
+    // 备用方案：使用浏览器语言
+    if (typeof navigator !== 'undefined') {
+      this.debugLog("备用方案：使用浏览器语言");
+      this.debugLog("navigator.language", navigator.language);
+      this.debugLog("navigator.userLanguage", navigator.userLanguage);
+      return navigator.language || navigator.userLanguage || 'en';
+    }
+    
+    // 默认返回英文
+    return 'en';
   }
 
   /**
@@ -59,8 +97,9 @@ class ConfigManager {
       }
 
       // 从远程获取配置
-      this.debugLog("从远程服务器获取配置: " + this.defaultConfigUrl);
-      const response = await fetch(this.defaultConfigUrl);
+      const configUrl = this.getConfigUrl();
+      this.debugLog("从远程服务器获取配置: " + configUrl);
+      const response = await fetch(configUrl);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -139,18 +178,24 @@ class ConfigManager {
       hasLocalStorage: hasLocal,
       hasMemoryCache: hasCache,
       isLoading: this.isLoading,
-      configUrl: this.defaultConfigUrl
+      configUrl: this.getConfigUrl()
     };
   }
 
   /**
-   * 设置自定义配置URL
-   * @param {string} url - 新的配置URL
+   * 设置自定义配置URL基础路径
+   * @param {string} baseUrl - 新的配置URL基础路径（不包含语言后缀）
    */
-  setConfigUrl(url) {
-    this.defaultConfigUrl = url;
+  setConfigUrl(baseUrl) {
+    // 如果传入的是完整URL（包含.txt），则提取基础部分
+    if (baseUrl.endsWith('.txt')) {
+      // 移除语言后缀和.txt扩展名
+      baseUrl = baseUrl.replace(/\.(zh-CN|en)\.txt$/, '').replace(/\.txt$/, '');
+    }
+    
+    this.baseConfigUrl = baseUrl;
     this.clearCache(); // 清除缓存以便使用新URL
-    this.debugLog("配置URL已更新: " + url);
+    this.debugLog("配置URL基础路径已更新: " + baseUrl);
   }
 
   /**
