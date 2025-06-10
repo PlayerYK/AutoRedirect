@@ -4,11 +4,27 @@
 ## Configuration Rule
 
 ```
-# Multiple Results Test Configuration
-multi####https://www.google.com
-multi####https://www.bing.com
-multi####https://www.yahoo.com
+# Multiple Results Test Configuration (Safe Version)
+# Use safe exact match and prefix match formats
+=search.local####https://www.google.com
+=search.local####https://www.bing.com
+=search.local####https://www.yahoo.com
+
+# Or use safe prefix match format:
+^search.localhost####https://www.google.com
+^search.localhost####https://www.bing.com
+^search.localhost####https://www.yahoo.com
 ```
+
+## ⚠️ Important Safety Notice
+
+**Avoid risks from simple string matching:**
+- ❌ **Wrong Example:** `search####https://www.google.com`
+- ⚠️ **Problem:** Will accidentally match any URL containing "search", such as:
+  - `https://research.com/search-results` 
+  - `https://example.com/searchengine/docs`
+  - `https://site.com/advanced-search`
+- ✅ **Correct Approach:** Use exact match `=search.local` or prefix match `^search.localhost`
 
 ## 💡 Rule Description
 When the same URL pattern matches multiple different target URLs, the extension will display a selection page.
@@ -17,21 +33,26 @@ When the same URL pattern matches multiple different target URLs, the extension 
 - Suitable for scenarios where one keyword corresponds to multiple frequently used websites.
 - Provides more flexible redirection options.
 - Avoids the need to remember multiple different shortcuts.
+- **Safety First:** Use exact matching to avoid accidental redirections.
 
 ## How to Test
 
 <div class="test-links">
   <div class="test-link">
-    <strong>Test Method:</strong>
-    <span>Create a bookmark pointing to <code>http://multi</code> or use a programmatic call.</span>
+    <strong>✅ Recommended Test Method:</strong>
+    <span>Create a bookmark pointing to <code>http://search.local</code> or <code>http://search.localhost</code></span>
   </div>
   <div class="test-link">
     <strong>Expected Result:</strong>
     <span>A selection page is displayed with three options: Google, Bing, and Yahoo.</span>
   </div>
   <div class="test-link">
+    <strong>⚠️ Safety Reminder:</strong>
+    <span>Avoid using simple string matching to prevent accidental redirect triggers</span>
+  </div>
+  <div class="test-link">
     <strong>💡 Tip:</strong>
-    <span>Typing "multi" directly in the address bar will be treated as a search query.</span>
+    <span>Direct input in address bar will be treated as search terms, recommend using bookmarks or programmatic calls</span>
   </div>
 </div>
 

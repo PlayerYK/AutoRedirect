@@ -219,34 +219,29 @@ const configTestCases = [
         category: "Special Scenario Configuration (Use with Caution)",
         tests: [
             {
-                name: "Simple string matching ^danger_dev (programmatic access)",
-                input: "https://danger_dev.example.com",
-                expected: "https://development.example.com"
+                name: "Enterprise intranet - internal-* template matching",
+                input: "https://internal-hr.company.com",
+                expected: "https://gateway.company.com/redirect?to=hr.company.com"
             },
             {
-                name: "Simple string matching ^danger_dev with path",
-                input: "https://danger_dev.test.com/path",
-                expected: "https://development.example.com"
+                name: "Enterprise intranet - corp-hr exact matching",
+                input: "https://corp-hr.internal.com",
+                expected: "https://hr.company.com"
             },
             {
-                name: "Simple string matching danger_api* (programmatic access)",
-                input: "https://danger_api.test.com",
-                expected: "https://api.example.com"
+                name: "Enterprise intranet - corp-finance exact matching",
+                input: "https://corp-finance.internal.com",
+                expected: "https://finance.company.com"
             },
             {
-                name: "Simple string matching danger_api* with subdomain",
-                input: "https://danger_api.internal.company.com",
-                expected: "https://api.example.com"
+                name: "Custom protocol - myapp://",
+                input: "myapp://dashboard",
+                expected: "https://web.myapp.com/"
             },
             {
-                name: "Simple string matching ^danger_docs (programmatic access)",
-                input: "https://danger_docs.example.com",
-                expected: "https://documentation.example.com"
-            },
-            {
-                name: "Simple string matching ^danger_docs with path",
-                input: "https://danger_docs.company.com/guide",
-                expected: "https://documentation.example.com"
+                name: "Custom protocol - electron-app://",
+                input: "electron-app://settings",
+                expected: "https://app.example.com/"
             }
         ]
     },
@@ -256,14 +251,29 @@ const configTestCases = [
         category: "Multiple Result Selection Tests",
         tests: [
             {
-                name: "Multiple rule matching - multi",
-                input: "https://multi-test.com",
+                name: "Multiple rule matching - =search.local (exact match)",
+                input: "http://search.local",
                 expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
             },
             {
-                name: "Multiple rule matching - multi with path",
-                input: "https://multi.example.com/search",
+                name: "Multiple rule matching - ^search.localhost (prefix match)",
+                input: "http://search.localhost",
                 expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            },
+            {
+                name: "Multiple rule matching - ^search.localhost with path",
+                input: "http://search.localhost/query",
+                expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            },
+            {
+                name: "Avoid accidental trigger - research.com (should not match)",
+                input: "https://research.com/search-results",
+                expected: null
+            },
+            {
+                name: "Avoid accidental trigger - searchengine (should not match)",
+                input: "https://example.com/searchengine/docs",
+                expected: null
             }
         ]
     },

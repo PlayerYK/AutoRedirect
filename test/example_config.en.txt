@@ -46,20 +46,28 @@ weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 *demo_local.html$####https://www.example.com/demo/
 
 # ===== Special Scenario Configuration (Use with Caution) =====
-# The following rules are only for special scenarios, not recommended for direct address bar input
-# Suitable for: bookmarks, programmatic calls, enterprise intranet, etc.
+# The following rules are only for special scenarios, relatively safe in isolated environments
+# Suitable for: enterprise intranet, custom protocols, etc.
 
-# Simple string matching (for programmatic access only)
-# Note: Direct input in address bar will be treated as search terms
-^danger_dev####https://development.example.com
-danger_api*####https://api.example.com
-^danger_docs####https://documentation.example.com
+# Enterprise intranet environment (unified naming convention)
+internal-*####https://gateway.company.com/redirect?to={1}
+corp-hr####https://hr.company.com
+corp-finance####https://finance.company.com
+
+# Custom application protocols (protocol isolation)
+myapp://####https://web.myapp.com/
+electron-app://####https://app.example.com/
 
 # ===== Multiple Result Selection Test =====
 # When a URL matches multiple rules, a selection page will be displayed for user choice
-multi####https://www.google.com
-multi####https://www.bing.com
-multi####https://www.yahoo.com
+# Use safe exact match and prefix match formats
+=search.local####https://www.google.com
+=search.local####https://www.bing.com
+=search.local####https://www.yahoo.com
+# Or use safe prefix match format:
+^search.localhost####https://www.google.com
+^search.localhost####https://www.bing.com
+^search.localhost####https://www.yahoo.com
 
 # ===== Suffix Match Mode =====
 # Use * prefix or $ suffix to match URLs ending with specified string
@@ -86,6 +94,11 @@ multi####https://www.yahoo.com
 #    - Simple string matching only for special scenarios (bookmarks, programmatic calls, etc.)
 #    - Rules are matched from top to bottom, exact matches should be placed first
 #    - Use more specific path matching to avoid rule conflicts
+#    - ⚠️ Avoid accidental triggers from simple string matching:
+#      * Wrong: search#### will match research.com/search-results
+#      * Wrong: api#### will match example.com/rapid-api/docs
+#      * Correct: corp-hr#### or internal-hr#### (enterprise intranet environment)
+#      * Correct: myapp://#### (custom protocol)
 # 8. Address bar input limitations:
 #    - Simple strings (like dev, api) will be treated as search terms when directly input in address bar
 #    - Recommend using complete domain format or access through bookmarks/programmatic calls

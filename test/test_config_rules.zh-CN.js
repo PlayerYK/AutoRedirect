@@ -219,34 +219,29 @@ const configTestCases = [
         category: "特殊场景配置（谨慎使用）",
         tests: [
             {
-                name: "简单字符串匹配 ^danger_dev（程序化访问）",
-                input: "https://danger_dev.example.com",
-                expected: "https://development.example.com"
+                name: "企业内网环境 - internal-* 模板匹配",
+                input: "https://internal-hr.company.com",
+                expected: "https://gateway.company.com/redirect?to=hr.company.com"
             },
             {
-                name: "简单字符串匹配 ^danger_dev 带路径",
-                input: "https://danger_dev.test.com/path",
-                expected: "https://development.example.com"
+                name: "企业内网环境 - corp-hr 精确匹配",
+                input: "https://corp-hr.internal.com",
+                expected: "https://hr.company.com"
             },
             {
-                name: "简单字符串匹配 danger_api*（程序化访问）",
-                input: "https://danger_api.test.com",
-                expected: "https://api.example.com"
+                name: "企业内网环境 - corp-finance 精确匹配",
+                input: "https://corp-finance.internal.com",
+                expected: "https://finance.company.com"
             },
             {
-                name: "简单字符串匹配 danger_api* 带子域名",
-                input: "https://danger_api.internal.company.com",
-                expected: "https://api.example.com"
+                name: "自定义协议 - myapp://",
+                input: "myapp://dashboard",
+                expected: "https://web.myapp.com/"
             },
             {
-                name: "简单字符串匹配 ^danger_docs（程序化访问）",
-                input: "https://danger_docs.example.com",
-                expected: "https://documentation.example.com"
-            },
-            {
-                name: "简单字符串匹配 ^danger_docs 带路径",
-                input: "https://danger_docs.company.com/guide",
-                expected: "https://documentation.example.com"
+                name: "自定义协议 - electron-app://",
+                input: "electron-app://settings",
+                expected: "https://app.example.com/"
             }
         ]
     },
@@ -256,14 +251,29 @@ const configTestCases = [
         category: "多结果选择测试",
         tests: [
             {
-                name: "多规则匹配 - multi",
-                input: "https://multi-test.com",
+                name: "多规则匹配 - =search.local（精确匹配）",
+                input: "http://search.local",
                 expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
             },
             {
-                name: "多规则匹配 - multi 带路径",
-                input: "https://multi.example.com/search",
+                name: "多规则匹配 - ^search.localhost（开头匹配）",
+                input: "http://search.localhost",
                 expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            },
+            {
+                name: "多规则匹配 - ^search.localhost 带路径",
+                input: "http://search.localhost/query",
+                expected: ["https://www.google.com", "https://www.bing.com", "https://www.yahoo.com"]
+            },
+            {
+                name: "避免意外触发 - research.com（不应匹配）",
+                input: "https://research.com/search-results",
+                expected: null
+            },
+            {
+                name: "避免意外触发 - searchengine（不应匹配）",
+                input: "https://example.com/searchengine/docs",
+                expected: null
             }
         ]
     },

@@ -46,20 +46,28 @@ weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 *demo_local.html$####https://www.example.com/demo/
 
 # ===== 特殊场景配置（谨慎使用） =====
-# 以下规则仅适用于特殊场景，不推荐在地址栏直接输入
-# 适用于：书签、程序调用、企业内网等场景
+# 以下规则仅适用于特殊场景，在隔离环境中相对安全
+# 适用于：企业内网、自定义协议等
 
-# 简单字符串匹配（仅用于程序化访问）
-# 注意：在地址栏直接输入会被当作搜索词
-^danger_dev####https://development.example.com
-danger_api*####https://api.example.com
-^danger_docs####https://documentation.example.com
+# 企业内网环境（统一命名规范）
+internal-*####https://gateway.company.com/redirect?to={1}
+corp-hr####https://hr.company.com
+corp-finance####https://finance.company.com
+
+# 自定义应用协议（协议隔离）
+myapp://####https://web.myapp.com/
+electron-app://####https://app.example.com/
 
 # ===== 多结果选择测试 =====
 # 当一个URL匹配多个规则时，会显示选择页面让用户选择
-multi####https://www.google.com
-multi####https://www.bing.com
-multi####https://www.yahoo.com
+# 使用安全的精确匹配和开头匹配格式
+=search.local####https://www.google.com
+=search.local####https://www.bing.com
+=search.local####https://www.yahoo.com
+# 或者使用开头匹配的安全格式：
+^search.localhost####https://www.google.com
+^search.localhost####https://www.bing.com
+^search.localhost####https://www.yahoo.com
 
 # ===== 结尾匹配模式 =====
 # 使用 * 前缀或 $ 后缀，匹配以指定字符串结尾的URL
@@ -86,6 +94,11 @@ multi####https://www.yahoo.com
 #    - 简单字符串匹配仅用于特殊场景（书签、程序调用等）
 #    - 规则按从上到下的顺序匹配，精确匹配应放在前面
 #    - 使用更具体的路径匹配避免规则冲突
+#    - ⚠️ 避免简单字符串匹配的误触发风险：
+#      * 错误：search#### 会匹配 research.com/search-results
+#      * 错误：api#### 会匹配 example.com/rapid-api/docs  
+#      * 正确：corp-hr#### 或 internal-hr#### （企业内网环境）
+#      * 正确：myapp://#### （自定义协议）
 # 8. 地址栏输入限制：
 #    - 简单字符串（如 dev、api）在地址栏直接输入会被当作搜索词
 #    - 推荐使用完整域名格式或通过书签、程序调用访问
