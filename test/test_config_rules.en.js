@@ -141,9 +141,9 @@ const configTestCases = [
         ]
     },
     
-    // ===== Exact Local File Redirection Tests (Highest Priority) =====
+    // ===== Exact Local File Redirection Tests =====
     {
-        category: "Exact Local File Redirection (Highest Priority)",
+        category: "Exact Local File Redirection",
         tests: [
             {
                 name: "Complete file:// protocol path matching (most precise)",

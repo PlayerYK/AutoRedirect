@@ -29,8 +29,8 @@ user.com/profile/*####newuser.com/{1}/dashboard/{1}
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 
-# ===== Exact Local File Redirection (Highest Priority) =====
-# Complete file:// protocol path matching (most precise, highest priority)
+# ===== Exact Local File Redirection =====
+# Complete file:// protocol path matching (most precise matching method)
 =file:///Downloads/full/test_local.html####https://www.example.com/full/
 
 # ===== Cross-User Local File Redirection =====
@@ -80,7 +80,7 @@ electron-app://####https://app.example.com/
 # 3. Rule format: Original URL Pattern####Target URL Pattern
 # 4. Empty target URL (nothing after ####) is used for universal URL extraction
 # 5. Matching pattern explanation:
-#    - Exact match: =pattern (complete match, safest, recommended priority)
+#    - Exact match: =pattern (complete match, safest, recommended)
 #    - Prefix match: ^pattern or pattern* (match beginning, recommend standard domain format)
 #    - Suffix match: *pattern or pattern$ (match ending)
 #    - Contains match: pattern (default mode, use with caution)
@@ -107,4 +107,4 @@ electron-app://####https://app.example.com/
 #    - Can use wildcards for batch file processing
 #    - Suitable for local development to production environment mapping
 #    - Support directory structure preserving redirection
-#    - Rules sorted by priority: exact match > cross-user match > specific project > universal match 
+#    - Rules are matched in configuration file order, recommend placing more precise matches first 

@@ -29,8 +29,8 @@ user.com/profile/*####newuser.com/{1}/dashboard/{1}
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 
-# ===== 精确本地文件重定向（最高优先级） =====
-# 完整file://协议路径匹配（最精确，优先级最高）
+# ===== 精确本地文件重定向 =====
+# 完整file://协议路径匹配（最精确的匹配方式）
 =file:///Downloads/full/test_local.html####https://www.example.com/full/
 
 # ===== 跨用户本地文件重定向 =====
@@ -80,7 +80,7 @@ electron-app://####https://app.example.com/
 # 3. 规则格式：原始URL模式####目标URL模式
 # 4. 空目标URL（####后面为空）用于通用URL提取功能
 # 5. 匹配模式说明：
-#    - 精确匹配：=pattern（完全匹配，最安全，推荐优先使用）
+#    - 精确匹配：=pattern（完全匹配，最安全，推荐使用）
 #    - 开头匹配：^pattern 或 pattern*（匹配开头，推荐使用标准域名格式）
 #    - 结尾匹配：*pattern 或 pattern$（匹配结尾）
 #    - 包含匹配：pattern（默认模式，谨慎使用）
@@ -92,7 +92,7 @@ electron-app://####https://app.example.com/
 #    - 优先使用精确匹配（=前缀），避免意外重定向
 #    - 开头匹配使用标准域名格式（如 .localhost、.local）
 #    - 简单字符串匹配仅用于特殊场景（书签、程序调用等）
-#    - 规则按从上到下的顺序匹配，精确匹配应放在前面
+#    - 规则按从上到下的顺序匹配，建议将更精确的匹配放在前面
 #    - 使用更具体的路径匹配避免规则冲突
 #    - ⚠️ 避免简单字符串匹配的误触发风险：
 #      * 错误：search#### 会匹配 research.com/search-results
@@ -107,4 +107,4 @@ electron-app://####https://app.example.com/
 #    - 可以使用通配符批量处理文件
 #    - 适用于本地开发到生产环境的映射
 #    - 支持保持目录结构的重定向
-#    - 规则按优先级排序：精确匹配 > 跨用户匹配 > 特定项目 > 通用匹配 
+#    - 规则按配置文件顺序匹配，建议将更精确的匹配放在前面 

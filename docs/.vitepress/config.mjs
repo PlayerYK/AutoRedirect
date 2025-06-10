@@ -17,6 +17,7 @@ export default defineConfig({
         nav: [
           { text: 'Home', link: '/' },
           { text: 'Guide', link: '/guide' },
+          { text: 'Configuration', link: '/configuration' },
           { text: 'Test Cases', link: '/test-cases/01-exact-match' }
         ],
 
@@ -60,6 +61,7 @@ export default defineConfig({
         nav: [
           { text: '首页', link: '/zh/' },
           { text: '使用指南', link: '/zh/guide' },
+          { text: '配置参考', link: '/zh/configuration' },
           { text: '测试用例', link: '/zh/test-cases/01-exact-match' }
         ],
 
