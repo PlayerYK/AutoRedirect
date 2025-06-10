@@ -439,7 +439,7 @@
       }
     }
   },
-  "redEngLogSmartProtocolStart": { "message": "Smart protocol processing started" },
+  "redEngLogSmartProtocolStart": { "message": "Automatic protocol handling started" },
   "redEngLogProtocolExists": { "message": "Pattern already contains protocol, returning directly" },
   "redEngLogLocalFile": { "message": "Explicit local file pattern processing" },
   "redEngLogWebLocalFile": { "message": "Web/local file pattern processing" },

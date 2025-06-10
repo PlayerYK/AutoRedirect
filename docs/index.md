@@ -17,7 +17,7 @@ hero:
       link: https://github.com/PlayerYK/AutoRedirect
 
 features:
-  - title: Smart Identification
+  - title: Pattern-based Matching
     details: Automatically recognizes and extracts URLs from various complex query strings, supporting jump and copy operations.
   - title: Multiple Matching Modes
     details: Supports exact match, prefix match, and simple string match to meet different redirection needs.

@@ -11,7 +11,7 @@ Explore practical examples and configuration scenarios for AutoRedirect:
 ## Advanced Features
 
 - [Template Replace](./04-template-replace.md) - Use dynamic templates for flexible redirects
-- [Smart URL Extraction](./05-smart-url-extraction.md) - Extract and redirect to embedded URLs
+- [Automatic URL Extraction](./05-smart-url-extraction.md) - Extract and redirect to embedded URLs
 - [Local File](./06-local-file.md) - Redirect to local file resources
 - [Multiple Results](./07-multiple-results.md) - Handle multiple matching results
 - [Suffix Match](./08-suffix-match.md) - Match URLs ending with specific patterns

@@ -1,6 +1,6 @@
-# AutoRedirect - Smart URL Redirection
+# AutoRedirect - URL Redirection
 
-**AutoRedirect** is a powerful smart URL redirection Chrome extension built on Manifest V3 architecture. It enables seamless environment switching, domain migration, and link optimization, dramatically boosting your browsing and development efficiency.
+**AutoRedirect** is a powerful URL redirection Chrome extension built on Manifest V3 architecture. It enables seamless environment switching, domain migration, and link optimization, dramatically boosting your browsing and development efficiency.
 
 ## ✨ Core Features
 

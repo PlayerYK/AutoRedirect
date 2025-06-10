@@ -32,7 +32,7 @@ Get started with AutoRedirect's powerful features in just 4 steps:
   <div class="step-number">4</div>
   <div class="guide-step-content">
     <h3>Start Testing</h3>
-    <p>Click test links or visit specified URLs to experience the smart redirection features.</p>
+    <p>Click test links or visit specified URLs to experience the automatic redirection features.</p>
   </div>
 </div>
 

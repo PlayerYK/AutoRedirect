@@ -114,9 +114,9 @@ const configTestCases = [
         ]
     },
     
-    // ===== Smart URL Extraction Feature Tests =====
+    // ===== Automatic URL Extraction Feature Tests =====
     {
-        category: "Smart URL Extraction Feature",
+        category: "Automatic URL Extraction Feature",
         tests: [
             {
                 name: "Zhihu link URL extraction",

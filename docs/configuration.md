@@ -10,7 +10,7 @@ source_pattern####target_url
 ```
 
 - Use `####` as the separator between source pattern and target URL
-- Empty target URL (nothing after `####`) enables smart URL extraction
+- Empty target URL (nothing after `####`) enables automatic URL extraction
 - Lines starting with `#` are comments and will be ignored
 - Empty lines are also ignored
 
@@ -73,7 +73,7 @@ example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
 user.com/profile/*####newuser.com/{1}/dashboard/{1}
 ```
 
-## Smart URL Extraction
+## Automatic URL Extraction
 
 Leave target URL empty to enable automatic URL parameter extraction and decoding.
 

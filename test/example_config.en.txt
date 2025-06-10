@@ -25,7 +25,7 @@ example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
 # Reuse placeholders: same capture group can be used multiple times
 user.com/profile/*####newuser.com/{1}/dashboard/{1}
 
-# ===== Smart URL Extraction Feature =====
+# ===== Automatic URL Extraction Feature =====
 # Empty target URL for automatic URL parameter extraction and decoding
 # Automatically skip intermediate redirect pages, go directly to target website
 link.zhihu.com/?target=####

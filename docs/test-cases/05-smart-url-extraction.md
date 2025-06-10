@@ -1,10 +1,10 @@
-# 🔗 Smart URL Extraction
+# 🔗 Automatic URL Extraction
 <p class="description">Automatically extracts and decodes the target URL from redirect links.</p>
 
 ## Configuration Rule
 
 ```
-# Smart URL Extraction Test Configuration
+# Automatic URL Extraction Test Configuration
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 ```

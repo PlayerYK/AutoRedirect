@@ -12,7 +12,7 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       title: 'AutoRedirect',
-      description: 'A smart redirect extension - making URL jumps simpler and more efficient',
+      description: 'A URL redirect extension - making URL jumps simpler and more efficient',
       themeConfig: {
         nav: [
           { text: 'Home', link: '/' },
@@ -30,7 +30,7 @@ export default defineConfig({
                 { text: '🚀 Prefix Match', link: '/test-cases/02-prefix-match' },
                 { text: '⚠️ Simple String Match', link: '/test-cases/03-simple-string-match' },
                 { text: '🔧 URL Template Replace', link: '/test-cases/04-template-replace' },
-                { text: '🔗 Smart URL Extraction', link: '/test-cases/05-smart-url-extraction' },
+                { text: '🔗 Automatic URL Extraction', link: '/test-cases/05-smart-url-extraction' },
                 { text: '📁 Local File', link: '/test-cases/06-local-file' },
                 { text: '🔀 Multiple Results', link: '/test-cases/07-multiple-results' },
                 { text: '🎯 Suffix Match', link: '/test-cases/08-suffix-match' },
