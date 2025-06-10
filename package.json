@@ -1,7 +1,7 @@
 {
   "name": "auto-redirect",
   "version": "0.1.0",
-  "description": "智能URL重定向工具 - Chrome扩展",
+  "description": "URL重定向工具 - Chrome扩展",
   "main": "build.js",
   "scripts": {
     "docs:dev": "vitepress dev docs",

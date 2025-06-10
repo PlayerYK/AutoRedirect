@@ -32,7 +32,7 @@
   <div class="step-number">4</div>
   <div class="guide-step-content">
     <h3>开始测试</h3>
-    <p>点击测试链接或访问指定URL，体验智能重定向功能。</p>
+    <p>点击测试链接或访问指定URL，体验自动重定向功能。</p>
   </div>
 </div>
 

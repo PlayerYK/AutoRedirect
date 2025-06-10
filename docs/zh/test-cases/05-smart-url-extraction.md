@@ -1,10 +1,10 @@
-# 🔗 智能URL提取
+# 🔗 URL 提取
 <p class="description">自动提取和解码跳转链接中的目标URL</p>
 
 ## 配置规则
 
 ```
-# 智能URL提取测试配置
+# URL提取测试配置
 link.zhihu.com/?target=####
 weixin110.qq.com/cgi-bin/readtemplate?t=safety/index&url=####
 ```

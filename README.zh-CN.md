@@ -1,6 +1,6 @@
 [English](./README.md)
 
-# AutoRedirect - 智能重定向扩展
+# AutoRedirect - URL 重定向扩展
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/edgiaaakbcjloebnmehbnfiajbhcpbcf.svg)](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/edgiaaakbcjloebnmehbnfiajbhcpbcf.svg)](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
@@ -10,10 +10,10 @@ AutoRedirect 是一个强大的 Chrome 扩展，用于自动重定向 URL，特�
 
 ## ✨ 主要特性
 
-- 🎯 **智能匹配**：支持精确匹配、前缀、后缀等多种模式。
+- 🎯 **多种匹配**：支持精确匹配、前缀、后缀等多种模式。
 - 🔧 **URL模板替换**：使用通配符和占位符进行复杂的URL重写。
 - 📁 **本地文件重定向**：支持本地文件到远程URL的映射。
-- 🔗 **智能URL提取**：自动解码跳转链接中的目标URL。
+- 🔗 **URL提取**：自动解码跳转链接中的目标URL。
 - 🔀 **多结果选择**：当匹配多个规则时提供选择页面。
 - ⚡ **即时生效**：配置保存后立即生效，无需重启浏览器。
 - 🛡️ **安全可靠**：基于 Manifest V3，性能优化，安全性更高。

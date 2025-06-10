@@ -439,7 +439,7 @@
       }
     }
   },
-  "redEngLogSmartProtocolStart": { "message": "智能协议处理开始" },
+  "redEngLogSmartProtocolStart": { "message": "自动添加协议处理开始" },
   "redEngLogProtocolExists": { "message": "模式已包含协议，直接返回" },
   "redEngLogLocalFile": { "message": "明确本地文件模式处理" },
   "redEngLogWebLocalFile": { "message": "网络/本地文件模式处理" },

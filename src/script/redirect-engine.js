@@ -139,12 +139,12 @@ function escapeRegExp(string) {
 }
 
 /**
- * 智能处理URL模式，自动添加协议匹配
+ * 处理URL模式，自动添加协议匹配
  * @param {string} pattern - 原始模式
  * @returns {string} - 处理后的模式
  */
 function smartProcessUrlPattern(pattern) {
-  Logger.debug(chrome.i18n.getMessage('redEngLogSmartProtocolStart') || `智能协议处理开始`, { originalPattern: pattern });
+  Logger.debug(chrome.i18n.getMessage('redEngLogSmartProtocolStart') || `自动添加协议处理开始`, { originalPattern: pattern });
   
   // 如果模式已经包含协议，直接返回
   if (pattern.match(/^https?:\/\//) || pattern.match(/^file:\/\//) || pattern.match(/^[a-z]+:\/\//)) {
@@ -214,7 +214,7 @@ function processMatchPattern(pattern) {
   if (trimmedPattern.startsWith('=')) {
     let exactPattern = trimmedPattern.substring(1);
     
-    // 智能处理协议
+    // 处理URL模式，自动添加协议匹配
     exactPattern = smartProcessUrlPattern(exactPattern);
     
     // 对精确匹配模式也进行URL标准化，与testUrlMatch中的逻辑保持一致
@@ -238,7 +238,7 @@ function processMatchPattern(pattern) {
       cleanPattern = cleanPattern.substring(1);
     }
     
-    // 智能处理协议
+    // 处理URL模式，自动添加协议匹配
     cleanPattern = smartProcessUrlPattern(cleanPattern);
     
     // 注意：不要移除末尾的*，让processPatternWithCaptures处理

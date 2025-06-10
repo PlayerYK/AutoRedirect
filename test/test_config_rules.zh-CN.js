@@ -114,9 +114,9 @@ const configTestCases = [
         ]
     },
     
-    // ===== 智能URL提取功能测试 =====
+    // ===== 自动URL提取功能测试 =====
     {
-        category: "智能URL提取功能",
+        category: "自动URL提取功能",
         tests: [
             {
                 name: "知乎链接URL提取",

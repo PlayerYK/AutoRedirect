@@ -56,7 +56,7 @@ export default defineConfig({
       label: '简体中文',
       lang: 'zh-CN',
       title: 'AutoRedirect',
-      description: '智能重定向扩展 - 让URL跳转更简单高效',
+      description: 'URL重定向扩展 - 让URL跳转更简单高效',
       themeConfig: {
         nav: [
           { text: '首页', link: '/zh/' },
@@ -74,7 +74,7 @@ export default defineConfig({
                 { text: '🚀 开头匹配', link: '/zh/test-cases/02-prefix-match' },
                 { text: '⚠️ 简单字符串匹配', link: '/zh/test-cases/03-simple-string-match' },
                 { text: '🔧 URL模板替换', link: '/zh/test-cases/04-template-replace' },
-                { text: '🔗 智能URL提取', link: '/zh/test-cases/05-smart-url-extraction' },
+                { text: '🔗 URL提取', link: '/zh/test-cases/05-smart-url-extraction' },
                 { text: '📁 本地文件', link: '/zh/test-cases/06-local-file' },
                 { text: '🔀 多结果选择', link: '/zh/test-cases/07-multiple-results' },
                 { text: '🎯 结尾匹配', link: '/zh/test-cases/08-suffix-match' },

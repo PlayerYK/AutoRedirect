@@ -73,7 +73,7 @@ example.com/*/page/*####https://newsite.com/{1}/newpage/{2}
 user.com/profile/*####newuser.com/{1}/dashboard/{1}
 ```
 
-## 智能URL提取功能
+## URL提取功能
 
 目标URL为空时，启用自动URL参数提取和解码功能。
 
