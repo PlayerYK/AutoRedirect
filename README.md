@@ -2,7 +2,9 @@
 
 # AutoRedirect
 
-**[Website & Documentation](https://playeryk.github.io/AutoRedirect/)** | **[Install from Chrome Web Store](https://chrome.google.com/webstore/detail/autoredirect/gndfhdgckfkegfapahppiignfgecbmch)**
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/edgiaaakbcjloebnmehbnfiajbhcpbcf.svg)](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
+[![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/edgiaaakbcjloebnmehbnfiajbhcpbcf.svg)](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
+[![Documentation](https://img.shields.io/badge/📖-Documentation-blue.svg)](https://playeryk.github.io/AutoRedirect/)
 
 ---
 
