@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="optionsTitle"></title>
     <style type="text/css">
         * {
@@ -153,6 +154,12 @@
         .jump-list:focus {
             outline: none;
             border-color: #007acc;
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+        }
+
+        .jump-list:focus-visible {
+            outline: 2px solid #007acc;
+            outline-offset: -2px;
         }
 
         .help-section {
@@ -377,7 +384,6 @@
             background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
             background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
             background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
         }
 
         .slideThree input[type=checkbox]:checked + label {
@@ -533,6 +539,12 @@
         .test-input:focus {
             outline: none;
             border-color: #007acc;
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+        }
+
+        .test-input:focus-visible {
+            outline: 2px solid #007acc;
+            outline-offset: -2px;
         }
 
         .test-result {

@@ -1,6 +1,7 @@
 // 渲染测试结果
 function renderTestResult(redirectChain) {
   const resultDiv = document.getElementById('test_result');
+  const esc = RedirectEngine.escapeHtml;
   
   if (redirectChain.length === 0) {
     resultDiv.innerHTML = `<div class="no-match">${chrome.i18n.getMessage("testResult_noMatch")}</div>`;
@@ -17,13 +18,13 @@ function renderTestResult(redirectChain) {
       case 'single':
         stepContent = `
           <div class="step-header">
-            <div class="step-number">${step.step}</div>
+            <div class="step-number">${esc(String(step.step))}</div>
             <span>${chrome.i18n.getMessage("testResult_redirect")}</span>
           </div>
-          <div class="step-url">${chrome.i18n.getMessage("testResult_from")}: ${step.url}</div>
-          <div class="step-url">${chrome.i18n.getMessage("testResult_to")}: ${step.targetUrl}</div>
-          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingRule")}: ${step.rule}</div>
-          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingType")}: <span class="match-type-badge ${step.matchType}">${getMatchTypeText(step.matchType)}</span></div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_from")}: ${esc(step.url)}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_to")}: ${esc(step.targetUrl)}</div>
+          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingRule")}: ${esc(step.rule)}</div>
+          <div class="step-rule">${chrome.i18n.getMessage("testResult_matchingType")}: <span class="match-type-badge ${esc(step.matchType)}">${esc(getMatchTypeText(step.matchType))}</span></div>
         `;
         break;
         
@@ -31,18 +32,18 @@ function renderTestResult(redirectChain) {
         stepClass += ' warning-step';
         stepContent = `
           <div class="step-header">
-            <div class="step-number">${step.step}</div>
+            <div class="step-number">${esc(String(step.step))}</div>
             <span>${chrome.i18n.getMessage("testResult_multipleMatches")}</span>
           </div>
-          <div class="step-url">${chrome.i18n.getMessage("testResult_currentURL")}: ${step.url}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_currentURL")}: ${esc(step.url)}</div>
           <div style="margin-top: 10px; font-weight: 600;">${chrome.i18n.getMessage("testResult_foundNMatches", [step.matches.length])}</div>
         `;
         step.matches.forEach((match, i) => {
           stepContent += `
             <div class="match-item">
-              <div class="match-url">${i + 1}. ${match.url}</div>
-              <div class="match-rule">${chrome.i18n.getMessage("testResult_rule")}: ${match.rule}</div>
-              <div class="match-rule">${chrome.i18n.getMessage("testResult_type")}: <span class="match-type-badge ${match.matchType}">${getMatchTypeText(match.matchType)}</span></div>
+              <div class="match-url">${i + 1}. ${esc(match.url)}</div>
+              <div class="match-rule">${chrome.i18n.getMessage("testResult_rule")}: ${esc(match.rule)}</div>
+              <div class="match-rule">${chrome.i18n.getMessage("testResult_type")}: <span class="match-type-badge ${esc(match.matchType)}">${esc(getMatchTypeText(match.matchType))}</span></div>
             </div>
           `;
         });
@@ -52,11 +53,11 @@ function renderTestResult(redirectChain) {
         stepClass += ' error-step';
         stepContent = `
           <div class="step-header">
-            <div class="step-number">⚠️</div>
+            <div class="step-number">&#x26A0;&#xFE0F;</div>
             <span>${chrome.i18n.getMessage("testResult_cycleRedirect")}</span>
           </div>
-          <div class="step-url">${chrome.i18n.getMessage("testResult_url")}: ${step.url}</div>
-          <div style="color: #dc3545; font-weight: 600; margin-top: 8px;">${step.message}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_url")}: ${esc(step.url)}</div>
+          <div style="color: #dc3545; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
         `;
         break;
         
@@ -64,21 +65,21 @@ function renderTestResult(redirectChain) {
         stepClass += ' error-step';
         stepContent = `
           <div class="step-header">
-            <div class="step-number">⚠️</div>
+            <div class="step-number">&#x26A0;&#xFE0F;</div>
             <span>${chrome.i18n.getMessage("testResult_limitReached")}</span>
           </div>
-          <div style="color: #dc3545; font-weight: 600;">${step.message}</div>
+          <div style="color: #dc3545; font-weight: 600;">${esc(step.message)}</div>
         `;
         break;
         
       case 'final':
         stepContent = `
           <div class="step-header">
-            <div class="step-number">✓</div>
+            <div class="step-number">&#x2713;</div>
             <span>${chrome.i18n.getMessage("testResult_finalResult")}</span>
           </div>
-          <div class="step-url">${chrome.i18n.getMessage("testResult_finalURL")}: ${step.url}</div>
-          <div style="color: #28a745; font-weight: 600; margin-top: 8px;">${step.message}</div>
+          <div class="step-url">${chrome.i18n.getMessage("testResult_finalURL")}: ${esc(step.url)}</div>
+          <div style="color: #28a745; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
         `;
         break;
     }
@@ -243,11 +244,6 @@ function checkCircleRedirect(src_list) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 调试：检查ConfigManager是否正确加载
-  console.log("检查ConfigManager加载状态:");
-  console.log("window.ConfigManager:", typeof window.ConfigManager);
-  console.log("window.configManager:", typeof window.configManager);
-  
   if (typeof window.ConfigManager === 'undefined') {
     console.error("ConfigManager未正确加载！");
     // 显示错误信息给用户
@@ -261,8 +257,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set switch labels dynamically to avoid inline script CSP violation
   const style = document.createElement('style');
   document.head.appendChild(style);
-  const onText = chrome.i18n.getMessage('textOn');
-  const offText = chrome.i18n.getMessage('textOff');
+  const onText = (chrome.i18n.getMessage('textOn') || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  const offText = (chrome.i18n.getMessage('textOff') || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   if (onText) style.sheet.insertRule(`.slideThree:before { content: '${onText}'; }`, 0);
   if (offText) style.sheet.insertRule(`.slideThree:after { content: '${offText}'; }`, 1);
   
@@ -318,13 +314,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 3000);
       } catch (error) {
         console.error("保存配置失败:", error);
-        msgAlert.innerHTML = `<h3>${chrome.i18n.getMessage("options_save_failed_header")}</h3><br>${chrome.i18n.getMessage("options_error_info", [error.message])}`;
+        const esc = RedirectEngine.escapeHtml;
+        msgAlert.innerHTML = `<h3>${chrome.i18n.getMessage("options_save_failed_header")}</h3><br>${esc(chrome.i18n.getMessage("options_error_info", [error.message]))}`;
         msgAlert.style.display = "block";
       }
     } else {
+      const esc = RedirectEngine.escapeHtml;
       var errAlert = `<h3>${chrome.i18n.getMessage("options_cycle_found_header")}</h3><br>`;
       errorArr.forEach(function (v, i) {
-        errAlert += v;
+        errAlert += esc(v);
       });
       msgAlert.innerHTML = errAlert;
       msgAlert.style.display = "block";
@@ -337,12 +335,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const jumpList = document.getElementById("jump_list").value;
     
     if (!testUrl) {
-      alert(chrome.i18n.getMessage("options_enter_test_url"));
+      showMessage(chrome.i18n.getMessage("options_enter_test_url"), "error");
       return;
     }
     
     if (!jumpList.trim()) {
-      alert(chrome.i18n.getMessage("options_config_rules_first"));
+      showMessage(chrome.i18n.getMessage("options_config_rules_first"), "error");
       return;
     }
     
@@ -367,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function () {
       RedirectEngine.Logger.error("测试重定向时出错", error);
       
       document.getElementById('test_result').innerHTML = 
-        `<div class="error-step"><div class="step-header"><div class="step-number">❌</div><span>${chrome.i18n.getMessage("options_test_error_header")}</span></div><div style="color: #dc3545;">${chrome.i18n.getMessage("options_test_error_message")}</div></div>`;
+        `<div class="error-step"><div class="step-header"><div class="step-number">&#x274C;</div><span>${chrome.i18n.getMessage("options_test_error_header")}</span></div><div style="color: #dc3545;">${chrome.i18n.getMessage("options_test_error_message")}</div></div>`;
       
       // 即使出错也显示日志
       renderTestLogs();
@@ -459,17 +457,18 @@ function renderTestLogs() {
     return;
   }
   
+  const esc = RedirectEngine.escapeHtml;
   const logsHtml = logs.map(log => {
     const levelClass = log.level.toLowerCase();
-    const dataStr = log.data ? `<div class="log-data">${JSON.stringify(log.data, null, 2)}</div>` : '';
+    const dataStr = log.data ? `<div class="log-data">${esc(JSON.stringify(log.data, null, 2))}</div>` : '';
     const time = log.timestamp.split('T')[1].split('.')[0];
     
-    return `<div class="log-entry log-${levelClass}">
+    return `<div class="log-entry log-${esc(levelClass)}">
       <div class="log-header">
-        <span class="log-time">${time}</span>
-        <span class="log-level">[${log.level}]</span>
+        <span class="log-time">${esc(time)}</span>
+        <span class="log-level">[${esc(log.level)}]</span>
       </div>
-      <div class="log-message">${log.message}</div>
+      <div class="log-message">${esc(log.message)}</div>
       ${dataStr}
     </div>`;
   }).join('');

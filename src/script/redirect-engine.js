@@ -100,11 +100,12 @@ const Logger = {
   formatLogsAsHtml() {
     return this.logs.map(log => {
       const levelClass = log.level.toLowerCase();
-      const dataStr = log.data ? ` | ${chrome.i18n.getMessage('redEngLogData') || '数据: '}${JSON.stringify(log.data)}` : '';
-      return `<div class="log-entry log-${levelClass}">
-        <span class="log-time">${log.timestamp.split('T')[1].split('.')[0]}</span>
-        <span class="log-level">[${log.level}]</span>
-        <span class="log-message">${log.message}${dataStr}</span>
+      const safeMessage = escapeHtml(log.message);
+      const safeData = log.data ? ` | ${escapeHtml(chrome.i18n.getMessage('redEngLogData') || '数据: ')}${escapeHtml(JSON.stringify(log.data))}` : '';
+      return `<div class="log-entry log-${escapeHtml(levelClass)}">
+        <span class="log-time">${escapeHtml(log.timestamp.split('T')[1].split('.')[0])}</span>
+        <span class="log-level">[${escapeHtml(log.level)}]</span>
+        <span class="log-message">${safeMessage}${safeData}</span>
       </div>`;
     }).join('');
   },
@@ -128,6 +129,34 @@ const Logger = {
     return header + logText;
   }
 };
+
+/**
+ * 转义HTML特殊字符，防止XSS注入
+ * @param {string} str - 要转义的字符串
+ * @returns {string} - 转义后的安全字符串
+ */
+function escapeHtml(str) {
+  if (typeof str !== 'string') return String(str);
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * 校验URL协议是否安全（白名单）
+ * @param {string} url - 要校验的URL
+ * @returns {boolean}
+ */
+function isSafeUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim();
+  return /^https?:\/\//i.test(trimmed) ||
+         /^file:\/\//i.test(trimmed) ||
+         /^[^:]+$/.test(trimmed);  // no protocol = relative
+}
 
 /**
  * 转义正则表达式特殊字符
@@ -284,7 +313,7 @@ function processMatchPattern(pattern) {
  */
 function processPatternWithCaptures(pattern) {
   // 检查是否已经是正则表达式格式（由smartProcessUrlPattern处理过）
-  const isRegexPattern = pattern.match(/^\(\?\:/) || pattern.match(/^https?\?:/);
+  const isRegexPattern = pattern.match(/^\(\?\:/) || pattern.match(/^https?\?:\/\//);
   
   let escaped;
   if (isRegexPattern) {
@@ -908,6 +937,8 @@ if (typeof module !== 'undefined' && module.exports) {
   // Node.js环境
   module.exports = {
     Logger,
+    escapeHtml,
+    isSafeUrl,
     processMatchPattern,
     processPatternWithCaptures,
     parseUrlTemplate,
@@ -932,6 +963,8 @@ if (typeof module !== 'undefined' && module.exports) {
   if (globalScope) {
     globalScope.RedirectEngine = {
       Logger,
+      escapeHtml,
+      isSafeUrl,
       processMatchPattern,
       processPatternWithCaptures,
       parseUrlTemplate,

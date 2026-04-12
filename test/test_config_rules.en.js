@@ -8,6 +8,11 @@
 const fs = require('fs');
 const path = require('path');
 
+// Mock chrome.i18n API for Node.js environment
+if (typeof globalThis.chrome === 'undefined') {
+  globalThis.chrome = { i18n: { getMessage: () => '' } };
+}
+
 // Import redirect engine
 const RedirectEngine = require('../src/script/redirect-engine.js');
 
@@ -445,7 +450,7 @@ function runAllTests() {
     } catch (error) {
         console.log(colorize('❌ Unable to load configuration file example_config.en.txt', 'red'));
         console.log(colorize(`Error: ${error.message}`, 'red'));
-        return;
+        return { passed: 0, failed: 1, total: 0, error: error.message };
     }
     
     let totalTests = 0;

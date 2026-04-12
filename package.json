@@ -1,12 +1,15 @@
 {
   "name": "auto-redirect",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "URL重定向工具 - Chrome扩展",
   "main": "build.js",
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "test": "node test/test_config_rules.zh-CN.js && node test/test_config_rules.en.js",
+    "test:zh": "node test/test_config_rules.zh-CN.js",
+    "test:en": "node test/test_config_rules.en.js",
     "build": "node build.js",
     "package": "node build.js",
     "pack": "node build.js"

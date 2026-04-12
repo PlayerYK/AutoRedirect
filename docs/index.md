@@ -1,4 +1,5 @@
 ---
+
 layout: home
 
 hero:
@@ -13,14 +14,19 @@ hero:
       text: Get Started
       link: /guide
     - theme: alt
+      text: Download Now
+      link: [https://chromewebstore.google.com/detail/edgiaaakbcjloebnmehbnfiajbhcpbcf](https://chromewebstore.google.com/detail/edgiaaakbcjloebnmehbnfiajbhcpbcf)
+    - theme: alt
       text: View on GitHub
-      link: https://github.com/PlayerYK/AutoRedirect
+      link: [https://github.com/PlayerYK/AutoRedirect](https://github.com/PlayerYK/AutoRedirect)
 
 features:
-  - title: Pattern-based Matching
-    details: Automatically recognizes and extracts URLs from various complex query strings, supporting jump and copy operations.
-  - title: Multiple Matching Modes
-    details: Supports exact match, prefix match, and simple string match to meet different redirection needs.
-  - title: Flexible Configuration
-    details: Users can customize redirection rules, including using templates for URL replacement to handle dynamic links.
---- 
+
+- title: Pattern-based Matching
+details: Automatically recognizes and extracts URLs from various complex query strings, supporting jump and copy operations.
+- title: Multiple Matching Modes
+details: Supports exact match, prefix match, and simple string match to meet different redirection needs.
+- title: Flexible Configuration
+details: Users can customize redirection rules, including using templates for URL replacement to handle dynamic links.
+
+---

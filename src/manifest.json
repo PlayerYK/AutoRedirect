@@ -4,6 +4,7 @@
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
   "default_locale": "zh_CN",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmf9MMwHg87qtSH/S5U0NgnTNOtr40xC2aGx7yCHEvN+O6K0KD7hVMfriHbGS59gVeoW79ZSLixI76QkRChP9xbtpG9cjm6sc8dCAR8ivqQ0o8ZY6Q5Kqc8oNgFcZU54opOSxwULpW1oolMGd5b4ihGW/LykttAlJZ5qDDEsT2SIUjf8wyuRKWvaQ5Zp1bn9lE8chtV67G8tWZtiSUYF8/9i0riofbwL1c0ePy061iTr7s1jYkw8MiLvBYfVotchofmpkkkrvHhFAygf8BzEtQx/sxyWD5C8gR0PqsnQB58zM1Wo3F8qjlvbQQcKFB+9+5ju78GXf8P8jXijonBgxVwIDAQAB",
   "permissions": ["tabs", "storage", "webRequest"],
   "host_permissions": ["http://*/*", "https://*/*", "file://*/*"],
   "options_page": "options.html",

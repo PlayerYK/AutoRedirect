@@ -69,8 +69,8 @@ function createPackage() {
     console.log(`📂 打包源目录: ${srcDir}`);
     console.log(`📦 输出文件: ${zipPath}`);
     
-    // 使用 zip 命令打包 src 目录的所有内容
-    const zipCommand = `cd "${srcDir}" && zip -r "${zipPath}" .`;
+    // 使用 zip 命令打包 src 目录的所有内容（排除系统文件）
+    const zipCommand = `cd "${srcDir}" && zip -r "${zipPath}" . -x "*.DS_Store" -x "__MACOSX/*" -x "*.swp" -x "*~"`;
     execSync(zipCommand, { stdio: 'inherit' });
     
     // 检查文件是否创建成功

@@ -8,6 +8,11 @@
 const fs = require('fs');
 const path = require('path');
 
+// Node.js 环境下 mock chrome.i18n API
+if (typeof globalThis.chrome === 'undefined') {
+  globalThis.chrome = { i18n: { getMessage: () => '' } };
+}
+
 // 导入重定向引擎
 const RedirectEngine = require('../src/script/redirect-engine.js');
 
@@ -445,7 +450,7 @@ function runAllTests() {
     } catch (error) {
         console.log(colorize('❌ 无法加载配置文件 example_config.zh-CN.txt', 'red'));
         console.log(colorize(`错误: ${error.message}`, 'red'));
-        return;
+        return { passed: 0, failed: 1, total: 0, error: error.message };
     }
     
     let totalTests = 0;
@@ -547,15 +552,15 @@ function main() {
 AutoRedirect 配置文件规则测试脚本
 
 用法:
-  node test_config_rules.js [选项]
+  node test_config_rules.zh-CN.js [选项]
 
 选项:
   --help, -h     显示帮助信息
   --quiet, -q    静默模式，只显示总结
 
 示例:
-  node test_config_rules.js        # 运行配置文件测试
-  node test_config_rules.js --quiet # 静默运行测试
+  node test_config_rules.zh-CN.js        # 运行配置文件测试
+  node test_config_rules.zh-CN.js --quiet # 静默运行测试
         `);
         return;
     }
