@@ -407,8 +407,13 @@ function performTemplateReplacement(url, pattern, template, processedPattern) {
     
     const regex = new RegExp(processedPattern.regex, 'i');
     let match = normalizedUrl.match(regex);
-    
-    // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
+
+    // 如果标准化后匹配失败，用原始URL再试
+    if (!match && normalizedUrl !== url) {
+      match = url.match(regex);
+    }
+
+    // 如果仍然失败，且URL没有协议，尝试添加协议再匹配
     if (!match && !normalizedUrl.match(/^[a-z]+:\/\//)) {
       Logger.debug(chrome.i18n.getMessage('redEngLogTemplateUrlNoProtocol') || `模板替换：URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
       
@@ -544,8 +549,16 @@ function testUrlMatch(url, regexPattern, matchType) {
     
     const regex = new RegExp(regexPattern, 'i');
     let result = regex.test(normalizedUrl);
-    
-    // 如果第一次匹配失败，且URL没有协议，尝试添加协议再匹配
+
+    // 如果标准化后匹配失败，用原始URL再试一次（尾部/可能是规则需要的）
+    if (!result && normalizedUrl !== url) {
+      result = regex.test(url);
+      if (result) {
+        Logger.debug(chrome.i18n.getMessage('redEngLogOriginalUrlMatch') || `使用原始URL匹配成功`, { normalizedUrl, originalUrl: url });
+      }
+    }
+
+    // 如果仍然失败，且URL没有协议，尝试添加协议再匹配
     if (!result && !normalizedUrl.match(/^[a-z]+:\/\//)) {
       Logger.debug(chrome.i18n.getMessage('redEngLogUrlNoProtocol') || `URL无协议，尝试添加协议进行匹配`, { originalUrl: normalizedUrl });
       

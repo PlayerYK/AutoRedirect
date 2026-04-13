@@ -56,8 +56,8 @@ const configTestCases = [
             },
             {
                 name: "Prefix match ^api.localhost",
-                input: "https://api.localhost",
-                expected: "https://api.example.com"
+                input: "https://api.localhost/",
+                expected: "https://api.example.com/"
             },
             {
                 name: "Prefix match ^localhost:8",

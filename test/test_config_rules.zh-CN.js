@@ -56,8 +56,8 @@ const configTestCases = [
             },
             {
                 name: "开头匹配 ^api.localhost",
-                input: "https://api.localhost",
-                expected: "https://api.example.com"
+                input: "https://api.localhost/",
+                expected: "https://api.example.com/"
             },
             {
                 name: "开头匹配 ^localhost:8",

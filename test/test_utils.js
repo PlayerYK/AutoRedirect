@@ -145,6 +145,121 @@ console.log('\n\x1b[36m=== parseRedirectRules ===\x1b[0m');
   eq(rules.length, 1, 'whitespace around separator -> parsed');
 }
 
+// ── parseRedirectRules edge cases ──
+
+console.log('\n\x1b[36m=== parseRedirectRules (edge cases) ===\x1b[0m');
+
+{
+  const rules = RE.parseRedirectRules('a####b####c');
+  eq(rules.length, 1, 'multiple #### in one line -> still 1 rule');
+  eq(rules[0].urlStr, 'b', 'multiple #### -> target is first segment after split');
+}
+{
+  const rules = RE.parseRedirectRules('foo.com####bar.com\r\nbaz.com####qux.com\r\n');
+  eq(rules.length, 2, 'lines with \\r\\n -> parsed correctly');
+}
+{
+  const rules = RE.parseRedirectRules('foo.com####bar.com\r');
+  eq(rules.length, 1, 'trailing \\r -> parsed');
+}
+
+// ── normalizeTargetUrl ──
+
+console.log('\n\x1b[36m=== normalizeTargetUrl ===\x1b[0m');
+
+eq(RE.normalizeTargetUrl('', 'https://a.com'), '', 'empty target -> empty');
+eq(RE.normalizeTargetUrl(null, 'https://a.com'), null, 'null target -> null');
+eq(RE.normalizeTargetUrl('https://b.com', 'https://a.com'), 'https://b.com', 'target with protocol -> unchanged');
+eq(RE.normalizeTargetUrl('http://b.com', 'https://a.com'), 'http://b.com', 'http target -> unchanged');
+eq(RE.normalizeTargetUrl('/path/to', 'https://a.com'), '/path/to', 'relative path -> unchanged');
+eq(RE.normalizeTargetUrl('b.com/page', 'https://a.com'), 'https://b.com/page', 'no protocol + https source -> https');
+eq(RE.normalizeTargetUrl('b.com/page', 'http://a.com'), 'http://b.com/page', 'no protocol + http source -> http');
+eq(RE.normalizeTargetUrl('b.com', null), 'https://b.com', 'no protocol + null source -> https default');
+eq(RE.normalizeTargetUrl('  b.com  ', 'https://a.com'), 'https://b.com', 'whitespace trimmed');
+
+// ── testRedirectChain (multi-step, cycle, limit) ──
+
+console.log('\n\x1b[36m=== testRedirectChain ===\x1b[0m');
+
+{
+  const rules = 'a.com####https://b.com\nb.com####https://c.com';
+  const chain = RE.testRedirectChain('https://a.com', rules, 5);
+  const types = chain.map(s => s.type);
+  assert(types.includes('single'), 'multi-step: has single step');
+  assert(types[types.length - 1] === 'final', 'multi-step: ends with final');
+  const finalStep = chain.find(s => s.type === 'final');
+  eq(finalStep.url, 'https://c.com', 'multi-step: A->B->C reaches C');
+}
+{
+  const rules = 'a.com####https://b.com\nb.com####https://a.com';
+  const chain = RE.testRedirectChain('https://a.com', rules, 10);
+  const types = chain.map(s => s.type);
+  assert(types.includes('cycle'), 'cycle: detected A->B->A');
+}
+{
+  const rules = 'a.com####https://b.com\nb.com####https://c.com\nc.com####https://d.com\nd.com####https://e.com';
+  const chain = RE.testRedirectChain('https://a.com', rules, 2);
+  const lastStep = chain[chain.length - 1];
+  eq(lastStep.type, 'limit', 'limit: maxSteps=2 triggers limit');
+}
+{
+  const rules = 'nomatch####https://x.com';
+  const chain = RE.testRedirectChain('https://other.com', rules, 5);
+  eq(chain.length, 1, 'no match: single final step');
+  eq(chain[0].type, 'final', 'no match: type is final');
+}
+{
+  const rules = '=a.com####https://b.com\n=a.com####https://c.com';
+  const chain = RE.testRedirectChain('http://a.com', rules, 5);
+  const multiStep = chain.find(s => s.type === 'multiple');
+  assert(multiStep !== undefined, 'multiple matches: detected');
+  eq(multiStep.matches.length, 2, 'multiple matches: 2 targets');
+}
+
+// ── performTemplateReplacement ──
+
+console.log('\n\x1b[36m=== performTemplateReplacement ===\x1b[0m');
+
+{
+  const pattern = '^test.com/*';
+  const processed = RE.processMatchPattern(pattern);
+  const result = RE.performTemplateReplacement(
+    'https://test.com/hello', pattern,
+    'https://dest.com/fixed', processed
+  );
+  eq(result, 'https://dest.com/fixed', 'no placeholders -> returns template as-is');
+}
+{
+  const pattern = '^test.com/*';
+  const processed = RE.processMatchPattern(pattern);
+  const result = RE.performTemplateReplacement(
+    'https://test.com/hello', pattern,
+    'https://dest.com/{1}', processed
+  );
+  eq(result, 'https://dest.com/hello', 'placeholder {1} -> captures path');
+}
+{
+  const pattern = '^test.com/*';
+  const processed = RE.processMatchPattern(pattern);
+  const result = RE.performTemplateReplacement(
+    'https://test.com/hello', pattern,
+    'https://dest.com/{1}/{5}', processed
+  );
+  assert(result !== null, 'out-of-range placeholder -> does not crash');
+  assert(result.includes('{5}') || result.includes('hello'), 'out-of-range placeholder -> handled gracefully');
+}
+
+// ── testUrlMatch ──
+
+console.log('\n\x1b[36m=== testUrlMatch ===\x1b[0m');
+
+{
+  eq(RE.testUrlMatch('https://foo.com', '^https?://foo\\.com$', 'exact'), true, 'basic exact match');
+  eq(RE.testUrlMatch('https://foo.com/', '^https?://foo\\.com', 'prefix'), true, 'trailing slash normalized');
+  eq(RE.testUrlMatch('foo.com', '^https?://foo\\.com$', 'exact'), true, 'no protocol -> auto-added');
+  eq(RE.testUrlMatch('http://bar.com', '^https?://foo\\.com$', 'exact'), false, 'non-matching URL');
+}
+
 // ── ConfigManager mock ──
 
 console.log('\n\x1b[36m=== ConfigManager ===\x1b[0m');

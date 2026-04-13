@@ -1,6 +1,6 @@
 {
   "name": "auto-redirect",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "description": "URL重定向工具 - Chrome扩展",
   "main": "build.js",
   "scripts": {
@@ -12,7 +12,8 @@
     "test:en": "node test/test_config_rules.en.js",
     "build": "node build.js",
     "package": "node build.js package",
-    "pack": "node build.js package"
+    "pack": "node build.js package",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "keywords": [
     "chrome-extension",
