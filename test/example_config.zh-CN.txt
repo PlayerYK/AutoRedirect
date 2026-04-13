@@ -12,7 +12,7 @@
 # 使用标准域名格式，避免被浏览器当作搜索词
 # 推荐使用 .localhost、.local 或带端口的localhost
 ^dev.localhost####https://development.example.com
-^api.localhost####https://api.example.com
+^api.localhost/*####https://api.example.com/{1}
 ^localhost:8####https://development.example.com
 staging.internal*####https://staging.example.com
 

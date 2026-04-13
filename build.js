@@ -4,116 +4,181 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// 读取 manifest.json 获取版本号
+const DIST_DIR = path.join(__dirname, 'dist');
+const SRC_DIR = path.join(__dirname, 'src');
+const MANIFEST_PATH = path.join(SRC_DIR, 'manifest.json');
+const PACKAGE_PATH = path.join(__dirname, 'package.json');
+
+const EXCLUDE_PATTERNS = ['.DS_Store', '__MACOSX', '.swp', '~'];
+
+// ── helpers ──
+
 function getVersion() {
   try {
-    const manifestPath = path.join(__dirname, 'src', 'manifest.json');
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    return manifest.version;
+    return JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8')).version;
   } catch (error) {
-    console.error('❌ 无法读取 src/manifest.json 文件:', error.message);
+    console.error('❌ 无法读取 src/manifest.json:', error.message);
     process.exit(1);
   }
 }
 
-// 检查是否安装了 zip 命令
+/**
+ * 递增版本号并同步写入 manifest.json 和 package.json
+ * @param {'major'|'minor'|'patch'} [part='patch']
+ * @returns {string} 新版本号
+ */
+function bumpVersion(part) {
+  part = part || 'patch';
+  const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+  const pkg = JSON.parse(fs.readFileSync(PACKAGE_PATH, 'utf8'));
+
+  const old = manifest.version;
+  const segs = old.split('.').map(Number);
+
+  switch (part) {
+    case 'major': segs[0]++; segs[1] = 0; segs[2] = 0; break;
+    case 'minor': segs[1]++; segs[2] = 0; break;
+    default:      segs[2]++; break;
+  }
+
+  const next = segs.join('.');
+  manifest.version = next;
+  pkg.version = next;
+
+  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(PACKAGE_PATH, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
+
+  console.log(`🔖 版本号 ${old} → ${next}  (${part})`);
+  return next;
+}
+
+function shouldExclude(name) {
+  return EXCLUDE_PATTERNS.some(p => name.includes(p));
+}
+
+/** 递归删除目录 */
+function rmDir(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) rmDir(full); else fs.unlinkSync(full);
+  }
+  fs.rmdirSync(dir);
+}
+
+/** 递归复制目录，跳过排除文件 */
+function copyDir(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    if (shouldExclude(entry.name)) continue;
+    const s = path.join(src, entry.name);
+    const d = path.join(dest, entry.name);
+    if (entry.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d);
+  }
+}
+
 function checkZipCommand() {
-  try {
-    execSync('which zip', { stdio: 'ignore' });
-    return true;
-  } catch (error) {
-    return false;
-  }
+  try { execSync('which zip', { stdio: 'ignore' }); return true; }
+  catch { return false; }
 }
 
-// 创建 dist 目录
-function ensureDistDirectory() {
-  const distDir = path.join(__dirname, 'dist');
-  if (!fs.existsSync(distDir)) {
-    fs.mkdirSync(distDir, { recursive: true });
-    console.log('📁 创建 dist 目录');
+// ── commands ──
+
+/**
+ * build：bump 版本 → 清空 dist → 复制 src 到 dist/
+ * 输出目录固定为 dist/，不带版本号子目录，方便直接加载调试。
+ */
+function build(options) {
+  options = options || {};
+  bumpVersion(options.bumpPart || 'patch');
+
+  const version = getVersion();
+
+  console.log(`🔨 Build v${version}`);
+
+  if (fs.existsSync(DIST_DIR)) {
+    rmDir(DIST_DIR);
+    console.log('🗑️  已清空 dist/');
   }
+
+  copyDir(SRC_DIR, DIST_DIR);
+
+  const count = execSync(`find "${DIST_DIR}" -type f | wc -l`).toString().trim();
+  console.log(`✅ 已输出 ${count} 个文件到 dist/`);
 }
 
-// 创建打包
-function createPackage() {
+/**
+ * package：bump 版本 → 清空 dist → 复制 src 到 dist/ → 打带版本号的 zip
+ */
+function pack(options) {
+  options = options || {};
+
+  build(options);
+
   const version = getVersion();
   const zipName = `AutoRedirect-${version}.zip`;
-  const distDir = path.join(__dirname, 'dist');
-  const zipPath = path.join(distDir, zipName);
-  
-  console.log(`📦 开始打包 AutoRedirect v${version}...`);
-  
-  // 检查 zip 命令
+  const zipPath = path.join(DIST_DIR, zipName);
+
   if (!checkZipCommand()) {
-    console.error('❌ 系统未安装 zip 命令，请先安装 zip 工具');
-    console.log('💡 在 macOS 上，zip 命令通常已预装');
-    console.log('💡 如果没有，可以通过 brew install zip 安装');
+    console.error('❌ 系统未安装 zip 命令');
     process.exit(1);
   }
-  
-  // 确保 dist 目录存在
-  ensureDistDirectory();
-  
-  // 删除已存在的 zip 文件
-  if (fs.existsSync(zipPath)) {
-    fs.unlinkSync(zipPath);
-    console.log(`🗑️  删除已存在的 ${zipName}`);
-  }
-  
-  try {
-    // 切换到 src 目录进行打包
-    const srcDir = path.join(__dirname, 'src');
-    
-    console.log('🔄 执行打包命令...');
-    console.log(`📂 打包源目录: ${srcDir}`);
-    console.log(`📦 输出文件: ${zipPath}`);
-    
-    // 使用 zip 命令打包 src 目录的所有内容（排除系统文件）
-    const zipCommand = `cd "${srcDir}" && zip -r "${zipPath}" . -x "*.DS_Store" -x "__MACOSX/*" -x "*.swp" -x "*~"`;
-    execSync(zipCommand, { stdio: 'inherit' });
-    
-    // 检查文件是否创建成功
-    if (fs.existsSync(zipPath)) {
-      const stats = fs.statSync(zipPath);
-      const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(2);
-      
-      console.log(`✅ 打包完成！`);
-      console.log(`📁 文件名: ${zipName}`);
-      console.log(`📏 文件大小: ${fileSizeInMB} MB`);
-      console.log(`📍 文件位置: ${zipPath}`);
-      
-      // 显示包含的文件列表
-      console.log('\n📋 包含的文件:');
-      try {
-        const listCommand = `unzip -l "${zipPath}"`;
-        execSync(listCommand, { stdio: 'inherit' });
-      } catch (error) {
-        console.log('💡 可以使用 unzip -l ' + zipPath + ' 查看包含的文件');
-      }
-      
-    } else {
-      console.error('❌ 打包失败，未找到生成的 zip 文件');
-      process.exit(1);
-    }
-    
-  } catch (error) {
-    console.error('❌ 打包过程中出现错误:', error.message);
+
+  console.log(`📦 打包 ${zipName}...`);
+  execSync(`cd "${DIST_DIR}" && zip -r "${zipPath}" . -x "*.DS_Store" -x "__MACOSX/*" -x "AutoRedirect-*.zip"`, { stdio: 'inherit' });
+
+  if (!fs.existsSync(zipPath)) {
+    console.error('❌ 打包失败');
     process.exit(1);
   }
+
+  const size = (fs.statSync(zipPath).size / 1024).toFixed(1);
+  console.log(`✅ ${zipName}  (${size} KB)`);
+  console.log(`📍 ${zipPath}`);
 }
 
-// 主函数
+// ── CLI ──
+
 function main() {
-  console.log('🚀 AutoRedirect 扩展打包工具');
+  const args = process.argv.slice(2);
+  const cmd = args.find(a => !a.startsWith('-')) || '';
+
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+AutoRedirect 构建工具
+
+命令:
+  node build.js              编译：bump 版本 + 清空 dist + 复制 src 到 dist/
+  node build.js package      发布：编译 + 打 AutoRedirect-<version>.zip
+
+选项:
+  --patch     递增补丁版本 x.y.Z（默认）
+  --minor     递增次版本 x.Y.0
+  --major     递增主版本 X.0.0
+
+npm scripts:
+  npm run build              等同 node build.js
+  npm run package            等同 node build.js package
+`);
+    return;
+  }
+
+  console.log('🚀 AutoRedirect 构建工具');
   console.log('================================');
-  
-  createPackage();
+
+  const options = {};
+  if (args.includes('--major')) options.bumpPart = 'major';
+  else if (args.includes('--minor')) options.bumpPart = 'minor';
+
+  if (cmd === 'package' || cmd === 'pack') {
+    pack(options);
+  } else {
+    build(options);
+  }
 }
 
-// 运行脚本
 if (require.main === module) {
   main();
 }
 
-module.exports = { getVersion, createPackage }; 
+module.exports = { getVersion, bumpVersion, build, pack };

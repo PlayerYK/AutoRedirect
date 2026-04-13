@@ -18,7 +18,7 @@ function showEmptyState() {
   const list = document.getElementById("list");
   list.innerHTML = `
     <div class="empty-state">
-      <div class="icon">🔍</div>
+      <div class="icon" style="font-size:2rem;color:#94a3b8;">?</div>
       <h3>${chrome.i18n.getMessage("choseEmptyStateHeader")}</h3>
       <p>${chrome.i18n.getMessage("choseEmptyStateMessage")}</p>
     </div>

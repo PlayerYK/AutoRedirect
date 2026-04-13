@@ -56,7 +56,7 @@
     "description": "Header for the rule configuration panel."
   },
   "optionsOnlineDocsLink": {
-    "message": "🧪 在线文档与测试",
+    "message": "在线文档与测试",
     "description": "Link text for online documentation and testing."
   },
   "optionsRulesPlaceholder": {
@@ -64,15 +64,15 @@
     "description": "Placeholder text for the redirection rules textarea."
   },
   "optionsSaveButton": {
-    "message": "💾 保存配置",
+    "message": "保存配置",
     "description": "Text for the save button."
   },
   "optionsGuideTab": {
-    "message": "📚 使用指南",
+    "message": "使用指南",
     "description": "Tab title for the user guide."
   },
   "optionsTestToolTab": {
-    "message": "🧪 测试工具",
+    "message": "测试工具",
     "description": "Tab title for the test tool."
   },
   "guideRedirectMessage": {
@@ -88,7 +88,7 @@
     "description": "Header for the user guide section."
   },
   "testToolHeader": {
-    "message": "🧪 重定向测试工具",
+    "message": "重定向测试工具",
     "description": "Header for the redirect test tool section."
   },
   "testToolUrlLabel": {
@@ -100,11 +100,11 @@
     "description": "Placeholder for the test URL input."
   },
   "testToolTestButton": {
-    "message": "🔍 测试重定向",
+    "message": "测试重定向",
     "description": "Text for the test redirect button."
   },
   "logsHeader": {
-    "message": "📋 测试日志",
+    "message": "测试日志",
     "description": "Header for the test logs section."
   },
   "logsLevelLabel": {
@@ -128,11 +128,11 @@
     "description": "Log level option: ERROR."
   },
   "logsCopyButton": {
-    "message": "📋 复制日志",
+    "message": "复制日志",
     "description": "Text for the copy logs button."
   },
   "logsClearButton": {
-    "message": "🗑️ 清空日志",
+    "message": "清空日志",
     "description": "Text for the clear logs button."
   },
   "logsNoLogs": {
@@ -144,7 +144,7 @@
     "description": "Title of the multiple matches choice page."
   },
   "choseHeader": {
-    "message": "🔗 选择要打开的链接",
+    "message": "选择要打开的链接",
     "description": "Header text on the choice page."
   },
   "choseSubheader": {
@@ -182,6 +182,10 @@
   "choseMatchTypeContains": {
     "message": "包含匹配",
     "description": "Match type: Contains."
+  },
+  "choseUnknownRule": {
+    "message": "未知规则",
+    "description": "Fallback text when rule info is not available on the choice page."
   },
   "choseEmptyStateHeader": {
     "message": "没有找到匹配的链接",
@@ -438,6 +442,78 @@
         "example": "5"
       }
     }
+  },
+  "editorToggleComment": {
+    "message": "# 注释切换",
+    "description": "Toolbar button to toggle comment on selected lines."
+  },
+  "editorShortcutHint": {
+    "message": "Ctrl+/ 切换注释 · Ctrl+S 保存",
+    "description": "Hint showing keyboard shortcuts for the editor."
+  },
+  "statsTotal": {
+    "message": "共 $COUNT$ 行",
+    "description": "Total line count in rule stats.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "statsValid": {
+    "message": "有效 $COUNT$",
+    "description": "Valid rule count in stats.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "statsComment": {
+    "message": "注释 $COUNT$",
+    "description": "Comment line count in stats.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "statsError": {
+    "message": "异常 $COUNT$",
+    "description": "Error/malformed line count in stats.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "testModeSingle": {
+    "message": "单条测试",
+    "description": "Button label for single URL test mode."
+  },
+  "testModeBatch": {
+    "message": "批量测试",
+    "description": "Button label for batch URL test mode."
+  },
+  "batchTestUrlLabel": {
+    "message": "批量测试URL",
+    "description": "Label for batch test URL textarea."
+  },
+  "batchTestPlaceholder": {
+    "message": "每行输入一个URL，例如：\nhttps://example.com/page1\nhttps://example.com/page2",
+    "description": "Placeholder for batch test URL textarea."
+  },
+  "batchTestButton": {
+    "message": "批量测试",
+    "description": "Text for the batch test button."
+  },
+  "batchTotal": {
+    "message": "共 $COUNT$ 条",
+    "description": "Total URL count in batch results.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "batchMatched": {
+    "message": "匹配 $COUNT$",
+    "description": "Matched URL count in batch results.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "batchNoMatch": {
+    "message": "无匹配 $COUNT$",
+    "description": "No-match URL count in batch results.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "batchErrors": {
+    "message": "错误 $COUNT$",
+    "description": "Error count in batch results.",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "batchNoMatchLabel": {
+    "message": "无匹配",
+    "description": "Label shown when a URL has no match in batch mode."
   },
   "redEngLogSmartProtocolStart": { "message": "自动添加协议处理开始" },
   "redEngLogProtocolExists": { "message": "模式已包含协议，直接返回" },

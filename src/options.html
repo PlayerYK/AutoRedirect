@@ -13,9 +13,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
+            background: #f1f5f9;
             min-height: 100vh;
-            color: #333;
+            color: #1e293b;
             line-height: 1.6;
         }
 
@@ -38,12 +38,12 @@
         #title {
             font-size: 2.5rem;
             font-weight: 600;
-            color: #333;
+            color: #0f172a;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            color: #666;
+            color: #64748b;
             font-size: 1.1rem;
             font-weight: 400;
         }
@@ -59,7 +59,7 @@
         .config-panel {
             background: white;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #e2e8f0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -72,25 +72,25 @@
             overflow: hidden;
             background: #fff;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #e2e8f0;
         }
 
         .help-panel {
             background: white;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #e2e8f0;
             overflow: hidden;
             flex: 1;
             min-height: 0;
         }
 
         .section-header {
-            background: #f8f9fa;
-            color: #333;
+            background: #f8fafc;
+            color: #0f172a;
             padding: 20px 30px;
             font-size: 1.3rem;
             font-weight: 600;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #e2e8f0;
             flex-shrink: 0;
         }
 
@@ -114,17 +114,11 @@
         .option-name {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #333;
+            color: #1e293b;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             flex-shrink: 0;
-        }
-
-        .option-name::before {
-            content: '⚙️';
-            margin-right: 10px;
-            font-size: 1.2rem;
         }
 
         .line {
@@ -137,8 +131,8 @@
             width: 100%;
             flex: 1;
             min-height: 300px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             padding: 15px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 14px;
@@ -153,21 +147,21 @@
 
         .jump-list:focus {
             outline: none;
-            border-color: #007acc;
-            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
         }
 
         .jump-list:focus-visible {
-            outline: 2px solid #007acc;
+            outline: 2px solid #2563eb;
             outline-offset: -2px;
         }
 
         .help-section {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            color: #333;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
             padding: 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 15px;
         }
 
@@ -181,12 +175,7 @@
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            color: #333;
-        }
-
-        .help-section h3::before {
-            content: '📚';
-            margin-right: 8px;
+            color: #1e293b;
         }
 
         .help-section ul {
@@ -198,7 +187,7 @@
             padding-left: 20px;
             position: relative;
             font-size: 0.9rem;
-            color: #555;
+            color: #475569;
         }
 
         .help-section li::before {
@@ -206,11 +195,11 @@
             position: absolute;
             left: 0;
             top: 0;
-            color: #666;
+            color: #94a3b8;
         }
 
         .help-section strong {
-            color: #333;
+            color: #1e293b;
             font-weight: 600;
         }
 
@@ -220,31 +209,39 @@
             flex-shrink: 0;
         }
 
-        #save {
-            background: #007acc;
+        /* Primary button */
+        #save,
+        #test_redirect,
+        #batch_test_redirect {
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
+            padding: 10px 24px;
+            font-size: 0.9rem;
             font-weight: 500;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background 0.15s;
         }
 
-        #save:hover {
-            background: #005a9e;
+        #save:hover,
+        #test_redirect:hover,
+        #batch_test_redirect:hover {
+            background: #1d4ed8;
         }
 
-        #save:active {
-            background: #004080;
+        #save:active,
+        #test_redirect:active,
+        #batch_test_redirect:active {
+            background: #1e40af;
         }
 
         #msg-alert {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
             padding: 15px 25px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-top: 20px;
             display: none;
             white-space: pre-wrap;
@@ -253,16 +250,16 @@
         #footer {
             text-align: center;
             padding: 15px;
-            color: #666;
+            color: #64748b;
             font-size: 0.9rem;
             flex-shrink: 0;
         }
 
         .foot-text {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             display: inline-block;
         }
 
@@ -270,15 +267,15 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
             padding: 15px 20px;
             font-size: 14px;
             z-index: 1000;
             display: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         /* 扩展开关样式 */
@@ -292,112 +289,93 @@
         .switch-wrapper {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             background: white;
-            padding: 15px 25px;
+            padding: 12px 24px;
             border-radius: 8px;
-            border: 2px solid #e9ecef;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .switch-label {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: #333;
+            color: #1e293b;
         }
 
         .switch-status {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             min-width: 40px;
         }
 
         .switch-status.enabled {
-            color: #28a745;
+            color: #2563eb;
         }
 
         .switch-status.disabled {
-            color: #dc3545;
+            color: #6b7280;
         }
 
-        /* 开关样式 - 从popup.html复制 */
-        input[type=checkbox] {
-            visibility: hidden;
-        }
-
+        /* Modern flat toggle switch */
         .slideThree {
-            width: 80px;
-            height: 26px;
-            background: #333;
-            margin: 0;
-            -webkit-border-radius: 50px;
-            -moz-border-radius: 50px;
-            border-radius: 50px;
+            width: 44px;
+            height: 24px;
             position: relative;
-            -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
-            -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
-            box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+            margin: 0;
+            flex-shrink: 0;
         }
 
-        .slideThree:after {
-            font: 12px/26px Arial, sans-serif;
-            color: #000;
+        .slideThree input[type=checkbox] {
             position: absolute;
-            right: 10px;
-            z-index: 0;
-            font-weight: bold;
-            text-shadow: 1px 1px 0px rgba(255,255,255,.15);
-        }
-
-        .slideThree:before {
-            font: 12px/26px Arial, sans-serif;
-            color: #00bf00;
-            position: absolute;
-            left: 10px;
-            z-index: 0;
-            font-weight: bold;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         .slideThree label {
             display: block;
-            width: 34px;
-            height: 20px;
-            -webkit-border-radius: 50px;
-            -moz-border-radius: 50px;
-            border-radius: 50px;
-            -webkit-transition: all .1s ease;
-            -moz-transition: all .1s ease;
-            -o-transition: all .1s ease;
-            -ms-transition: all .1s ease;
-            transition: all .1s ease;
+            width: 44px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            top: 3px;
-            left: 3px;
-            z-index: 1;
-            -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
-            -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
-            box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
-            background: #fcfff4;
-            background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            top: 0;
+            left: 0;
+            transition: background 0.2s;
+        }
+
+        .slideThree label::after {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
         }
 
         .slideThree input[type=checkbox]:checked + label {
-            left: 43px;
+            background: #2563eb;
+        }
+
+        .slideThree input[type=checkbox]:checked + label::after {
+            transform: translateX(20px);
         }
 
         /* 隐藏滚动条但保持滚动功能 */
         .jump-list {
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .jump-list::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .help-panel {
@@ -412,50 +390,49 @@
         /* 匹配类型内联样式 */
         .match-symbol {
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 13px;
             font-weight: 600;
-            color: #495057;
+            color: #475569;
             margin: 0 2px;
         }
 
-        /* 不同匹配类型的颜色 */
         .match-symbol.exact {
-            color: #28a745;
-            border-color: #c3e6cb;
+            color: #059669;
+            border-color: #a7f3d0;
         }
 
         .match-symbol.prefix {
-            color: #007bff;
-            border-color: #b8daff;
+            color: #2563eb;
+            border-color: #bfdbfe;
         }
 
         .match-symbol.suffix {
-            color: #fd7e14;
-            border-color: #ffd59a;
+            color: #d97706;
+            border-color: #fde68a;
         }
 
         .match-symbol.contains {
-            color: #dc3545;
-            border-color: #f5c6cb;
+            color: #475569;
+            border-color: #cbd5e1;
         }
 
         .match-symbol.comment {
-            color: #6c757d;
-            border-color: #dee2e6;
+            color: #6b7280;
+            border-color: #e5e7eb;
         }
 
         .match-example {
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 12px;
-            color: #495057;
+            color: #475569;
             margin: 0 2px;
         }
 
@@ -484,28 +461,28 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .right-panel {
                 max-height: none;
                 overflow-y: visible;
             }
-            
+
             .container {
                 padding: 15px;
             }
-            
+
             #title {
                 font-size: 2rem;
             }
-            
+
             .section-content {
                 padding: 20px;
             }
-            
+
             .help-content {
                 padding: 20px;
             }
-            
+
             .jump-list {
                 padding: 15px;
             }
@@ -529,8 +506,8 @@
         .test-input {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             font-size: 14px;
             font-family: inherit;
             background: #fff;
@@ -538,19 +515,19 @@
 
         .test-input:focus {
             outline: none;
-            border-color: #007acc;
-            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
         }
 
         .test-input:focus-visible {
-            outline: 2px solid #007acc;
+            outline: 2px solid #2563eb;
             outline-offset: -2px;
         }
 
         .test-result {
             margin-top: 20px;
             padding: 0;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 13px;
             line-height: 1.5;
@@ -561,9 +538,9 @@
         }
 
         .redirect-step {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
             padding: 15px;
             margin-bottom: 10px;
         }
@@ -574,14 +551,14 @@
 
         .step-header {
             font-weight: 600;
-            color: #333;
+            color: #1e293b;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
         }
 
         .step-number {
-            background: #007acc;
+            background: #2563eb;
             color: white;
             border-radius: 50%;
             width: 24px;
@@ -592,79 +569,80 @@
             font-size: 12px;
             font-weight: 600;
             margin-right: 10px;
+            flex-shrink: 0;
         }
 
         .step-url {
-            color: #0066cc;
+            color: #2563eb;
             word-break: break-all;
             margin: 5px 0;
             padding: 8px 12px;
             background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
         }
 
         .step-rule {
-            color: #666;
+            color: #64748b;
             font-size: 12px;
             margin-top: 5px;
             padding: 6px 10px;
-            background: #e9ecef;
-            border-radius: 3px;
+            background: #f1f5f9;
+            border-radius: 4px;
         }
 
         .warning-step {
-            background: #fff3cd;
-            border-color: #ffeaa7;
+            background: #fffbeb;
+            border-color: #fde68a;
         }
 
         .warning-step .step-number {
-            background: #ffc107;
-            color: #212529;
+            background: #d97706;
+            color: #fff;
         }
 
         .error-step {
-            background: #f8d7da;
-            border-color: #f5c6cb;
+            background: #fef2f2;
+            border-color: #fecaca;
         }
 
         .error-step .step-number {
-            background: #dc3545;
+            background: #dc2626;
         }
 
         .no-match {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             text-align: center;
         }
 
         .multiple-matches {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .match-item {
             background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
             padding: 10px;
             margin: 8px 0;
         }
 
         .match-url {
-            color: #0066cc;
+            color: #2563eb;
             word-break: break-all;
             font-weight: 500;
         }
 
         .match-rule {
-            color: #666;
+            color: #64748b;
             font-size: 12px;
             margin-top: 5px;
         }
@@ -676,9 +654,9 @@
             align-items: center;
             margin-bottom: 15px;
             padding: 15px;
-            background: #f8f9fa;
-            border-radius: 4px;
-            border: 1px solid #e9ecef;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
         }
 
         .log-control-group {
@@ -689,55 +667,49 @@
 
         .log-control-group label {
             font-weight: 600;
-            color: #333;
+            color: #1e293b;
         }
 
         .log-level-select {
             padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             background: white;
             font-size: 14px;
         }
 
-        .clear-logs-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+        /* Secondary outline buttons */
+        .clear-logs-btn,
+        .copy-logs-btn {
+            background: #fff;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 7px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-        }
-
-        .clear-logs-btn:hover {
-            background: #c82333;
+            transition: all 0.15s;
         }
 
         .copy-logs-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
             margin-right: 10px;
         }
 
+        .clear-logs-btn:hover,
         .copy-logs-btn:hover {
-            background: #218838;
+            background: #f9fafb;
+            border-color: #9ca3af;
         }
 
+        .clear-logs-btn:active,
         .copy-logs-btn:active {
-            background: #1e7e34;
+            background: #f3f4f6;
         }
 
         .test-logs {
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
             background: #fff;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 13px;
@@ -745,7 +717,7 @@
             max-height: 400px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: #ccc #f1f1f1;
+            scrollbar-color: #cbd5e1 #f1f5f9;
         }
 
         .test-logs::-webkit-scrollbar {
@@ -753,22 +725,22 @@
         }
 
         .test-logs::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #f1f5f9;
             border-radius: 3px;
         }
 
         .test-logs::-webkit-scrollbar-thumb {
-            background: #ccc;
+            background: #cbd5e1;
             border-radius: 3px;
         }
 
         .test-logs::-webkit-scrollbar-thumb:hover {
-            background: #999;
+            background: #94a3b8;
         }
 
         .log-entry {
             padding: 8px 12px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .log-entry:last-child {
@@ -783,7 +755,7 @@
         }
 
         .log-time {
-            color: #666;
+            color: #64748b;
             font-size: 11px;
             font-weight: 500;
         }
@@ -797,35 +769,34 @@
         }
 
         .log-debug .log-level {
-            background: #6c757d;
+            background: #6b7280;
         }
 
         .log-info .log-level {
-            background: #007bff;
+            background: #2563eb;
         }
 
         .log-warn .log-level {
-            background: #ffc107;
-            color: #212529;
+            background: #d97706;
         }
 
         .log-error .log-level {
-            background: #dc3545;
+            background: #dc2626;
         }
 
         .log-message {
-            color: #333;
+            color: #1e293b;
             margin-bottom: 4px;
         }
 
         .log-data {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 3px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
             padding: 8px;
             margin-top: 6px;
             font-size: 11px;
-            color: #495057;
+            color: #475569;
             white-space: pre-wrap;
             overflow-x: auto;
         }
@@ -833,41 +804,40 @@
         .no-logs {
             padding: 20px;
             text-align: center;
-            color: #666;
-            font-style: italic;
+            color: #64748b;
         }
 
         /* 标签页导航样式 */
         .tab-navigation {
             display: flex;
             background: #fff;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #e2e8f0;
             border-radius: 8px 8px 0 0;
             overflow: hidden;
         }
 
         .tab-button {
             flex: 1;
-            background: #f8f9fa;
+            background: #f8fafc;
             border: none;
             padding: 15px 20px;
             font-size: 1rem;
             font-weight: 600;
-            color: #666;
+            color: #64748b;
             cursor: pointer;
             transition: all 0.2s ease;
             border-bottom: 3px solid transparent;
         }
 
         .tab-button:hover {
-            background: #e9ecef;
-            color: #333;
+            background: #f1f5f9;
+            color: #1e293b;
         }
 
         .tab-button.active {
             background: #fff;
-            color: #007acc;
-            border-bottom-color: #007acc;
+            color: #2563eb;
+            border-bottom-color: #2563eb;
         }
 
         .tab-content {
@@ -899,7 +869,6 @@
             height: 100%;
         }
 
-        /* 测试工具标签页特殊样式 */
         #test-tab {
             flex-direction: column;
             gap: 0;
@@ -919,22 +888,359 @@
 
         /* 消息提示样式 */
         .msg-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
             padding: 10px 15px;
             margin-top: 15px;
             display: block;
         }
 
         .msg-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
             padding: 10px 15px;
             margin-top: 15px;
+            display: block;
+        }
+
+        /* 编辑器工具栏 */
+        .editor-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            flex-shrink: 0;
+        }
+
+        .toolbar-btn {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #374151;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+
+        .toolbar-btn:hover {
+            background: #f1f5f9;
+            border-color: #9ca3af;
+        }
+
+        .toolbar-btn:active {
+            background: #e2e8f0;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 20px;
+            background: #d1d5db;
+        }
+
+        .toolbar-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-left: auto;
+        }
+
+        /* 编辑器容器 */
+        .editor-container {
+            display: flex;
+            flex: 1;
+            min-height: 200px;
+            border: 1px solid #cbd5e1;
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+        }
+
+        .editor-container:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .line-numbers {
+            width: 45px;
+            flex-shrink: 0;
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            padding: 15px 5px 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #94a3b8;
+            text-align: right;
+            overflow: hidden;
+            user-select: none;
+            white-space: pre;
+        }
+
+        .line-numbers .ln-error {
+            color: #ef4444;
+            background: #fef2f2;
+            display: inline-block;
+            width: 100%;
+            border-radius: 2px;
+        }
+
+        .editor-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+            pointer-events: none;
+            color: transparent;
+        }
+
+        .highlight-layer .hl-comment { color: #9ca3af; }
+        .highlight-layer .hl-exact { color: #059669; font-weight: 600; }
+        .highlight-layer .hl-prefix { color: #2563eb; font-weight: 600; }
+        .highlight-layer .hl-suffix { color: #d97706; font-weight: 600; }
+        .highlight-layer .hl-separator { color: #64748b; font-weight: 700; }
+        .highlight-layer .hl-contains { color: #475569; }
+        .highlight-layer .hl-target { color: #7c3aed; }
+
+        .editor-container .jump-list {
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+            color: transparent;
+            caret-color: #1e293b;
+            resize: none;
+            overflow: auto;
+        }
+
+        .editor-container .jump-list:focus,
+        .editor-container .jump-list:focus-visible {
+            outline: none;
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        /* 规则统计栏 */
+        .rule-stats {
+            display: flex;
+            gap: 15px;
+            padding: 6px 15px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            font-size: 12px;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+
+        .rule-stats .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .stat-dot.valid { background: #2563eb; }
+        .stat-dot.comment { background: #9ca3af; }
+        .stat-dot.error { background: #ef4444; }
+
+        /* 测试模式切换 */
+        .test-mode-switcher {
+            display: flex;
+            gap: 0;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: #f8fafc;
+            border: none;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .mode-btn:not(:last-child) {
+            border-right: 1px solid #cbd5e1;
+        }
+
+        .mode-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .mode-btn.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .test-mode-panel {
+            display: none;
+        }
+
+        .test-mode-panel.active {
+            display: block;
+        }
+
+        /* 批量测试 */
+        .batch-textarea {
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            background: #fff;
+        }
+
+        .batch-textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .batch-result {
+            margin-top: 15px;
+        }
+
+        .batch-result:empty {
+            display: none;
+        }
+
+        .batch-summary {
+            display: flex;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .batch-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+
+        .batch-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .batch-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            user-select: none;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            background: #fafafa;
+        }
+
+        .batch-card-header:hover {
+            background: #f1f5f9;
+        }
+
+        .batch-card-arrow {
+            flex-shrink: 0;
+            width: 16px;
+            text-align: center;
+            color: #94a3b8;
+            transition: transform 0.15s;
+            font-size: 10px;
+        }
+
+        .batch-card.open .batch-card-arrow {
+            transform: rotate(90deg);
+        }
+
+        .batch-card-status {
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .batch-card-status.matched { background: #16a34a; }
+        .batch-card-status.no-match { background: #9ca3af; }
+        .batch-card-status.error { background: #ef4444; }
+        .batch-card-status.multi { background: #d97706; }
+
+        .batch-card-url {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #1e293b;
+        }
+
+        .batch-card-target {
+            flex-shrink: 0;
+            max-width: 45%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #2563eb;
+        }
+
+        .batch-card-target.none {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .batch-card-detail {
+            display: none;
+            padding: 10px 12px;
+            border-top: 1px solid #e2e8f0;
+            background: #fff;
+            font-size: 12px;
+        }
+
+        .batch-card.open .batch-card-detail {
             display: block;
         }
     </style>
@@ -970,13 +1276,28 @@
                     <div class="option">
                         <div class="option-name">
                             <a href="https://playeryk.github.io/AutoRedirect/" target="_blank"
-                                style="color: #007acc; text-decoration: none; display: flex; align-items: center; gap: 10px;"
+                                style="color: #2563eb; text-decoration: none; display: flex; align-items: center; gap: 10px;"
                                 data-i18n="optionsOnlineDocsLink">
                             </a>
                         </div>
                         <div class="line">
-                            <textarea name="jump_list" id="jump_list" class="jump-list"
-                                data-i18n-placeholder="optionsRulesPlaceholder"></textarea>
+                            <div class="editor-toolbar">
+                                <button type="button" class="toolbar-btn" id="btn_comment_toggle" title="Ctrl+/">
+                                    <span data-i18n="editorToggleComment"></span>
+                                </button>
+                                <div class="toolbar-separator"></div>
+                                <span class="toolbar-hint" data-i18n="editorShortcutHint"></span>
+                            </div>
+                            <div class="editor-container">
+                                <div class="line-numbers" id="line_numbers" aria-hidden="true"></div>
+                                <div class="editor-wrapper">
+                                    <div class="highlight-layer" id="highlight_layer" aria-hidden="true"></div>
+                                    <textarea name="jump_list" id="jump_list" class="jump-list"
+                                        data-i18n-placeholder="optionsRulesPlaceholder"
+                                        spellcheck="false"></textarea>
+                                </div>
+                            </div>
+                            <div class="rule-stats" id="rule_stats"></div>
                         </div>
                     </div>
                     <div class="button-container">
@@ -1002,7 +1323,7 @@
                             <div class="help-section" style="text-align: center; padding: 40px;">
                                 <p data-i18n="guideRedirectMessage" style="margin-bottom: 20px; font-size: 1rem;"></p>
                                 <a href="https://playeryk.github.io/AutoRedirect/" target="_blank" data-i18n="guideRedirectLink"
-                                    style="font-weight: bold; font-size: 1.1rem; color: #007acc; text-decoration: none;"></a>
+                                    style="font-weight: bold; font-size: 1.1rem; color: #2563eb; text-decoration: none;"></a>
                             </div>
                         </div>
                     </div>
@@ -1014,16 +1335,37 @@
                     <div class="config-panel">
                         <div class="section-header" data-i18n="testToolHeader"></div>
                         <div class="section-content">
-                            <div class="option">
-                                <div class="option-name" data-i18n="testToolUrlLabel"></div>
-                                <div class="line">
-                                    <input type="text" id="test_url" class="test-input" data-i18n-placeholder="testToolUrlPlaceholder" />
+                            <div class="test-mode-switcher">
+                                <button type="button" class="mode-btn active" id="mode_single" data-i18n="testModeSingle"></button>
+                                <button type="button" class="mode-btn" id="mode_batch" data-i18n="testModeBatch"></button>
+                            </div>
+                            <!-- 单条测试 -->
+                            <div class="test-mode-panel active" id="single_test_panel">
+                                <div class="option">
+                                    <div class="option-name" data-i18n="testToolUrlLabel"></div>
+                                    <div class="line">
+                                        <input type="text" id="test_url" class="test-input" data-i18n-placeholder="testToolUrlPlaceholder" />
+                                    </div>
                                 </div>
+                                <div class="button-container">
+                                    <button type="button" id="test_redirect" data-i18n="testToolTestButton"></button>
+                                </div>
+                                <div id="test_result" class="test-result"></div>
                             </div>
-                            <div class="button-container">
-                                <button type="button" id="test_redirect" data-i18n="testToolTestButton"></button>
+                            <!-- 批量测试 -->
+                            <div class="test-mode-panel" id="batch_test_panel">
+                                <div class="option">
+                                    <div class="option-name" data-i18n="batchTestUrlLabel"></div>
+                                    <div class="line">
+                                        <textarea id="batch_urls" class="batch-textarea" rows="6"
+                                            data-i18n-placeholder="batchTestPlaceholder" spellcheck="false"></textarea>
+                                    </div>
+                                </div>
+                                <div class="button-container">
+                                    <button type="button" id="batch_test_redirect" data-i18n="batchTestButton"></button>
+                                </div>
+                                <div id="batch_result" class="batch-result"></div>
                             </div>
-                            <div id="test_result" class="test-result"></div>
                         </div>
                     </div>
                     

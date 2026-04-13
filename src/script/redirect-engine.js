@@ -594,6 +594,7 @@ function testUrlMatch(url, regexPattern, matchType) {
  * @returns {Array} - 解析后的规则数组
  */
 function parseRedirectRules(jumpList) {
+  if (!jumpList || typeof jumpList !== 'string') return [];
   const src_list = jumpList.split("\n");
   const j_list = [];
 

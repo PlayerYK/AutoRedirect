@@ -12,7 +12,7 @@
 # Use standard domain format to avoid being treated as search terms by browsers
 # Recommended to use .localhost, .local or localhost with port
 ^dev.localhost####https://development.example.com
-^api.localhost####https://api.example.com
+^api.localhost/*####https://api.example.com/{1}
 ^localhost:8####https://development.example.com
 staging.internal*####https://staging.example.com
 

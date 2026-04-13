@@ -2,66 +2,59 @@
 
 # AutoRedirect
 
-[Chrome Web Store](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
-[Chrome Web Store Users](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf)
-[Documentation](https://playeryk.github.io/AutoRedirect/)
+[Chrome Web Store](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf) · [Documentation](https://playeryk.github.io/AutoRedirect/)
 
----
+**AutoRedirect** is a Chrome extension for automatic URL redirection, built on Manifest V3. It handles environment switching, domain migration, redirect link extraction, and local file mapping.
 
-**AutoRedirect** is a browser extension that gives you full control over URL redirection. Whether you want to skip ad-filled landing pages, correct typos in URLs, or create custom shortcuts for your favorite websites, AutoRedirect makes it easy.
+## Features
 
-## 🌟 Key Features
+- **Multiple matching modes** — Exact, prefix, suffix, and wildcard patterns.
+- **URL templates** — Rewrite paths with `{1}`, `{2}` placeholders for domain migration.
+- **URL extraction** — Skip intermediate redirect pages (Zhihu, WeChat, etc.) and go straight to the target.
+- **Local file mapping** — Redirect `file://` paths to remote servers.
+- **Multi-result selection** — Choose from multiple targets when a rule matches several destinations.
+- **Batch testing** — Built-in tool to verify multiple rules at once.
+- **Rule editor** — Line numbers, syntax highlighting, error indicators, and comment toggling.
 
-- **Powerful Rule Engine**: Supports wildcards (`*`), regular expressions, and custom functions for complex redirection logic.
-- **Flexible Configuration**: Easily import/export your rules, and sync them across devices.
-- **User-Friendly Interface**: Manage your rules with a clean and intuitive UI.
-- **Lightweight & Fast**: Designed to be efficient and have minimal impact on your browsing experience.
-- **Privacy-Focused**: No data collection, ever. Your rules are your own.
+## Quick Start
 
-## 🚀 Getting Started
+1. Install from the [Chrome Web Store](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf).
+2. Open the extension's Options page.
+3. Add your redirection rules.
+4. Save — rules take effect immediately.
 
-1. **Install** the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/autoredirect/edgiaaakbcjloebnmehbnfiajbhcpbcf).
-2. **Open** the extension's "Options" page.
-3. **Add** your redirection rules.
-4. **Save** and enjoy automatic redirection!
+For full usage guide and examples, see the [documentation](https://playeryk.github.io/AutoRedirect/).
 
-For detailed usage and examples, please visit our **[documentation website](https://playeryk.github.io/AutoRedirect/)**.
+## Contributing
 
-## 🤝 Contributing
+See the [Contributing Guide](./CONTRIBUTING.md) and [Developer Testing Guide](./test/TESTING_GUIDE.en.md).
 
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) and [Developer Testing Guide](./test/TESTING_GUIDE.en.md) for more details.
+## Changelog
 
-## 📋 Changelog
+### v0.2 (Latest)
 
-### v0.2.1
+**New Features**
 
-**Security Fixes**
+- Batch URL testing tool: validate multiple rules simultaneously
+- Rule editor enhancements: line numbers, syntax highlighting, error line indicators, comment toggling (Ctrl+/)
+- Rule statistics bar showing valid, comment, and error line counts
 
-- Fix multiple XSS injection risks: all dynamic content is now HTML-escaped before DOM insertion; `href` attributes are validated against a protocol whitelist
-- Fix `startProcess` ignoring the passed `tab` parameter, which caused redirects to the wrong tab
+**UI Redesign**
 
-**Feature Improvements**
+- Redesigned options page with a cohesive neutral color palette (Tailwind Slate scale)
+- Removed all emoji from UI — cleaner, more consistent across platforms
+- Modern flat toggle switch replacing the old skeuomorphic slider
+- Clear button hierarchy: primary (blue), secondary (outline), contextual status colors
+- Unified toast notifications and error states
 
-- Eliminate message-passing race condition: chose.html now actively requests data from background instead of relying on unreliable `setTimeout`
-- Fix URL timestamp appending that broke existing query parameters (now uses the `URL` object correctly)
-- Add parsed-rule caching to avoid redundant parsing and regex compilation when config is unchanged
-- Fix `isRegexPattern` regex logic; remove unused extra parameter from `findRedirectMatches` calls
-- Add `tabId < 0` guard to prevent `tabs.update` failures on detached requests
+**Security & Stability**
 
-**UX Improvements**
+- Fixed multiple XSS injection risks with HTML escaping and protocol whitelist
+- Fixed race condition in chose.html data loading
+- Added rule parsing cache to avoid redundant regex compilation
+- Added `tabId < 0` guard for detached requests
+- Defensive null checks in `parseRedirectRules`
 
-- Add `<meta viewport>` and `lang` attribute to the options page for better mobile and screen-reader support
-- Add `focus-visible` styles so keyboard users can see focus indicators
-- Replace `alert()` validation prompts with in-page Toast notifications for a more consistent experience
-- Fix CSS `insertRule` breaking when localized text contains quotes
+## License
 
-**Code Quality**
-
-- Fix test scripts silently exiting with code 0 when config file fails to load
-- Add `chrome.i18n` mock for the Node.js test environment — all 48 test cases now pass
-- Sync `package.json` version with `manifest.json`
-- Add `npm test` scripts; exclude `.DS_Store` and other system files from build output
-
-## 📄 License
-
-This project is licensed under the [MIT License](./LICENSE).
+[MIT License](./LICENSE)

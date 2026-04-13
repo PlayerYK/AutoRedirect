@@ -1,54 +1,48 @@
-**AutoRedirect** 是一个功能强大的URL重定向Chrome扩展，基于Manifest V3架构，能轻松实现开发环境切换、域名迁移和链接优化等功能，大幅提升您的浏览和开发效率。
+**AutoRedirect** 是一个基于 Manifest V3 的 Chrome URL 重定向扩展，用于开发环境切换、域名迁移和跳转链接优化。
 
-## ✨ 核心特性
+## 核心功能
 
-- **🎯 多种匹配模式**：支持精确、前缀、后缀、通配符等多种匹配方式。
-- **🔧 强大的URL模板**：使用`{1}`, `{2}`等占位符进行复杂的URL重写。
-- **🔗 URL提取**：自动从跳转链接中提取真实URL，跳过中间页。
-- **📁 本地文件映射**：将本地 `file://` 路径重定向到远程服务器。
-- **🔀 多结果选择**：当一个规则匹配多个目标时，提供选择页面。
-- **🛡️ 安全可靠**：基于Manifest V3，性能更优，安全性更高。
+- **多种匹配模式** — 精确匹配、前缀、后缀、通配符，覆盖各种场景。
+- **URL 模板替换** — 使用 `{1}`, `{2}` 等占位符进行路径重写和域名迁移。
+- **URL 提取** — 自动从中间跳转页提取真实链接，一步直达。
+- **本地文件映射** — 将本地 `file://` 路径重定向到远程服务器。
+- **多结果选择** — 一条规则匹配多个目标时提供选择页面。
+- **批量测试** — 内置批量 URL 测试工具，快速验证规则是否正确。
 
-## 🚀 核心功能示例
+## 使用示例
 
 ```
-# 场景1：开发环境切换
-# 将本地服务地址自动指向开发服务器
+# 精确匹配：本地端口 → 开发服务器
 =localhost:3000####https://dev.example.com
 
-# 场景2：URL模板替换 (域名迁移)
-# 将旧域名的所有页面映射到新域名，并保持路径
+# 域名迁移：保持路径不变
 old-domain.com/*####https://new-domain.com/{1}
 
-# 场景3：URL提取 (跳过中间页)
-# 访问知乎外链时，直接跳转到目标网址
+# URL 提取：跳过知乎外链中间页
 link.zhihu.com/?target=####
 
-# 场景4：本地文件重定向
-# 在浏览器中打开本地HTML文件时，自动跳转到在线版本
+# 后缀匹配：本地文件 → 在线版本
 *demo_local.html$####https://www.example.com/demo/
 ```
 
-## 📖 完整文档与更多示例
+## 适用场景
 
-想要了解所有匹配规则和高级用法吗？我们为您准备了详细的在线文档！
+- **开发者** — 在本地、开发、测试、生产环境间快速切换。
+- **站长** — 批量处理域名迁移和 URL 重组。
+- **日常用户** — 跳过广告页和跳转中间页。
 
-**➡️ [访问在线文档](https://playeryk.github.io/AutoRedirect/)**
+## 文档
 
-在文档中，您可以找到：
-- 完整的上手指南
-- 所有匹配模式的详细说明
-- 几十个可直接复制的实用配置示例
+完整使用指南和更多配置示例：[https://playeryk.github.io/AutoRedirect/](https://playeryk.github.io/AutoRedirect/)
 
-## 适用用户
+## 最近更新
 
-- **开发者**：在本地、开发、测试、生产环境间无缝切换。
-- **网站管理员**：轻松处理域名迁移和URL重组。
-- **效率追求者**：跳过烦人的广告或跳转中间页。
+- 全新设计的选项页面，更清晰的视觉风格
+- 新增批量 URL 测试工具，支持同时验证多条规则
+- 规则编辑器增强：行号、语法高亮、错误行提示、注释切换
 
-## 🔗 相关链接
+## 链接
 
-- **GitHub仓库 (欢迎Star!)**: https://github.com/PlayerYK/AutoRedirect
-- **问题与建议**: [通过 GitHub Issues 提交](https://github.com/PlayerYK/AutoRedirect/issues)
+- GitHub: [https://github.com/PlayerYK/AutoRedirect](https://github.com/PlayerYK/AutoRedirect)
+- 问题反馈: [https://github.com/PlayerYK/AutoRedirect/issues](https://github.com/PlayerYK/AutoRedirect/issues)
 
-AutoRedirect致力于为开发者和效率爱好者提供最便捷、安全、强大的URL重定向解决方案。

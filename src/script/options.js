@@ -53,11 +53,11 @@ function renderTestResult(redirectChain) {
         stepClass += ' error-step';
         stepContent = `
           <div class="step-header">
-            <div class="step-number">&#x26A0;&#xFE0F;</div>
+            <div class="step-number">!</div>
             <span>${chrome.i18n.getMessage("testResult_cycleRedirect")}</span>
           </div>
           <div class="step-url">${chrome.i18n.getMessage("testResult_url")}: ${esc(step.url)}</div>
-          <div style="color: #dc3545; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
+          <div style="color: #dc2626; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
         `;
         break;
         
@@ -65,21 +65,21 @@ function renderTestResult(redirectChain) {
         stepClass += ' error-step';
         stepContent = `
           <div class="step-header">
-            <div class="step-number">&#x26A0;&#xFE0F;</div>
+            <div class="step-number">!</div>
             <span>${chrome.i18n.getMessage("testResult_limitReached")}</span>
           </div>
-          <div style="color: #dc3545; font-weight: 600;">${esc(step.message)}</div>
+          <div style="color: #dc2626; font-weight: 600;">${esc(step.message)}</div>
         `;
         break;
         
       case 'final':
         stepContent = `
           <div class="step-header">
-            <div class="step-number">&#x2713;</div>
+            <div class="step-number">&check;</div>
             <span>${chrome.i18n.getMessage("testResult_finalResult")}</span>
           </div>
           <div class="step-url">${chrome.i18n.getMessage("testResult_finalURL")}: ${esc(step.url)}</div>
-          <div style="color: #28a745; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
+          <div style="color: #16a34a; font-weight: 600; margin-top: 8px;">${esc(step.message)}</div>
         `;
         break;
     }
@@ -192,13 +192,13 @@ function showMessage(message, type = "info") {
 
   switch (type) {
     case 'success':
-      messageEl.style.backgroundColor = '#28a745';
+      messageEl.style.backgroundColor = '#2563eb';
       break;
     case 'error':
-      messageEl.style.backgroundColor = '#dc3545';
+      messageEl.style.backgroundColor = '#dc2626';
       break;
     default:
-      messageEl.style.backgroundColor = '#007bff';
+      messageEl.style.backgroundColor = '#2563eb';
       break;
   }
 
@@ -243,6 +243,143 @@ function checkCircleRedirect(src_list) {
   return errorList;
 }
 
+// === 编辑器增强 ===
+
+function classifyLine(trimmed) {
+  if (!trimmed) return 'empty';
+  if (trimmed.startsWith('#')) return 'comment';
+  if (trimmed.indexOf('####') !== -1) return 'valid';
+  return 'error';
+}
+
+function updateLineNumbers() {
+  const textarea = document.getElementById('jump_list');
+  const lineNumbersEl = document.getElementById('line_numbers');
+  if (!textarea || !lineNumbersEl) return;
+
+  const lines = textarea.value.split('\n');
+  let html = '';
+  for (let i = 0; i < lines.length; i++) {
+    var cls = classifyLine(lines[i].trim());
+    if (cls === 'error') {
+      html += '<span class="ln-error">' + (i + 1) + '</span>\n';
+    } else {
+      html += (i + 1) + '\n';
+    }
+  }
+  lineNumbersEl.innerHTML = html;
+}
+
+function syncScroll() {
+  const textarea = document.getElementById('jump_list');
+  const lineNumbersEl = document.getElementById('line_numbers');
+  const highlightEl = document.getElementById('highlight_layer');
+  if (!textarea) return;
+  if (lineNumbersEl) lineNumbersEl.scrollTop = textarea.scrollTop;
+  if (highlightEl) {
+    highlightEl.style.transform = 'translate(' + (-textarea.scrollLeft) + 'px,' + (-textarea.scrollTop) + 'px)';
+  }
+}
+
+function updateHighlight() {
+  const textarea = document.getElementById('jump_list');
+  const highlightEl = document.getElementById('highlight_layer');
+  if (!textarea || !highlightEl) return;
+
+  const esc = RedirectEngine.escapeHtml;
+  const lines = textarea.value.split('\n');
+  const htmlLines = lines.map(function(line) {
+    if (!line.trim()) return '\n';
+    if (line.trimStart().startsWith('#')) {
+      return '<span class="hl-comment">' + esc(line) + '</span>\n';
+    }
+    const sepIdx = line.indexOf('####');
+    if (sepIdx === -1) {
+      return highlightPrefix(esc(line)) + '\n';
+    }
+    const src = line.substring(0, sepIdx);
+    const sep = '####';
+    const dst = line.substring(sepIdx + 4);
+    return highlightPrefix(esc(src)) + '<span class="hl-separator">' + esc(sep) + '</span><span class="hl-target">' + esc(dst) + '</span>\n';
+  });
+  highlightEl.innerHTML = htmlLines.join('');
+}
+
+function highlightPrefix(escapedLine) {
+  if (escapedLine.startsWith('=')) return '<span class="hl-exact">' + escapedLine + '</span>';
+  if (escapedLine.startsWith('^')) return '<span class="hl-prefix">' + escapedLine + '</span>';
+  if (escapedLine.startsWith('$') || escapedLine.startsWith('*')) return '<span class="hl-suffix">' + escapedLine + '</span>';
+  if (escapedLine.endsWith('*')) return '<span class="hl-prefix">' + escapedLine + '</span>';
+  return '<span class="hl-contains">' + escapedLine + '</span>';
+}
+
+function updateRuleStats() {
+  const textarea = document.getElementById('jump_list');
+  const statsEl = document.getElementById('rule_stats');
+  if (!textarea || !statsEl) return;
+
+  const lines = textarea.value.split('\n');
+  let total = 0, valid = 0, comments = 0, empty = 0, errors = 0;
+  lines.forEach(function(line) {
+    total++;
+    switch (classifyLine(line.trim())) {
+      case 'empty': empty++; break;
+      case 'comment': comments++; break;
+      case 'valid': valid++; break;
+      case 'error': errors++; break;
+    }
+  });
+
+  const i18n = chrome.i18n.getMessage;
+  statsEl.innerHTML =
+    '<span class="stat-item">' + i18n('statsTotal', [String(total)]) + '</span>' +
+    '<span class="stat-item"><span class="stat-dot valid"></span> ' + i18n('statsValid', [String(valid)]) + '</span>' +
+    '<span class="stat-item"><span class="stat-dot comment"></span> ' + i18n('statsComment', [String(comments)]) + '</span>' +
+    '<span class="stat-item"><span class="stat-dot error"></span> ' + i18n('statsError', [String(errors)]) + '</span>';
+}
+
+function toggleCommentLines() {
+  const textarea = document.getElementById('jump_list');
+  if (!textarea) return;
+
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+
+  const lineStartIdx = value.lastIndexOf('\n', start - 1) + 1;
+  let lineEndIdx = value.indexOf('\n', end);
+  if (lineEndIdx === -1) lineEndIdx = value.length;
+
+  const selectedText = value.substring(lineStartIdx, lineEndIdx);
+  const lines = selectedText.split('\n');
+
+  const allCommented = lines.every(function(l) {
+    var t = l.trim();
+    return t === '' || t.startsWith('#');
+  });
+
+  const newLines = lines.map(function(line) {
+    if (!line.trim()) return line;
+    if (allCommented) {
+      return line.replace(/^(\s*)#\s?/, '$1');
+    } else {
+      if (line.trimStart().startsWith('#')) return line;
+      return '# ' + line;
+    }
+  });
+
+  const newText = newLines.join('\n');
+  textarea.setRangeText(newText, lineStartIdx, lineEndIdx, 'select');
+  textarea.dispatchEvent(new Event('input'));
+  textarea.focus();
+}
+
+function refreshEditor() {
+  updateLineNumbers();
+  updateHighlight();
+  updateRuleStats();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof window.ConfigManager === 'undefined') {
     console.error("ConfigManager未正确加载！");
@@ -254,15 +391,34 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
   
-  // Set switch labels dynamically to avoid inline script CSP violation
-  const style = document.createElement('style');
-  document.head.appendChild(style);
-  const onText = (chrome.i18n.getMessage('textOn') || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  const offText = (chrome.i18n.getMessage('textOff') || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  if (onText) style.sheet.insertRule(`.slideThree:before { content: '${onText}'; }`, 0);
-  if (offText) style.sheet.insertRule(`.slideThree:after { content: '${offText}'; }`, 1);
   
-  initValue();
+  initValue().then(function() {
+    refreshEditor();
+  });
+
+  // 编辑器事件绑定
+  const jumpList = document.getElementById('jump_list');
+  if (jumpList) {
+    jumpList.addEventListener('input', refreshEditor);
+    jumpList.addEventListener('scroll', syncScroll);
+
+    jumpList.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+        e.preventDefault();
+        toggleCommentLines();
+      }
+    });
+  }
+
+  const commentBtn = document.getElementById('btn_comment_toggle');
+  if (commentBtn) {
+    commentBtn.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+    });
+    commentBtn.addEventListener('click', function() {
+      toggleCommentLines();
+    });
+  }
 
   // 初始化扩展开关
   initExtensionSwitch();
@@ -365,7 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
       RedirectEngine.Logger.error("测试重定向时出错", error);
       
       document.getElementById('test_result').innerHTML = 
-        `<div class="error-step"><div class="step-header"><div class="step-number">&#x274C;</div><span>${chrome.i18n.getMessage("options_test_error_header")}</span></div><div style="color: #dc3545;">${chrome.i18n.getMessage("options_test_error_message")}</div></div>`;
+        `<div class="error-step"><div class="step-header"><div class="step-number">!</div><span>${chrome.i18n.getMessage("options_test_error_header")}</span></div><div style="color: #dc2626;">${chrome.i18n.getMessage("options_test_error_message")}</div></div>`;
       
       // 即使出错也显示日志
       renderTestLogs();
@@ -401,6 +557,53 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // 测试模式切换
+  const modeSingleBtn = document.getElementById('mode_single');
+  const modeBatchBtn = document.getElementById('mode_batch');
+  const singlePanel = document.getElementById('single_test_panel');
+  const batchPanel = document.getElementById('batch_test_panel');
+
+  if (modeSingleBtn && modeBatchBtn) {
+    modeSingleBtn.addEventListener('click', function() {
+      modeSingleBtn.classList.add('active');
+      modeBatchBtn.classList.remove('active');
+      if (singlePanel) singlePanel.classList.add('active');
+      if (batchPanel) batchPanel.classList.remove('active');
+    });
+    modeBatchBtn.addEventListener('click', function() {
+      modeBatchBtn.classList.add('active');
+      modeSingleBtn.classList.remove('active');
+      if (batchPanel) batchPanel.classList.add('active');
+      if (singlePanel) singlePanel.classList.remove('active');
+    });
+  }
+
+  // 批量测试按钮
+  const batchTestBtn = document.getElementById('batch_test_redirect');
+  if (batchTestBtn) {
+    batchTestBtn.addEventListener('click', function() {
+      const batchInput = document.getElementById('batch_urls').value.trim();
+      const rules = document.getElementById('jump_list').value;
+
+      if (!batchInput) {
+        showMessage(chrome.i18n.getMessage('options_enter_test_url'), 'error');
+        return;
+      }
+      if (!rules.trim()) {
+        showMessage(chrome.i18n.getMessage('options_config_rules_first'), 'error');
+        return;
+      }
+
+      const urls = batchInput.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
+      if (urls.length === 0) {
+        showMessage(chrome.i18n.getMessage('options_enter_test_url'), 'error');
+        return;
+      }
+
+      renderBatchResult(urls, rules);
+    });
+  }
+
   // 添加回车键支持
   document.getElementById("test_url").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
@@ -426,6 +629,122 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// === 批量测试 ===
+
+function renderBatchResult(urls, jumpList) {
+  const resultDiv = document.getElementById('batch_result');
+  if (!resultDiv) return;
+
+  const esc = RedirectEngine.escapeHtml;
+  const results = [];
+
+  urls.forEach(function(url) {
+    try {
+      const chain = RedirectEngine.testRedirectChain(url, jumpList);
+      results.push({ url: url, chain: chain, error: null });
+    } catch (e) {
+      results.push({ url: url, chain: [], error: e.message });
+    }
+  });
+
+  let matched = 0, noMatch = 0, errors = 0;
+  results.forEach(function(r) {
+    if (r.error) { errors++; }
+    else if (r.chain.length === 0) { noMatch++; }
+    else { matched++; }
+  });
+
+  const i18n = chrome.i18n.getMessage;
+  let html = '<div class="batch-summary">' +
+    '<span>' + i18n('batchTotal', [String(results.length)]) + '</span>' +
+    '<span style="color:#16a34a">' + i18n('batchMatched', [String(matched)]) + '</span>' +
+    '<span style="color:#9ca3af">' + i18n('batchNoMatch', [String(noMatch)]) + '</span>' +
+    (errors > 0 ? '<span style="color:#ef4444">' + i18n('batchErrors', [String(errors)]) + '</span>' : '') +
+    '</div>';
+
+  results.forEach(function(r, idx) {
+    const finalStep = r.chain.length > 0 ? r.chain[r.chain.length - 1] : null;
+    let statusClass, targetHtml;
+
+    if (r.error) {
+      statusClass = 'error';
+      targetHtml = '<span class="batch-card-target none">' + esc(r.error) + '</span>';
+    } else if (r.chain.length === 0) {
+      statusClass = 'no-match';
+      targetHtml = '<span class="batch-card-target none">' + i18n('batchNoMatchLabel') + '</span>';
+    } else if (r.chain.some(function(s) { return s.type === 'multiple'; })) {
+      statusClass = 'multi';
+      var last = finalStep;
+      targetHtml = '<span class="batch-card-target">' + (last && last.url ? esc(last.url) : '...') + '</span>';
+    } else {
+      statusClass = 'matched';
+      targetHtml = '<span class="batch-card-target">' + (finalStep && finalStep.url ? esc(finalStep.url) : '') + '</span>';
+    }
+
+    html += '<div class="batch-card" data-idx="' + idx + '">' +
+      '<div class="batch-card-header">' +
+        '<span class="batch-card-arrow">&#x25B6;</span>' +
+        '<span class="batch-card-status ' + statusClass + '"></span>' +
+        '<span class="batch-card-url">' + esc(r.url) + '</span>' +
+        '<span style="color:#999;flex-shrink:0">&rarr;</span>' +
+        targetHtml +
+      '</div>' +
+      '<div class="batch-card-detail" id="batch_detail_' + idx + '">' +
+        renderBatchCardDetail(r, esc) +
+      '</div>' +
+    '</div>';
+  });
+
+  resultDiv.innerHTML = html;
+
+  resultDiv.querySelectorAll('.batch-card-header').forEach(function(header) {
+    header.addEventListener('click', function() {
+      this.parentElement.classList.toggle('open');
+    });
+  });
+}
+
+function renderBatchCardDetail(r, esc) {
+  if (r.error) {
+    return '<div style="color:#dc2626">' + esc(r.error) + '</div>';
+  }
+  if (r.chain.length === 0) {
+    return '<div style="color:#888">' + chrome.i18n.getMessage('testResult_noMatch') + '</div>';
+  }
+  let html = '';
+  r.chain.forEach(function(step) {
+    switch (step.type) {
+      case 'single':
+        html += '<div class="redirect-step" style="padding:8px 10px;margin-bottom:6px">' +
+          '<div style="font-weight:600;margin-bottom:4px">' + chrome.i18n.getMessage('testResult_redirect') + ' ' + esc(String(step.step)) + '</div>' +
+          '<div class="step-url" style="padding:4px 8px">' + chrome.i18n.getMessage('testResult_to') + ': ' + esc(step.targetUrl) + '</div>' +
+          '<div class="step-rule" style="padding:3px 8px;font-size:11px">' + esc(step.rule) + ' <span class="match-type-badge ' + esc(step.matchType) + '">' + esc(getMatchTypeText(step.matchType)) + '</span></div>' +
+        '</div>';
+        break;
+      case 'multiple':
+        html += '<div class="redirect-step warning-step" style="padding:8px 10px;margin-bottom:6px">' +
+          '<div style="font-weight:600;margin-bottom:4px">' + chrome.i18n.getMessage('testResult_multipleMatches') + ' (' + step.matches.length + ')</div>';
+        step.matches.forEach(function(m, i) {
+          html += '<div class="match-item" style="padding:6px 8px;margin:4px 0">' + (i+1) + '. ' + esc(m.url) + '</div>';
+        });
+        html += '</div>';
+        break;
+      case 'cycle':
+        html += '<div class="redirect-step error-step" style="padding:8px 10px;margin-bottom:6px;color:#dc2626">' + esc(step.message) + '</div>';
+        break;
+      case 'limit':
+        html += '<div class="redirect-step error-step" style="padding:8px 10px;margin-bottom:6px;color:#dc2626">' + esc(step.message) + '</div>';
+        break;
+      case 'final':
+        html += '<div class="redirect-step" style="padding:8px 10px;margin-bottom:6px;background:#f0fdf4;border-color:#bbf7d0">' +
+          '<div style="font-weight:600;color:#166534">' + chrome.i18n.getMessage('testResult_finalURL') + ': ' + esc(step.url) + '</div>' +
+        '</div>';
+        break;
+    }
+  });
+  return html;
+}
 
 // 渲染测试日志
 function renderTestLogs() {
@@ -552,17 +871,16 @@ function showCopyMessage(message, type = 'info') {
   // 根据类型设置背景色
   switch (type) {
     case 'success':
-      messageEl.style.backgroundColor = '#28a745';
+      messageEl.style.backgroundColor = '#2563eb';
       break;
     case 'warning':
-      messageEl.style.backgroundColor = '#ffc107';
-      messageEl.style.color = '#212529';
+      messageEl.style.backgroundColor = '#d97706';
       break;
     case 'error':
-      messageEl.style.backgroundColor = '#dc3545';
+      messageEl.style.backgroundColor = '#dc2626';
       break;
     default:
-      messageEl.style.backgroundColor = '#007bff';
+      messageEl.style.backgroundColor = '#2563eb';
   }
   
   // 添加到页面
