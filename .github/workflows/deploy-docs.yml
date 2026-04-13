@@ -28,6 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Copy config files to docs public
+        run: |
+          mkdir -p docs/public
+          cp test/example_config.en.txt docs/public/
+          cp test/example_config.zh-CN.txt docs/public/
+
       - name: Build VitePress site
         run: npm run docs:build
 

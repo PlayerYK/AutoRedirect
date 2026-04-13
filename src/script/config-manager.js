@@ -3,7 +3,7 @@
  */
 class ConfigManager {
   constructor() {
-    this.baseConfigUrl = "https://extcreator.com/autoredirect/example_config";
+    this.baseConfigUrl = "https://playeryk.github.io/AutoRedirect/example_config";
     this.storageKey = "jump_list";
     this.cache = null;
     this.isLoading = false;
